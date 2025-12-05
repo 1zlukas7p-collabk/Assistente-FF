@@ -3,681 +3,807 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assistente FF – Módulo Tático de Calibração V1</title>
-    <!-- Carrega Tailwind CSS para um design responsivo e moderno -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* ========================================================= */
-        /* VARIÁVEIS DE COR E ESTILO - TEMA HÍBRIDO TÁTICO (VERDE/AZUL)*/
-        /* ========================================================= */
-        :root {
-            --neon-primary: #33FF55; /* Verde Elétrico (Ativo/Foco) */
-            --neon-secondary: #00A3FF; /* Azul Brilhante (Destaque) */
-            --bg-dark: #040410; /* Fundo Ultra Escuro */
-            --bg-card: rgba(5, 5, 25, 0.95); /* Fundo do Card (Vidro Fosco Mais Escuro) */
-            --bg-inactive: #1a1a38; /* Fundo Inativo dos Controles */
-            --shadow-active: 0 0 15px rgba(51, 255, 85, 0.5), 0 0 35px rgba(51, 255, 85, 0.3); /* Sombra Verde */
-            --border-glow: 1px solid var(--neon-primary); /* Borda Verde */
-            --text-base: #E0F7FA;
-        }
-
-        /* 1. Efeito de Animação de Brilho (Toggles e Botão) */
-        @keyframes pulse-green {
-            from { box-shadow: 0 0 5px var(--neon-primary), 0 0 10px var(--neon-primary); }
-            to { box-shadow: 0 0 15px var(--neon-primary), 0 0 35px var(--neon-primary); }
-        }
-
-        /* 2. ANIMAÇÃO DE ENTRADA (BOOT-UP) */
-        @keyframes section-boot-up {
-            0% { opacity: 0; transform: translateY(30px) scale(0.98); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        
-        /* 3. EFEITO MÁQUINA DE ESCREVER (MANTIDO E MELHORADO) */
-        @keyframes blink-cursor {
-            50% { border-right-color: transparent; }
-        }
-        
-        .typing-text {
-            border-right: 2px solid var(--neon-primary); /* Cursor Verde */
-            white-space: nowrap;
-            overflow: hidden;
-            min-height: 1.5rem; 
-            animation: blink-cursor 0.75s step-end infinite;
-        }
-
-        .section-enter-animation {
-            animation: section-boot-up 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-        }
-        
-        /* 4. ANIMAÇÃO DA BARRA DE PROGRESSO (SCAN LINE) */
-        @keyframes progress-scan {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-        .progress-fill.active {
-            background: var(--neon-primary); 
-            background-image: linear-gradient(
-                45deg, 
-                rgba(255, 255, 255, 0) 25%, 
-                rgba(255, 255, 255, 0.8) 50%, 
-                rgba(255, 255, 255, 0) 75%
-            );
-            background-size: 200% 100%; 
-            animation: progress-scan 2s linear infinite; 
-            box-shadow: 0 0 10px var(--neon-primary); 
-        }
-        
-        /* 5. Estilo Básico do Corpo e Fundo */
-        .futuristic-theme {
-            background-color: var(--bg-dark);
-            color: var(--text-base); 
-            font-family: 'Inter', monospace, sans-serif;
-            position: relative;
-            z-index: 1; 
-        }
-
-        /* 6. ESTILO DE CARTÃO DE DIAGNÓSTICO (NOVO DESIGN ASSIMÉTRICO) */
-        .hud-card {
-            background-color: var(--bg-card);
-            backdrop-filter: blur(8px); 
-            -webkit-backdrop-filter: blur(8px);
-            border: var(--border-glow); 
-            box-shadow: var(--shadow-outer);
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px; /* Mais quadrado, menos arredondado */
-            /* Efeito de Corte (Assegurando que a borda verde só apareça na lateral) */
-            border-left: 5px solid var(--neon-primary);
-            box-shadow: 0 0 10px rgba(51, 255, 85, 0.2);
-        }
-        
-        /* Card de Destaque Angular */
-        .angular-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--neon-secondary);
-            border-radius: 4px;
-            clip-path: polygon(0 0, 100% 0, 100% 85%, 90% 100%, 0 100%);
-            box-shadow: 0 0 15px var(--neon-secondary);
-        }
-
-
-        /* 7. ESTILO DOS Toggles (STATUS LIGHT) */
-        .status-light {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background-color: var(--bg-inactive);
-            border: 2px solid #555;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        .status-light.active {
-            background-color: var(--neon-primary);
-            border-color: var(--neon-primary);
-            box-shadow: 0 0 15px var(--neon-primary), 0 0 5px rgba(0, 0, 0, 0.8);
-            animation: pulse-green 1.5s infinite alternate;
-        }
-
-        /* 8. Estilo do Slider (MANTIDO) */
-        #aim-precision-slider::-webkit-slider-thumb {
-            box-shadow: 0 0 15px var(--neon-primary), 0 0 5px var(--bg-dark);
-        }
-        #aim-precision-slider::-moz-range-thumb {
-            box-shadow: 0 0 15px var(--neon-primary), 0 0 5px var(--bg-dark);
-        }
-
-        /* 9. Botão de Lançamento (LAUNCH KEY) */
-        .launch-key-button {
-            border: 4px solid var(--neon-primary);
-            background: linear-gradient(135deg, var(--bg-inactive) 0%, #000000 100%);
-            box-shadow: 0 0 20px var(--neon-primary);
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
-        .launch-key-button:hover {
-            background: var(--neon-primary);
-            color: var(--bg-dark) !important;
-            border-color: var(--neon-secondary);
-            box-shadow: 0 0 40px var(--neon-primary), 0 0 80px var(--neon-primary);
-            transform: scale(1.05) translateY(-2px);
-        }
-        
-        /* 10. ESCONDE AS SEÇÕES DE SIMULAÇÃO POR PADRÃO */
-        .section-simulation-panel {
-            display: none;
-        }
-        
-        /* Efeito de Brilho Geral */
-        .neon-glow {
-            text-shadow: 0 0 10px var(--neon-primary), 0 0 20px var(--neon-primary);
-        }
-        
-        /* Estilo do Medidor de Carga */
-        .load-meter-container {
-            height: 15px;
-            background-color: #0d0d26;
-            border-radius: 4px;
-            overflow: hidden;
-            border: 1px solid #333;
-        }
-        .load-meter-fill {
-            height: 100%;
-            background-color: var(--neon-primary);
-            transition: width 0.5s ease-out;
-        }
-
-    </style>
-    <script>
-        // Configuração do Tailwind (Usa Inter como fonte)
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'monospace', 'sans-serif'],
-                    },
-                    colors: {
-                        'neon-primary': 'var(--neon-primary)',
-                        'neon-secondary': 'var(--neon-secondary)',
-                    }
-                }
-            }
-        }
-    </script>
+    <title>Painel Interativo | Calibração & Otimização</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body class="futuristic-theme min-h-screen font-sans p-4 md:p-8" id="main-body">
-    
-    <!-- Fundo de Vídeo (MANTIDO) -->
-    <div id="video-background">
-        <iframe 
-            src="https://www.youtube.com/embed/1eX7l3V9xRw?autoplay=1&mute=1&loop=1&playlist=1eX7l3V9xRw&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&start=20"
-            frameborder="0"
-            allow="autoplay; encrypted-media; loop"
-            allowfullscreen>
-        </iframe>
-    </div>
+<body>
+    <div class="particles-bg"></div>
 
-    <!-- Container Principal Responsivo -->
-    <div class="max-w-7xl mx-auto space-y-8 relative z-10">
+    <header class="header">
+        <h1 class="neon-text">CYPHER: Painel de Otimização Tática</h1>
+        <p>Interface de Treino Visual & Otimização do Sistema.</p>
+    </header>
 
-        <!-- Header - Título e Status Bar -->
-        <header class="text-center pt-6 pb-4 md:pt-10">
-            <h1 class="text-6xl md:text-7xl font-black tracking-tighter uppercase neon-glow text-neon-primary transition-all duration-500" id="main-title">
-                MÓDULO DE EXECUÇÃO
-            </h1>
-            <h2 class="text-xl md:text-2xl font-light text-neon-secondary mt-2 transition-all duration-500">
-                // SISTEMA TÁTICO V1.0 | Status: <span class="text-neon-primary font-bold neon-glow">OPERACIONAL</span>
-            </h2>
-            <!-- Mensagem de Instrução em Barra de Comando (AGORA ANGULAR) -->
-            <p class="mt-4 text-base text-gray-200 max-w-4xl mx-auto angular-card py-3 px-6 transition-all duration-500 shadow-xl">
-                ACCESS_LOG 001: Selecione o protocolo. Diagnósticos de hardware e sensibilidade em espera. 
-            </p>
-        </header>
-
-        <!-- LAYOUT DE PAINEL DUPLO (Foco no painel de diagnóstico) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <main class="dashboard-container">
+        
+        <section class="card calibration-section" data-section="aim-training">
+            <h2 class="card-title">🔧 Calibração de Mira <i class="fas fa-crosshairs icon-anim"></i></h2>
+            <p>Ajuste parâmetros para simular e otimizar seus reflexos visuais.</p>
             
-            <!-- COLUNA 1: CONTROLES (Painel Esquerdo - Fixo) -->
-            <div class="md:col-span-1 space-y-8">
-                <section class="hud-card p-6 md:p-8 rounded-2xl space-y-8">
-                    <h3 class="text-2xl font-bold text-neon-primary border-b border-neon-primary/30 pb-3">
-                        <span class="text-neon-secondary">>></span> Protocolos de Ativação
-                    </h3>
-
-                    <!-- Toggles (Agora Status Lights) -->
-                    <div class="space-y-6"> 
-                        
-                        <!-- Toggle Otimização do Celular -->
-                        <div class="flex items-center justify-between p-3 bg-bg-inactive/50 rounded-lg border-l-4 border-neon-secondary/50 hover:border-neon-primary transition">
-                            <label class="text-lg font-medium text-gray-100">OTIMIZAÇÃO NÚCLEO (FPS)</label>
-                            <div id="toggle-optimization" class="status-light" onclick="toggleFeature('Optimization')"></div>
-                        </div>
-
-                        <!-- Toggle Calibração de Mira -->
-                        <div class="flex items-center justify-between p-3 bg-bg-inactive/50 rounded-lg border-l-4 border-neon-secondary/50 hover:border-neon-primary transition">
-                            <label class="text-lg font-medium text-gray-100">ASSISTÊNCIA DE MIRA (AIM)</label>
-                            <div id="toggle-aimguide" class="status-light" onclick="toggleFeature('AimGuide')"></div>
-                        </div>
-
-                        <!-- Toggle Ajustes de Precisão -->
-                        <div class="flex items-center justify-between p-3 bg-bg-inactive/50 rounded-lg border-l-4 border-neon-secondary/50 hover:border-neon-primary transition">
-                            <label class="text-lg font-medium text-gray-100">ANTI-RECOIL (ESTABILIZAÇÃO)</label>
-                            <div id="toggle-precision" class="status-light" onclick="toggleFeature('Precision')"></div>
-                        </div>
-
-                    </div>
-                </section>
-                
-                <!-- Slider (Módulo Separado para Destaque) -->
-                <section class="angular-card p-6 md:p-8 space-y-4">
-                    <label for="aim-precision-slider" class="text-xl font-bold text-neon-secondary flex justify-between items-center border-b border-neon-secondary/50 pb-2">
-                        <span>CALIBRAÇÃO FINA (DPI)</span>
-                    </label>
-                    <span id="aim-precision-value" class="block text-center text-5xl font-extrabold text-neon-primary neon-glow transition-all duration-300">50%</span>
-                    <input type="range" id="aim-precision-slider" min="0" max="100" value="50" oninput="updateAimPrecision(this.value)" class="w-full">
-                </section>
+            <div class="control-group">
+                <label for="sens-slider">Sensibilidade Visual:</label>
+                <input type="range" id="sens-slider" min="0" max="100" value="50" class="futuristic-slider">
+                <span id="sens-value" class="slider-value">50%</span>
             </div>
 
+            <div class="control-group">
+                <label for="speed-slider">Velocidade do Alvo (Simulada):</label>
+                <input type="range" id="speed-slider" min="0" max="100" value="50" class="futuristic-slider">
+                <span id="speed-value" class="slider-value">50%</span>
+            </div>
+            
+            <button id="activate-aim-training" class="futuristic-btn neon-btn">Ativar Treino de Mira</button>
+        </section>
 
-            <!-- COLUNA 2: DIAGNÓSTICO E SIMULAÇÕES (Painel Direito - Dinâmico) -->
-            <div class="md:col-span-2 space-y-6">
-                
-                <h3 class="text-2xl font-bold text-neon-primary border-b border-neon-primary/30 pb-3">
-                    <span class="text-neon-secondary">>></span> Log de Diagnóstico (EXEC)
-                </h3>
+        <section class="card optimization-section" data-section="optimization">
+            <h2 class="card-title">⚙ Otimização do Smartphone <i class="fas fa-microchip icon-anim"></i></h2>
+            <p>Interface para simular a melhoria da fluidez do sistema e recursos.</p>
+            
+            <div class="control-group">
+                <label for="optimization-intensity">Intensidade da Otimização:</label>
+                <input type="range" id="optimization-intensity" min="0" max="100" value="75" class="futuristic-slider">
+                <span id="intensity-value" class="slider-value">75%</span>
+            </div>
 
-                <!-- 1. Otimização do Celular (Simulação com Medidor de Carga) -->
-                <div id="section-optimization" class="hud-card p-6 section-simulation-panel">
-                    <h4 class="text-xl font-bold mb-4 text-neon-primary">STATUS > MÓDULO_NÚCLEO</h4>
-                    <div id="optimization-simulation" class="text-lg font-mono space-y-3 terminal-mono p-0 bg-transparent">
-                        <div id="opt-status-text" class="typing-text h-6"></div>
-                        <!-- Monitor de FPS e Carga -->
-                        <div class="grid grid-cols-2 gap-4 text-sm pt-2 border-t border-neon-secondary/20">
-                            <p>FPS ALVO: <span id="fps-counter" class="text-3xl text-neon-primary neon-glow font-bold">30</span></p>
-                            <p class="text-right">CARGA ATUAL: <span id="cpu-load-display" class="text-neon-secondary font-bold">25%</span></p>
-                        </div>
-                        <!-- Medidor de Carga (Novo Elemento Diferenciado) -->
-                        <div class="load-meter-container">
-                            <div id="cpu-load-meter" class="load-meter-fill" style="width: 25%;"></div>
-                        </div>
-                        <div class="progress-bar mt-2">
-                            <div id="opt-progress-fill" class="progress-fill"></div>
-                        </div>
-                    </div>
+            <button id="optimize-now" class="futuristic-btn neon-btn">Otimizar Agora</button>
+        </section>
+
+        <section class="card visual-settings-section" data-section="visual-settings">
+            <h2 class="card-title">🔄 Funções Visuais do Painel <i class="fas fa-magic icon-anim"></i></h2>
+            <p>Controle os efeitos visuais e tema desta interface.</p>
+            
+            <div class="switch-group">
+                <label for="switch-particles">Efeito de Partículas:</label>
+                <label class="futuristic-switch">
+                    <input type="checkbox" id="switch-particles" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            
+            <div class="switch-group">
+                <label for="switch-theme">Tema Claro/Escuro:</label>
+                <label class="futuristic-switch">
+                    <input type="checkbox" id="switch-theme">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class="switch-group">
+                <label for="switch-vibration">Vibração Visual (Shake):</label>
+                <label class="futuristic-switch">
+                    <input type="checkbox" id="switch-vibration">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            
+            <div class="switch-group">
+                <label for="switch-glow">Glow Neon Extra:</label>
+                <label class="futuristic-switch">
+                    <input type="checkbox" id="switch-glow" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </section>
+    </main>
+
+    <div id="futuristic-modal" class="modal">
+        <div class="modal-content glass-effect">
+            <span class="close-btn">&times;</span>
+            <div id="modal-icon-container" class="modal-icon-container">
                 </div>
-
-                <!-- 2. Calibração de Mira (Simulação com Retículo Animado) -->
-                <div id="section-aimguide" class="hud-card p-6 section-simulation-panel">
-                    <h4 class="text-xl font-bold mb-4 text-neon-primary">STATUS > ALINHAMENTO_ÓPTICO</h4>
-                    <div id="aimguide-simulation" class="text-center p-6 space-y-4 terminal-mono p-0 bg-transparent">
-                        <div id="aim-status-text" class="text-xl typing-text h-6 mx-auto"></div>
-                        <!-- Retículo de Calibração em SVG -->
-                        <div class="flex justify-center py-4">
-                            <svg id="aim-reticle" class="w-24 h-24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Círculo Externo (Spinning) -->
-                                <g class="reticle-spin">
-                                    <circle cx="50" cy="50" r="45" stroke="var(--neon-primary)" stroke-width="2" stroke-dasharray="10 5" stroke-opacity="0.7"/>
-                                </g>
-                                <!-- Centro e Pulse -->
-                                <g class="reticle-base" transform="translate(50, 50) scale(1) translate(-50, -50)">
-                                    <!-- Crosshair -->
-                                    <line x1="10" y1="50" x2="90" y2="50" stroke="var(--neon-secondary)" stroke-width="2"/>
-                                    <line x1="50" y1="10" x2="50" y2="90" stroke="var(--neon-secondary)" stroke-width="2"/>
-                                    <!-- Ponto Central -->
-                                    <circle cx="50" cy="50" r="5" fill="var(--neon-primary)"/>
-                                </g>
-                                <!-- Texto "CALIBRANDO" -->
-                                <text x="50" y="55" font-size="8" text-anchor="middle" fill="var(--neon-secondary)" font-family="Consolas, Monospace">BUSCA...</text>
-                            </svg>
-                        </div>
-                    </div>
+            <h3 id="modal-title" class="neon-text"></h3>
+            <p id="modal-message"></p>
+            <div class="progress-container">
+                <div class="progress-bar-bg">
+                    <div id="progress-bar" class="progress-bar"></div>
                 </div>
-
-                <!-- 3. Ajustes de Precisão (Simulação com Estabilizador) -->
-                <div id="section-precision" class="hud-card p-6 section-simulation-panel">
-                    <h4 class="text-xl font-bold mb-4 text-neon-primary">STATUS > ESTABILIZADOR_RECOIL</h4>
-                    <div id="precision-simulation" class="text-lg font-mono space-y-3 terminal-mono p-0 bg-transparent">
-                        <div id="prec-status-text" class="typing-text h-6"></div>
-                        <!-- Estabilizador de Recoil -->
-                        <div class="grid grid-cols-2 gap-4 text-sm pt-2 border-t border-neon-secondary/20">
-                            <p>DPI DE ENTRADA: <span id="prec-value" class="text-3xl text-neon-primary neon-glow font-bold">50%</span></p>
-                            <div class="text-right">
-                                ESTABILIDADE: 
-                                <span id="recoil-stabilizer" class="text-3xl font-black text-neon-primary transition-all duration-300 animate-pulse inline-block ml-2">
-                                    [ | | ]
-                                </span>
-                            </div>
-                        </div>
-                        <div class="progress-bar">
-                            <div id="prec-progress-fill" class="progress-fill"></div>
-                        </div>
-                    </div>
-                </div>
-
+                <span id="progress-text" class="progress-text">0%</span>
             </div>
         </div>
-
-        <!-- Botão Abrir Free Fire (LAUNCH KEY) -->
-        <div id="section-gamebutton" class="py-10 flex justify-center">
-            <button id="ff-launch-button"
-               onclick="openFreeFireApp()"
-               class="px-8 py-4 rounded-xl text-xl md:text-2xl font-extrabold transition duration-300 launch-key-button text-neon-primary">
-                ▶️ EXECUTAR SISTEMA (FREE FIRE)
-            </button>
-        </div>
-
-        <!-- Rodapé Profissional -->
-        <footer class="text-center py-8 border-t border-neon-primary/20 mt-10 text-gray-500 text-sm">
-            <p>Módulo Tático **HFR-42** | Versão **V1.0** | &copy; 2025 Assistente FF. Todos os direitos reservados.</p>
-        </footer>
-
     </div>
 
-    <!-- JavaScript para a Lógica dos Toggles e Simulações -->
-    <script>
-        // Elementos do novo slider
-        const slider = document.getElementById('aim-precision-slider');
-        const valueDisplay = document.getElementById('aim-precision-value');
+    <footer class="footer">
+        <div class="footer-info">
+            <span id="footer-fps">FPS Simulado: 60</span> | 
+            <span id="footer-time">Horário: --:--:--</span> |
+            <span id="footer-version">Versão: 1.0.Cypher</span>
+        </div>
+    </footer>
 
-        // Estado inicial de todas as funcionalidades
-        let appState = {
-            Optimization: false,
-            AimGuide: false,
-            Precision: false,
-            AimPrecisionPercentage: 50,
-        };
+    <div id="popup-message" class="popup glass-effect"></div>
 
-        // --- FUNÇÃO CENTRAL: EFEITO MÁQUINA DE ESCREVER (TYPEWRITER) ---
-        function typeWriterEffect(element, text, speed = 25) {
-            return new Promise(resolve => {
-                element.textContent = ''; 
-                element.classList.add('typing-text');
-                let i = 0;
-                
-                const typeInterval = setInterval(() => {
-                    if (i < text.length) {
-                        element.textContent += text.charAt(i);
-                        i++;
-                    } else {
-                        clearInterval(typeInterval);
-                        element.classList.remove('typing-text'); 
-                        resolve();
-                    }
-                }, speed);
-
-                element.dataset.interval = typeInterval;
-            });
-        }
-        
-        function clearTypingInterval(element) {
-            if (element && element.dataset.interval) {
-                clearInterval(element.dataset.interval);
-                element.classList.remove('typing-text');
-                element.textContent = ''; 
-                element.style.width = ''; 
-            }
-        }
-
-
-        // --- FUNÇÃO DE DEEP LINK (ABRIR APP DIRETO) ---
-        function openFreeFireApp() {
-            const fallbackUrl = "https://play.google.com/store/apps/details?id=com.dts.freefireth";
-            const deepLinkUri = "com.dts.freefireth://"; 
-
-            window.location.href = deepLinkUri;
-
-            const timeout = setTimeout(() => {
-                window.open(fallbackUrl, '_blank');
-            }, 300);
-            
-            // Limpa o timeout para evitar que a página da loja abra se o app abrir rápido
-            // (Embora em ambientes móveis reais, a detecção de link profundo seja complexa, esta é a prática recomendada.)
-            // Adicionado um pequeno atraso antes de limpar.
-            setTimeout(() => clearTimeout(timeout), 50); 
-        }
-
-        // --- SIMULAÇÃO DE OTIMIZAÇÃO DO CELULAR ---
-        async function startOptimizationSim() {
-            const statusTextElement = document.getElementById('opt-status-text');
-            const progressBar = document.getElementById('opt-progress-fill');
-            const fpsCounter = document.getElementById('fps-counter'); 
-            const cpuLoadMeter = document.getElementById('cpu-load-meter');
-            const cpuLoadDisplay = document.getElementById('cpu-load-display');
-            
-            clearTypingInterval(statusTextElement);
-            progressBar.style.width = '0%';
-            progressBar.classList.add('active'); 
-            fpsCounter.textContent = '30'; 
-            
-            const steps = [
-                { delay: 0, progress: 0, text: 'PROCESSANDO | Iniciando varredura de núcleo...', fps: 30, load: 30 },
-                { delay: 1000, progress: 30, text: 'EXECUTANDO | Limpando cache de fundo de RAM... [OK]', fps: 45, load: 55 },
-                { delay: 2000, progress: 65, text: 'EXECUTANDO | Ajustando prioridade de núcleo da CPU...', fps: 55, load: 70 },
-                { delay: 3500, progress: 95, text: 'EXECUTANDO | Alocando banda de rede para Free Fire...', fps: 58, load: 80 },
-                { delay: 4000, progress: 100, text: 'CONCLUÍDO | Otimização de sistema finalizada. Desempenho máximo ATIVO.', fps: 60, load: 15 },
-            ];
-            
-            let accumulatedDelay = 0;
-
-            for (const step of steps) {
-                if (!appState.Optimization) return; // CORREÇÃO DE BUG: Cancela se o toggle for desativado
-
-                await new Promise(resolve => setTimeout(resolve, step.delay - accumulatedDelay));
-                accumulatedDelay = step.delay;
-                
-                if (!appState.Optimization) return; // CORREÇÃO DE BUG: Cancela após o delay
-
-                await typeWriterEffect(statusTextElement, step.text);
-                
-                progressBar.style.width = step.progress + '%';
-                
-                // Atualiza o medidor de carga
-                cpuLoadMeter.style.width = step.load + '%';
-                cpuLoadDisplay.textContent = step.load + '%';
-                
-                // Efeito visual suave no contador de FPS
-                fpsCounter.style.transition = 'text-shadow 0.3s, color 0.3s';
-                fpsCounter.textContent = step.fps; 
-                fpsCounter.classList.add('neon-glow');
-                
-                setTimeout(() => fpsCounter.classList.remove('neon-glow'), 150);
-            }
-
-            progressBar.classList.remove('active');
-        }
-        
-        // --- SIMULAÇÃO DE CALIBRAÇÃO DE MIRA ---
-        async function startAimGuideSim() {
-            const statusTextElement = document.getElementById('aim-status-text');
-            const reticleElement = document.getElementById('aim-reticle');
-            
-            clearTypingInterval(statusTextElement);
-            
-            const spinGroup = reticleElement.querySelector('.reticle-spin');
-            const pulseGroup = reticleElement.querySelector('.reticle-base');
-            const textElement = reticleElement.querySelector('text');
-
-            // FASE 1: Rotação Rápida e Busca
-            spinGroup.style.animation = 'none';
-            spinGroup.style.animationDuration = '0.5s';
-            pulseGroup.style.animationDuration = '0.5s';
-            textElement.textContent = 'BUSCA...';
-            textElement.setAttribute('fill', 'var(--neon-secondary)');
-            
-            if (!appState.AimGuide) return; // CORREÇÃO DE BUG: Checagem inicial
-
-            await typeWriterEffect(statusTextElement, 'PROCESSANDO | Iniciando varredura de sensibilidade...');
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
-            if (!appState.AimGuide) return; // CORREÇÃO DE BUG: Checagem após delay
-            
-            // FASE 2: Calibração Fina
-            await typeWriterEffect(statusTextElement, 'EXECUTANDO | Ajustando parâmetros de DPI e Sensibilidade (360°)...');
-            // Animação de spin simplificada
-            spinGroup.style.animation = 'rotation 1.5s linear infinite';
-            pulseGroup.style.animation = 'pulse-center 1.2s infinite alternate';
-            textElement.textContent = 'CALIBRANDO';
-            await new Promise(resolve => setTimeout(resolve, 3000));
-            
-            if (!appState.AimGuide) return; // CORREÇÃO DE BUG: Checagem após delay
-
-            // FASE 3: Finalização e Bloqueio
-            await typeWriterEffect(statusTextElement, 'CONCLUÍDO | ALINHAMENTO ÓPTICO ATIVO! Sistema pronto para engajamento.');
-            spinGroup.style.animation = 'none';
-            pulseGroup.style.animation = 'none';
-            textElement.textContent = 'LOCK';
-            textElement.setAttribute('fill', 'var(--neon-primary)');
-        }
-        
-        // Adiciona as animações CSS (necessário para o SVG)
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes rotation {
-                from { transform: rotate(0deg); }
-                to { transform: rotate(360deg); }
-            }
-            @keyframes pulse-center {
-                0% { opacity: 1; transform: scale(1); }
-                50% { opacity: 0.7; transform: scale(1.1); }
-                100% { opacity: 1; transform: scale(1); }
-            }
-            .reticle-spin {
-                transform-origin: 50px 50px;
-            }
-            .reticle-base {
-                transform-origin: 50px 50px;
-            }
-        `;
-        document.head.appendChild(style);
-
-
-        // --- SIMULAÇÃO DE AJUSTES DE PRECISÃO ---
-        async function startPrecisionSim() {
-            const statusTextElement = document.getElementById('prec-status-text');
-            const progressBar = document.getElementById('prec-progress-fill');
-            const stabilizer = document.getElementById('recoil-stabilizer'); 
-            const precValueDisplay = document.getElementById('prec-value');
-            
-            const currentPrecision = document.getElementById('aim-precision-value').textContent; 
-            
-            // 1. Reset Visual
-            clearTypingInterval(statusTextElement);
-            progressBar.style.width = '0%';
-            progressBar.classList.add('active'); 
-            stabilizer.classList.add('animate-pulse'); 
-            stabilizer.classList.remove('neon-glow');
-            stabilizer.textContent = '[ | | ]'; 
-            precValueDisplay.textContent = currentPrecision; 
-            
-            // 2. Definição dos passos sequenciais
-            const simulationSteps = [
-                { text: `PROCESSANDO | Analisando a compensação de Recoil para: ${currentPrecision}`, progress: 0, stabilizer: '[ | | ]', wait: 500 },
-                { text: 'EXECUTANDO | Inicializando algoritmo Anti-Recoil (Fase 1/3)...', progress: 30, stabilizer: '[ > < ]', wait: 1500 },
-                { text: 'EXECUTANDO | Análise de Dispersão de Projéteis em tempo real...', progress: 60, stabilizer: '[ > | < ]', wait: 1500 },
-                { text: 'EXECUTANDO | Configurando estabilidade do giroscópio (Anti-Vibração)...', progress: 90, stabilizer: '[ | | ]', wait: 1000 },
-                { text: `CONCLUÍDO | Estabilizador de Recoil configurado. Otimização em ${currentPrecision}.`, progress: 100, stabilizer: '[ LOCK ]', wait: 0 },
-            ];
-            
-            // 3. Execução sequencial
-            for (const step of simulationSteps) {
-                if (!appState.Precision) return; // CORREÇÃO DE BUG: Cancela se o toggle for desativado
-
-                progressBar.style.width = step.progress + '%';
-                stabilizer.textContent = step.stabilizer;
-
-                await typeWriterEffect(statusTextElement, step.text);
-                
-                await new Promise(resolve => setTimeout(resolve, step.wait));
-                
-                if (!appState.Precision) return; // CORREÇÃO DE BUG: Checagem após delay
-            }
-            
-            // 4. Finalização visual
-            progressBar.classList.remove('active');
-            stabilizer.classList.add('neon-glow');
-            stabilizer.classList.remove('animate-pulse');
-        }
-
-
-        // --- LÓGICA DE INTERFACE (Toggles e Slider) ---
-
-        function updateSliderVisual(value) {
-            const percentage = value + '%';
-            // Garantindo que o slider use as cores do novo tema (Verde/Azul Escuro)
-            slider.style.background = `linear-gradient(to right, var(--neon-primary) ${percentage}, var(--bg-inactive) ${percentage})`;
-        }
-
-        function updateAimPrecision(value) {
-            appState.AimPrecisionPercentage = parseInt(value);
-            valueDisplay.textContent = `${appState.AimPrecisionPercentage}%`;
-            
-            const precValueDisplay = document.getElementById('prec-value');
-            if(precValueDisplay) {
-                precValueDisplay.textContent = `${appState.AimPrecisionPercentage}%`;
-            }
-            
-            updateSliderVisual(appState.AimPrecisionPercentage);
-        }
-
-        function toggleFeature(feature) {
-            const willBeActive = !appState[feature]; 
-            appState[feature] = willBeActive;
-
-            const toggleId = `toggle-${feature.toLowerCase()}`;
-            const toggleElement = document.getElementById(toggleId);
-
-            if (toggleElement) {
-                toggleElement.classList.toggle('active', willBeActive);
-            }
-
-            const sectionId = `section-${feature.toLowerCase()}`;
-            const sectionElement = document.getElementById(sectionId);
-
-            if (sectionElement) {
-                if (willBeActive) {
-                    // ATIVAR: Mostra a seção e inicia a simulação
-                    sectionElement.style.display = 'block';
-                    sectionElement.classList.remove('section-enter-animation'); 
-                    void sectionElement.offsetWidth;
-                    sectionElement.classList.add('section-enter-animation');
-
-                    switch (feature) {
-                        case 'Optimization':
-                            startOptimizationSim();
-                            break;
-                        case 'AimGuide':
-                            startAimGuideSim();
-                            break;
-                        case 'Precision':
-                            startPrecisionSim();
-                            break;
-                    }
-                } else {
-                    // DESATIVAR: Esconde a seção e limpa o estado
-                    sectionElement.classList.remove('section-enter-animation');
-                    sectionElement.style.display = 'none'; 
-                    
-                    const statusTextId = `${feature.toLowerCase()}-status-text`;
-                    clearTypingInterval(document.getElementById(statusTextId));
-                    
-                    // Lógica para resetar visuais de forma segura (usando '?.' ou verificação)
-                    if (feature === 'Optimization') {
-                         document.getElementById('opt-progress-fill')?.classList.remove('active');
-                         document.getElementById('fps-counter').textContent = '30';
-                         document.getElementById('cpu-load-meter').style.width = '25%';
-                         document.getElementById('cpu-load-display').textContent = '25%';
-                    }
-                    if (feature === 'Precision') {
-                         document.getElementById('prec-progress-fill')?.classList.remove('active');
-                         const stabilizer = document.getElementById('recoil-stabilizer');
-                         if (stabilizer) {
-                            stabilizer.textContent = '[ | | ]';
-                            stabilizer.classList.remove('neon-glow');
-                            stabilizer.classList.add('animate-pulse');
-                         }
-                    }
-                    if (feature === 'AimGuide') {
-                        const reticleElement = document.getElementById('aim-reticle');
-                        if (reticleElement) {
-                            reticleElement.querySelector('.reticle-spin').style.animation = 'none';
-                            reticleElement.querySelector('.reticle-base').style.animation = 'none';
-                            reticleElement.querySelector('text').textContent = 'BUSCA...'; 
-                            reticleElement.querySelector('text').setAttribute('fill', 'var(--neon-secondary)');
-                        }
-                    }
-                }
-            }
-        }
-
-        function initializeApp() {
-            if (slider && valueDisplay) {
-                updateAimPrecision(appState.AimPrecisionPercentage);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', initializeApp);
-
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
+/* ============================================== */
+/* 0. Variáveis e Reset Básico */
+/* ============================================== */
+:root {
+    --color-neon-blue: #00e0ff;
+    --color-dark-bg: #101216;
+    --color-card-bg: #1a1e24;
+    --color-metallic-grey: #a0a8b3;
+    --color-light-text: #f0f0f0;
+    --color-glow: #00a0ff;
+    --transition-time: 0.3s;
+    --shadow-neon: 0 0 10px var(--color-glow), 0 0 20px var(--color-neon-blue);
+}
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-dark-bg);
+    color: var(--color-light-text);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: background-color var(--transition-time);
+}
+
+/* Tema Claro (Classe JS) */
+body.light-theme {
+    --color-dark-bg: #f0f0f0;
+    --color-card-bg: #ffffff;
+    --color-light-text: #333;
+    --color-metallic-grey: #666;
+    --color-glow: #ff5500; /* Neon Laranja/Vermelho para contraste */
+    --color-neon-blue: #ff5500;
+}
+
+/* ============================================== */
+/* 1. Layout Geral e Responsividade */
+/* ============================================== */
+.header {
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.neon-text {
+    color: var(--color-neon-blue);
+    text-shadow: var(--shadow-neon);
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.dashboard-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    flex-grow: 1;
+}
+
+/* Cartões (Cards) */
+.card {
+    background-color: var(--color-card-bg);
+    border: 1px solid var(--color-metallic-grey);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transition: transform var(--transition-time), box-shadow var(--transition-time);
+    overflow: hidden;
+    position: relative;
+}
+
+.card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: var(--shadow-neon);
+}
+
+.card-title {
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+    color: var(--color-neon-blue);
+    border-bottom: 2px solid rgba(0, 224, 255, 0.2);
+    padding-bottom: 0.5rem;
+}
+
+/* Ícones Animados nos Títulos */
+.icon-anim {
+    margin-left: 10px;
+    transition: transform 0.6s ease-in-out;
+}
+.card:hover .icon-anim {
+    transform: rotate(10deg) scale(1.1);
+}
+
+/* ============================================== */
+/* 2. Formulário e Controles */
+/* ============================================== */
+.control-group {
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.control-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    color: var(--color-metallic-grey);
+}
+
+.slider-value {
+    color: var(--color-neon-blue);
+    font-weight: bold;
+}
+
+/* Slider Futurista */
+.futuristic-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    background: #333;
+    outline: none;
+    opacity: 0.7;
+    transition: opacity var(--transition-time);
+    border-radius: 3px;
+    margin-top: 5px;
+}
+.futuristic-slider:hover {
+    opacity: 1;
+}
+.futuristic-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-neon-blue);
+    cursor: pointer;
+    box-shadow: 0 0 5px var(--color-neon-blue);
+    transition: background var(--transition-time), box-shadow var(--transition-time);
+}
+.futuristic-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-neon-blue);
+    cursor: pointer;
+    box-shadow: 0 0 5px var(--color-neon-blue);
+}
+
+/* Botão Futurista */
+.futuristic-btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 1rem;
+    border: 2px solid var(--color-neon-blue);
+    background-color: var(--color-card-bg);
+    color: var(--color-light-text);
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all var(--transition-time);
+}
+.futuristic-btn:hover {
+    background-color: var(--color-neon-blue);
+    color: var(--color-dark-bg);
+    box-shadow: var(--shadow-neon);
+}
+/* Efeito de Vibração (Shake) */
+.shake-effect.futuristic-btn:hover {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    transform: translate3d(0, 0, 0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* Switches */
+.switch-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+.switch-group:last-child {
+    border-bottom: none;
+}
+
+.futuristic-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+.futuristic-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    transition: var(--transition-time);
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--color-metallic-grey);
+    transition: var(--transition-time);
+}
+input:checked + .slider {
+    background-color: var(--color-neon-blue);
+    box-shadow: 0 0 5px var(--color-neon-blue);
+}
+input:checked + .slider:before {
+    transform: translateX(26px);
+    background-color: var(--color-light-text);
+}
+.slider.round { border-radius: 24px; }
+.slider.round:before { border-radius: 50%; }
+
+/* ============================================== */
+/* 3. Rodapé Dinâmico */
+/* ============================================== */
+.footer {
+    padding: 1rem;
+    background-color: #0b0c0e;
+    text-align: center;
+    border-top: 1px solid var(--color-neon-blue);
+    box-shadow: 0 -2px 10px rgba(0, 224, 255, 0.2);
+}
+
+.footer-info {
+    color: var(--color-metallic-grey);
+    /* Animação Pulsante Leve */
+    animation: pulse 4s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1.0; }
+    100% { opacity: 0.8; }
+}
+
+/* ============================================== */
+/* 4. Modal e Progresso */
+/* ============================================== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    padding: 30px;
+    margin: 15% auto;
+    width: 90%;
+    max-width: 450px;
+    text-align: center;
+    border-radius: 15px;
+    position: relative;
+    border: 1px solid var(--color-neon-blue);
+}
+
+/* Efeito Glassmorphism/Vidro Embaçado */
+.glass-effect {
+    background: rgba(30, 34, 40, 0.8); /* Cor de fundo semi-transparente */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.close-btn {
+    color: var(--color-neon-blue);
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: var(--transition-time);
+}
+.close-btn:hover, .close-btn:focus {
+    color: #fff;
+    text-decoration: none;
+}
+
+.modal-icon-container {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    color: var(--color-neon-blue);
+    text-shadow: var(--shadow-neon);
+}
+/* Animação de Crosshair Girando */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Animação de Circuito Pulsando (Exemplo de Coração Digital) */
+@keyframes pulse-circuit {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Barra de Progresso Futurista */
+.progress-container {
+    margin-top: 20px;
+}
+.progress-bar-bg {
+    width: 100%;
+    height: 15px;
+    background-color: #333;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 5px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+}
+.progress-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #0050ff, var(--color-neon-blue));
+    box-shadow: var(--shadow-neon);
+    border-radius: 8px;
+    transition: width 0.1s linear; /* Transição JS */
+}
+.progress-text {
+    color: var(--color-neon-blue);
+    font-weight: bold;
+}
+
+/* ============================================== */
+/* 5. Efeito de Partículas (Fundo) */
+/* ============================================== */
+.particles-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.2;
+}
+
+/* ============================================== */
+/* 6. Popup de Confirmação */
+/* ============================================== */
+.popup {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    padding: 15px 25px;
+    color: var(--color-light-text);
+    background-color: rgba(30, 34, 40, 0.9);
+    border: 1px solid var(--color-neon-blue);
+    border-radius: 8px;
+    box-shadow: var(--shadow-neon);
+    z-index: 1001;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-time) ease-in-out, transform var(--transition-time) ease-in-out;
+    transform: translateY(20px);
+}
+.popup.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+/* Efeito Glassmorphism no Popup */
+.popup.glass-effect {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+/* ============================================== */
+/* 7. Efeitos Extras (Classe JS) */
+/* ============================================== */
+/* Glow Extra */
+.extra-glow .card, .extra-glow .futuristic-btn, .extra-glow .popup {
+    box-shadow: 0 0 15px var(--color-glow), 0 0 30px var(--color-neon-blue);
+}
+.extra-glow .futuristic-btn:hover {
+    box-shadow: 0 0 20px var(--color-glow), 0 0 40px var(--color-neon-blue);
+}
+
+/* Responsividade Aprimorada */
+@media (max-width: 600px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    .dashboard-container {
+        padding: 1rem;
+        gap: 1rem;
+    }
+    .card {
+        padding: 1rem;
+    }
+    .modal-content {
+        margin: 10% auto;
+    }
+}
+document.addEventListener('DOMContentLoaded', () => {
+    // ==============================================
+    // 1. Variáveis e Seletores
+    // ==============================================
+    const body = document.body;
+
+    // Seção de Calibração
+    const sensSlider = document.getElementById('sens-slider');
+    const sensValue = document.getElementById('sens-value');
+    const speedSlider = document.getElementById('speed-slider');
+    const speedValue = document.getElementById('speed-value');
+    const activateAimBtn = document.getElementById('activate-aim-training');
+
+    // Seção de Otimização
+    const optimizationIntensitySlider = document.getElementById('optimization-intensity');
+    const intensityValue = document.getElementById('intensity-value');
+    const optimizeNowBtn = document.getElementById('optimize-now');
+
+    // Switches
+    const switchParticles = document.getElementById('switch-particles');
+    const switchTheme = document.getElementById('switch-theme');
+    const switchVibration = document.getElementById('switch-vibration');
+    const switchGlow = document.getElementById('switch-glow');
+
+    // Modal
+    const modal = document.getElementById('futuristic-modal');
+    const closeModalBtn = document.querySelector('.close-btn');
+    const modalTitle = document.getElementById('modal-title');
+    const modalMessage = document.getElementById('modal-message');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const modalIconContainer = document.getElementById('modal-icon-container');
+
+    // Rodapé
+    const footerTime = document.getElementById('footer-time');
+    const footerFPS = document.getElementById('footer-fps');
+    
+    // Popup
+    const popupMessage = document.getElementById('popup-message');
+
+    let currentProgress = 0;
+    let animationInterval = null;
+
+    // ==============================================
+    // 2. Funções de Utilidade (Modal, Popup, Progresso)
+    // ==============================================
+
+    /**
+     * Exibe o popup de confirmação no canto inferior direito.
+     * @param {string} message - A mensagem a ser exibida.
+     */
+    const showPopup = (message) => {
+        popupMessage.textContent = message;
+        popupMessage.classList.add('show');
+        setTimeout(() => {
+            popupMessage.classList.remove('show');
+        }, 3000); // Popup desaparece após 3 segundos
+    };
+
+    /**
+     * Inicia a animação de barra de progresso.
+     * @param {string} title - Título da modal.
+     * @param {string} message - Mensagem da modal.
+     * @param {string} iconHTML - HTML do ícone de animação.
+     */
+    const startProgressAnimation = (title, message, iconHTML) => {
+        // Configura a modal
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        modalIconContainer.innerHTML = iconHTML;
+        progressBar.style.width = '0%';
+        progressText.textContent = '0%';
+        modal.style.display = 'flex';
+        currentProgress = 0;
+
+        // Inicia a animação de progresso
+        if (animationInterval) clearInterval(animationInterval);
+
+        animationInterval = setInterval(() => {
+            currentProgress += 1;
+            if (currentProgress > 100) {
+                clearInterval(animationInterval);
+                currentProgress = 100;
+                // Animação de sucesso (opcional)
+                modalTitle.textContent = "Processo Concluído!";
+                showPopup(title + " concluído com sucesso.");
+                setTimeout(() => { modal.style.display = 'none'; }, 1500);
+            }
+            
+            progressBar.style.width = `${currentProgress}%`;
+            progressText.textContent = `${currentProgress}%`;
+        }, 20); // Velocidade do progresso (20ms/passo)
+    };
+    
+    // Fecha Modal
+    closeModalBtn.onclick = () => {
+        modal.style.display = 'none';
+        if (animationInterval) clearInterval(animationInterval);
+    };
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+            if (animationInterval) clearInterval(animationInterval);
+        }
+    };
+
+    // ==============================================
+    // 3. Event Listeners para a Seção de Calibração
+    // ==============================================
+    
+    // Atualiza o valor da Sensibilidade
+    sensSlider.addEventListener('input', () => {
+        sensValue.textContent = `${sensSlider.value}%`;
+    });
+    
+    // Atualiza o valor da Velocidade do Alvo
+    speedSlider.addEventListener('input', () => {
+        speedValue.textContent = `${speedSlider.value}%`;
+    });
+
+    // Botão Ativar Treino de Mira
+    activateAimBtn.addEventListener('click', () => {
+        const icon = `<i class="fas fa-crosshairs" style="animation: spin 1s linear infinite;"></i>`;
+        const title = "Modo de Treino de Mira ativado";
+        const message = "Modo de Treino de Mira ativado — ajuste seus reflexos e precisão.";
+        startProgressAnimation(title, message, icon);
+    });
+
+    // ==============================================
+    // 4. Event Listeners para a Seção de Otimização
+    // ==============================================
+
+    // Atualiza o valor da Intensidade
+    optimizationIntensitySlider.addEventListener('input', () => {
+        intensityValue.textContent = `${optimizationIntensitySlider.value}%`;
+    });
+
+    // Botão Otimizar Agora
+    optimizeNowBtn.addEventListener('click', () => {
+        const icon = `<i class="fas fa-bolt" style="animation: pulse-circuit 1s infinite;"></i>`;
+        const title = "Processo de Otimização em Andamento";
+        const message = "Processo de otimização em andamento — melhorando fluidez do sistema.";
+        startProgressAnimation(title, message, icon);
+    });
+
+    // ==============================================
+    // 5. Event Listeners para Switches Visuais
+    // ==============================================
+
+    // Efeito de Partículas
+    const particlesBg = document.querySelector('.particles-bg');
+    const updateParticles = () => {
+        if (switchParticles.checked) {
+            particlesBg.style.display = 'block';
+            showPopup("Partículas Visuais: Ativado!");
+        } else {
+            particlesBg.style.display = 'none';
+            showPopup("Partículas Visuais: Desativado!");
+        }
+    };
+    switchParticles.addEventListener('change', updateParticles);
+    
+    // Simulação de partículas (CSS/JS simples)
+    if (switchParticles.checked) {
+        // Cria pontos de partículas CSS para simulação
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('i');
+            particle.classList.add('particle');
+            particle.style.width = `${Math.random() * 2 + 1}px`;
+            particle.style.height = particle.style.width;
+            particle.style.backgroundColor = `rgba(0, 224, 255, ${Math.random() * 0.7 + 0.3})`;
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.animation = `move-particle ${Math.random() * 10 + 5}s linear infinite alternate`;
+            particlesBg.appendChild(particle);
+        }
+    }
+    // Adiciona a animação de partícula ao CSS via JS para evitar poluir o style.css
+    const particleKeyframes = `
+        @keyframes move-particle {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            100% { transform: translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px) scale(0.8); opacity: 0.8; }
+        }
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }`;
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = particleKeyframes;
+    document.head.appendChild(styleSheet);
+
+
+    // Tema Claro/Escuro
+    switchTheme.addEventListener('change', () => {
+        if (switchTheme.checked) {
+            body.classList.add('light-theme');
+            showPopup("Tema Visual: Modo CLARO Ativado!");
+        } else {
+            body.classList.remove('light-theme');
+            showPopup("Tema Visual: Modo ESCURO Ativado!");
+        }
+    });
+
+    // Vibração Visual (Shake)
+    const allButtons = document.querySelectorAll('.futuristic-btn');
+    switchVibration.addEventListener('change', () => {
+        allButtons.forEach(btn => {
+            if (switchVibration.checked) {
+                btn.classList.add('shake-effect');
+                showPopup("Vibração Visual (Shake): Ativado!");
+            } else {
+                btn.classList.remove('shake-effect');
+                showPopup("Vibração Visual (Shake): Desativado!");
+            }
+        });
+    });
+
+    // Glow Neon Extra
+    switchGlow.addEventListener('change', () => {
+        if (switchGlow.checked) {
+            body.classList.add('extra-glow');
+            showPopup("Glow Neon Extra: Ativado!");
+        } else {
+            body.classList.remove('extra-glow');
+            showPopup("Glow Neon Extra: Desativado!");
+        }
+    });
+    // Aplica o estado inicial do glow
+    if (switchGlow.checked) body.classList.add('extra-glow');
+
+
+    // ==============================================
+    // 6. Rodapé Dinâmico (Relógio e FPS Simulado)
+    // ==============================================
+    
+    /**
+     * Atualiza o horário e simula o FPS no rodapé.
+     */
+    const updateFooter = () => {
+        // Horário
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('pt-BR');
+        footerTime.textContent = `Horário: ${timeString}`;
+
+        // FPS Simulado (Apenas visual, sem medição real)
+        const simulatedFPS = Math.floor(58 + Math.random() * 5); // 58 a 62
+        footerFPS.textContent = `FPS Simulado: ${simulatedFPS}`;
+    };
+
+    // Atualiza imediatamente e depois a cada segundo
+    updateFooter();
+    setInterval(updateFooter, 1000);
+});
