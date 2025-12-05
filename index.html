@@ -32,18 +32,11 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         
-        /* 3. EFEITO MÁQUINA DE ESCREVER (AJUSTADO PARA ESTABILIDADE) */
-        @keyframes blink-cursor {
-            50% { border-right-color: transparent; }
-        }
-        
-        .typing-text {
-            border-right: 2px solid var(--neon-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            /* CORREÇÃO APLICADA: Min-height garantido para 1 linha */
-            min-height: 1.5rem; 
-            animation: blink-cursor 0.75s step-end infinite;
+        /* 3. CLASSE DE TEXTO ESTÁVEL (ANTIGA .typing-text REMOVIDA) */
+        .stable-status-text {
+            /* CORREÇÃO APLICADA: Força múltiplas linhas e garante altura mínima. */
+            min-height: 2.5rem; /* Aumentado para garantir 2 linhas completas */
+            white-space: normal;
         }
 
         .section-enter-animation {
@@ -341,7 +334,7 @@
                 <div id="section-optimization" class="hud-card p-6 rounded-xl section-simulation-panel border-l-4 border-neon-primary">
                     <h4 class="text-xl font-bold mb-4 text-neon-primary">STATUS > OTIMIZAÇÃO_NÚCLEO</h4>
                     <div id="optimization-simulation" class="text-lg font-mono space-y-3 terminal-mono p-0 bg-transparent">
-                        <div id="opt-status-text" class="typing-text h-6"></div>
+                        <div id="opt-status-text" class="stable-status-text"></div>
                         <div class="grid grid-cols-2 gap-4 text-sm pt-2 border-t border-neon-secondary/20">
                             <p>FPS ATUAL: <span id="fps-counter" class="text-3xl text-neon-secondary neon-glow font-bold">30</span></p>
                             <p class="text-right">CARGA CPU: <span class="text-green-400">0.8%</span> | RAM: <span class="text-yellow-400">75%</span></p>
@@ -355,7 +348,7 @@
                 <div id="section-aimguide" class="hud-card p-6 rounded-xl section-simulation-panel border-l-4 border-neon-secondary">
                     <h4 class="text-xl font-bold mb-4 text-neon-primary">STATUS > ASSISTÊNCIA_MIRA</h4>
                     <div id="aimguide-simulation" class="text-center p-6 space-y-4 terminal-mono p-0 bg-transparent">
-                        <div id="aim-status-text" class="text-xl typing-text h-6 mx-auto"></div>
+                        <div id="aim-status-text" class="text-xl stable-status-text mx-auto"></div>
                         <div class="flex justify-center py-4">
                             <svg id="aim-reticle" class="w-24 h-24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <g class="reticle-spin">
@@ -375,7 +368,7 @@
                 <div id="section-precision" class="hud-card p-6 rounded-xl section-simulation-panel border-l-4 border-neon-primary">
                     <h4 class="text-xl font-bold mb-4 text-neon-primary">STATUS > ANTI_RECOIL</h4>
                     <div id="precision-simulation" class="text-lg font-mono space-y-3 terminal-mono p-0 bg-transparent">
-                        <div id="prec-status-text" class="typing-text h-6"></div>
+                        <div id="prec-status-text" class="stable-status-text"></div>
                         <div class="grid grid-cols-2 gap-4 text-sm pt-2 border-t border-neon-secondary/20">
                             <p>DPI SELECIONADO: <span id="prec-value" class="text-3xl text-neon-secondary neon-glow font-bold">50%</span></p>
                             <div class="text-right">
@@ -421,35 +414,14 @@
             AimPrecisionPercentage: 50,
         };
 
-        // --- FUNÇÃO CENTRAL: EFEITO MÁQUINA DE ESCREVER (TYPEWRITER) ---
-        function typeWriterEffect(element, text, speed = 25) {
-            return new Promise(resolve => {
-                element.textContent = ''; // Limpa o conteúdo antes de começar
-                element.classList.add('typing-text');
-                let i = 0;
-                
-                const typeInterval = setInterval(() => {
-                    if (i < text.length) {
-                        element.textContent += text.charAt(i);
-                        i++;
-                    } else {
-                        clearInterval(typeInterval);
-                        element.classList.remove('typing-text'); 
-                        resolve();
-                    }
-                }, speed);
-
-                element.dataset.interval = typeInterval;
-            });
+        // --- FUNÇÃO CENTRAL: ATUALIZAÇÃO INSTANTÂNEA DE TEXTO ---
+        // A função de digitação foi removida. O texto é inserido de uma vez.
+        function updateStatusText(element, text) {
+            element.textContent = text;
         }
         
-        function clearTypingInterval(element) {
-            if (element && element.dataset.interval) {
-                clearInterval(element.dataset.interval);
-                element.classList.remove('typing-text');
-                // Mantém a altura fixa, mas limpa o texto
-                element.textContent = ''; 
-            }
+        function clearStatusText(element) {
+            element.textContent = '';
         }
 
 
@@ -471,7 +443,7 @@
             const progressBar = document.getElementById('opt-progress-fill');
             const fpsCounter = document.getElementById('fps-counter'); 
             
-            clearTypingInterval(statusTextElement);
+            clearStatusText(statusTextElement);
             progressBar.style.width = '0%';
             progressBar.classList.add('active'); 
             fpsCounter.textContent = '30'; 
@@ -487,10 +459,12 @@
             let accumulatedDelay = 0;
 
             for (const step of steps) {
+                // Aguarda o tempo necessário para sincronizar com o progresso
                 await new Promise(resolve => setTimeout(resolve, step.delay - accumulatedDelay));
                 accumulatedDelay = step.delay;
 
-                await typeWriterEffect(statusTextElement, step.text);
+                // Atualização instantânea do texto
+                updateStatusText(statusTextElement, step.text);
                 
                 progressBar.style.width = step.progress + '%';
                 fpsCounter.style.transition = 'text-shadow 0.3s, color 0.3s';
@@ -508,7 +482,7 @@
             const statusTextElement = document.getElementById('aim-status-text');
             const reticleElement = document.getElementById('aim-reticle');
             
-            clearTypingInterval(statusTextElement);
+            clearStatusText(statusTextElement);
             
             const spinGroup = reticleElement.querySelector('.reticle-spin');
             const pulseGroup = reticleElement.querySelector('.reticle-base');
@@ -520,18 +494,18 @@
             textElement.textContent = 'BUSCA...';
             textElement.setAttribute('fill', 'var(--neon-secondary)');
             
-            await typeWriterEffect(statusTextElement, 'PROCESSANDO | Iniciando varredura de sensibilidade...');
+            updateStatusText(statusTextElement, 'PROCESSANDO | Iniciando varredura de sensibilidade...');
             await new Promise(resolve => setTimeout(resolve, 1500));
             
             // FASE 2: Calibração Fina
-            await typeWriterEffect(statusTextElement, 'EXECUTANDO | Ajustando parâmetros de DPI e Sensibilidade (360°)...');
+            updateStatusText(statusTextElement, 'EXECUTANDO | Ajustando parâmetros de DPI e Sensibilidade (360°)...');
             spinGroup.style.animation = 'reticle-spin 1.5s linear infinite';
             pulseGroup.style.animation = 'reticle-pulse 1.2s ease-in-out infinite';
             textElement.textContent = 'CALIBRANDO';
             await new Promise(resolve => setTimeout(resolve, 3000));
             
             // FASE 3: Finalização e Bloqueio
-            await typeWriterEffect(statusTextElement, 'CONCLUÍDO | MIRA ASSISTIDA ATIVA! Sistema pronto para o jogo.');
+            updateStatusText(statusTextElement, 'CONCLUÍDO | MIRA ASSISTIDA ATIVA! Sistema pronto para o jogo.');
             spinGroup.style.animation = 'none';
             pulseGroup.style.animation = 'none';
             textElement.textContent = 'LOCK';
@@ -548,7 +522,7 @@
             const currentPrecision = document.getElementById('aim-precision-value').textContent; 
             
             // 1. Reset Visual
-            clearTypingInterval(statusTextElement);
+            clearStatusText(statusTextElement);
             progressBar.style.width = '0%';
             progressBar.classList.add('active'); 
             stabilizer.classList.add('animate-pulse'); 
@@ -566,13 +540,17 @@
             ];
             
             // 3. Execução sequencial
+            let accumulatedWait = 0;
             for (const step of simulationSteps) {
+                // Aguarda o tempo
+                await new Promise(resolve => setTimeout(resolve, step.wait));
+                
+                // Atualização instantânea do texto
+                updateStatusText(statusTextElement, step.text);
+
+                // Atualiza a barra de progresso e o visual do estabilizador
                 progressBar.style.width = step.progress + '%';
                 stabilizer.textContent = step.stabilizer;
-
-                await typeWriterEffect(statusTextElement, step.text);
-                
-                await new Promise(resolve => setTimeout(resolve, step.wait));
             }
             
             // 4. Finalização visual
@@ -616,6 +594,9 @@
             const sectionElement = document.getElementById(sectionId);
 
             if (sectionElement) {
+                const statusTextId = `${feature.toLowerCase().slice(0, 4)}-status-text`;
+                const statusTextElement = document.getElementById(statusTextId);
+
                 if (willBeActive) {
                     sectionElement.style.display = 'block';
                     sectionElement.classList.remove('section-enter-animation'); 
@@ -635,11 +616,10 @@
                     }
                 } else {
                     sectionElement.classList.remove('section-enter-animation');
-                    // Oculta a seção
                     sectionElement.style.display = 'none'; 
                     
-                    const statusTextId = `${feature.toLowerCase().slice(0, 4)}-status-text`;
-                    clearTypingInterval(document.getElementById(statusTextId));
+                    // Limpa o texto de status
+                    clearStatusText(statusTextElement);
                     
                     // Reset Visual
                     if (feature === 'Optimization' && document.getElementById('opt-progress-fill')) {
