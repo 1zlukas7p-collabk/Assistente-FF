@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assistente FF – Módulo de Calibração HUD V10</title>
-    <!-- Carrega Tailwind CSS para um design responsivo e moderno -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* ========================================================= */
@@ -33,17 +32,17 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         
-        /* 3. EFEITO MÁQUINA DE ESCREVER */
+        /* 3. EFEITO MÁQUINA DE ESCREVER (AJUSTADO PARA ESTABILIDADE) */
         @keyframes blink-cursor {
             50% { border-right-color: transparent; }
         }
         
-        /* CORREÇÃO VISUAL APLICADA AQUI: Garantindo estabilidade na digitação. */
         .typing-text {
             border-right: 2px solid var(--neon-secondary);
             white-space: nowrap;
             overflow: hidden;
-            min-height: 1.5rem; /* Garante altura estável */
+            /* CORREÇÃO APLICADA: Min-height garantido para 1 linha */
+            min-height: 1.5rem; 
             animation: blink-cursor 0.75s step-end infinite;
         }
 
@@ -56,17 +55,30 @@
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
+        /* Estilo da Barra de Progresso e Preenchimento */
+        .progress-bar {
+            height: 12px;
+            background-color: var(--bg-inactive);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            border-radius: 6px;
+        }
         .progress-fill.active {
             background: var(--neon-primary); 
             background-image: linear-gradient(
                 45deg, 
                 rgba(255, 255, 255, 0) 25%, 
-                rgba(255, 255, 255, 0.8) 50%, /* Scan line mais forte */
+                rgba(255, 255, 255, 0.8) 50%, 
                 rgba(255, 255, 255, 0) 75%
             );
             background-size: 200% 100%; 
             animation: progress-scan 2s linear infinite; 
-            box-shadow: 0 0 10px var(--neon-primary); /* Brilho mais forte */
+            box-shadow: 0 0 10px var(--neon-primary); 
         }
         
         /* 5. Estilo Básico do Corpo e Fundo */
@@ -77,7 +89,7 @@
             position: relative;
             z-index: 1; 
         }
-
+        
         /* 6. ESTILO DE CARTÃO DE DIAGNÓSTICO (HUD CONTAINER) */
         .hud-card {
             background-color: var(--bg-card);
@@ -118,7 +130,7 @@
             opacity: 0.5;
         }
 
-        /* 7. ESTILO DOS Toggles (MANTIDO) */
+        /* 7. ESTILO DOS Toggles */
         .modern-switch.active {
             background-color: var(--neon-secondary);
             animation: pulse-cyan 1.5s infinite alternate; 
@@ -151,7 +163,7 @@
             box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
         }
 
-        /* 8. Estilo do Slider (MANTIDO) */
+        /* 8. Estilo do Slider */
         #aim-precision-slider::-webkit-slider-thumb {
             box-shadow: 0 0 15px var(--neon-secondary), 0 0 5px var(--bg-dark);
         }
@@ -159,7 +171,7 @@
             box-shadow: 0 0 15px var(--neon-secondary), 0 0 5px var(--bg-dark);
         }
 
-        /* 9. Botão de Lançamento Reforçado (MANTIDO) */
+        /* 9. Botão de Lançamento Reforçado */
         .reinforced-button {
             border: 4px solid var(--neon-secondary);
             background: linear-gradient(45deg, var(--neon-primary) 0%, #ff00ff 100%);
@@ -180,13 +192,13 @@
             display: none;
         }
         
-        /* Outros estilos de Slider e Fundo (MANTIDO) */
+        /* Outros estilos de Slider e Fundo */
         .neon-glow {
             text-shadow: 0 0 10px var(--neon-primary), 0 0 30px var(--neon-secondary);
         }
         #video-background {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; opacity: 0.3; pointer-events: none; 
-            transition: opacity 0.5s ease-in-out; display: block; 
+            transition: opacity 0.5s ease-in-out; display: block; filter: brightness(0.7) blur(2px);
         }
         #video-background iframe {
             width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -199,6 +211,44 @@
         }
         #aim-precision-slider::-moz-range-thumb {
             width: 25px; height: 25px; border-radius: 50%; background: var(--neon-secondary); cursor: pointer; box-shadow: 0 0 10px var(--neon-secondary); border: 3px solid var(--bg-dark);
+        }
+
+        /* ========================================================= */
+        /* ADIÇÕES CRUCIAIS PARA AS ANIMAÇÕES JS (Retículo e Estabilizador) */
+        /* ========================================================= */
+
+        /* 11. ANIMAÇÃO DO RETÍCULO SVG (Calibração de Mira) */
+        @keyframes reticle-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes reticle-pulse {
+            0% { transform: scale(1); opacity: 0.9; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.9; }
+        }
+        .reticle-spin {
+            animation: reticle-spin linear infinite;
+            transform-origin: 50px 50px;
+        }
+        .reticle-base {
+            animation: reticle-pulse ease-in-out infinite;
+            transform-origin: 50px 50px;
+        }
+
+        /* 12. ESTILO PARA O ESTABILIZADOR (ANTI-RECOIL) */
+        @keyframes flicker {
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
+                opacity: 0.99;
+                text-shadow: 0 0 5px var(--neon-secondary);
+            }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
+                opacity: 0.4;
+                text-shadow: none;
+            }
+        }
+        #recoil-stabilizer.neon-glow {
+            animation: flicker 4s infinite;
         }
 
     </style>
@@ -221,7 +271,6 @@
 </head>
 <body class="futuristic-theme min-h-screen font-sans p-4 md:p-8" id="main-body">
     
-    <!-- Fundo de Vídeo (MANTIDO) -->
     <div id="video-background">
         <iframe 
             src="https://www.youtube.com/embed/1eX7l3V9xRw?autoplay=1&mute=1&loop=1&playlist=1eX7l3V9xRw&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&start=20"
@@ -231,10 +280,8 @@
         </iframe>
     </div>
 
-    <!-- Container Principal Responsivo -->
     <div class="max-w-7xl mx-auto space-y-8 relative z-10">
 
-        <!-- Header - Título e Status Bar -->
         <header class="text-center pt-6 pb-4 md:pt-10">
             <h1 class="text-6xl md:text-7xl font-black tracking-tighter uppercase neon-glow text-neon-primary transition-all duration-500" id="main-title">
                 Assistente FF
@@ -242,38 +289,31 @@
             <h2 class="text-2xl md:text-3xl font-light text-neon-secondary mt-2 transition-all duration-500">
                 Módulo Cyber-Calibração V2.0 | Status: <span class="text-green-400 font-bold">ONLINE</span>
             </h2>
-            <!-- Mensagem de Instrução em Barra de Comando -->
             <p class="mt-4 text-base text-gray-200 max-w-4xl mx-auto hud-card py-3 px-6 rounded-xl transition-all duration-500 border-none shadow-xl">
                 SYSTEM_LOG 001: Clique nos controles para iniciar o diagnóstico e otimizar. 🛠️
             </p>
         </header>
 
-        <!-- LAYOUT DE PAINEL DUPLO -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            <!-- COLUNA 1: CONTROLES (Painel Esquerdo - Fixo) -->
             <div class="md:col-span-1 space-y-8">
                 <section class="hud-card p-6 md:p-8 rounded-2xl space-y-8">
                     <h3 class="text-3xl font-bold text-neon-primary border-b border-neon-primary/30 pb-3">
                         <span class="text-neon-secondary">//</span> Painel de Controle
                     </h3>
 
-                    <!-- Toggles Modernos (Stack) -->
                     <div class="space-y-6"> 
                         
-                        <!-- Toggle Otimização do Celular -->
                         <div class="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg border-l-4 border-neon-primary/50 hover:border-neon-secondary transition">
                             <label class="text-lg font-medium text-gray-100">OTIMIZAÇÃO DE FPS</label>
                             <div id="toggle-optimization" class="modern-switch" onclick="toggleFeature('Optimization')"></div>
                         </div>
 
-                        <!-- Toggle Calibração de Mira -->
                         <div class="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg border-l-4 border-neon-primary/50 hover:border-neon-secondary transition">
                             <label class="text-lg font-medium text-gray-100">ASSISTÊNCIA DE MIRA</label>
                             <div id="toggle-aimguide" class="modern-switch" onclick="toggleFeature('AimGuide')"></div>
                         </div>
 
-                        <!-- Toggle Ajustes de Precisão -->
                         <div class="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg border-l-4 border-neon-primary/50 hover:border-neon-secondary transition">
                             <label class="text-lg font-medium text-gray-100">ANTI-RECOIL AVANÇADO</label>
                             <div id="toggle-precision" class="modern-switch" onclick="toggleFeature('Precision')"></div>
@@ -282,7 +322,6 @@
                     </div>
                 </section>
                 
-                <!-- Slider (Módulo Separado para Destaque) -->
                 <section class="hud-card p-6 md:p-8 rounded-2xl space-y-4 border-neon-secondary">
                     <label for="aim-precision-slider" class="text-xl font-bold text-neon-secondary flex justify-between items-center border-b border-neon-secondary/50 pb-2">
                         <span>SELETOR DE SENSIBILIDADE (DPI)</span>
@@ -293,19 +332,16 @@
             </div>
 
 
-            <!-- COLUNA 2: DIAGNÓSTICO E SIMULAÇÕES (Painel Direito - Dinâmico) -->
             <div class="md:col-span-2 space-y-6">
                 
                 <h3 class="text-3xl font-bold text-neon-primary border-b border-neon-primary/30 pb-3">
                     <span class="text-neon-secondary">//</span> Diagnóstico em Tempo Real
                 </h3>
 
-                <!-- 1. Otimização do Celular (Simulação com FPS Monitor) -->
                 <div id="section-optimization" class="hud-card p-6 rounded-xl section-simulation-panel border-l-4 border-neon-primary">
                     <h4 class="text-xl font-bold mb-4 text-neon-primary">STATUS > OTIMIZAÇÃO_NÚCLEO</h4>
                     <div id="optimization-simulation" class="text-lg font-mono space-y-3 terminal-mono p-0 bg-transparent">
                         <div id="opt-status-text" class="typing-text h-6"></div>
-                        <!-- Monitor de FPS -->
                         <div class="grid grid-cols-2 gap-4 text-sm pt-2 border-t border-neon-secondary/20">
                             <p>FPS ATUAL: <span id="fps-counter" class="text-3xl text-neon-secondary neon-glow font-bold">30</span></p>
                             <p class="text-right">CARGA CPU: <span class="text-green-400">0.8%</span> | RAM: <span class="text-yellow-400">75%</span></p>
@@ -316,39 +352,30 @@
                     </div>
                 </div>
 
-                <!-- 2. Calibração de Mira (Simulação com Retículo Animado) -->
                 <div id="section-aimguide" class="hud-card p-6 rounded-xl section-simulation-panel border-l-4 border-neon-secondary">
                     <h4 class="text-xl font-bold mb-4 text-neon-primary">STATUS > ASSISTÊNCIA_MIRA</h4>
                     <div id="aimguide-simulation" class="text-center p-6 space-y-4 terminal-mono p-0 bg-transparent">
                         <div id="aim-status-text" class="text-xl typing-text h-6 mx-auto"></div>
-                        <!-- Retículo de Calibração em SVG -->
                         <div class="flex justify-center py-4">
                             <svg id="aim-reticle" class="w-24 h-24" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Círculo Externo (Spinning) -->
                                 <g class="reticle-spin">
                                     <circle cx="50" cy="50" r="45" stroke="var(--neon-primary)" stroke-width="2" stroke-dasharray="10 5" stroke-opacity="0.7"/>
                                 </g>
-                                <!-- Centro e Pulse -->
                                 <g class="reticle-base" transform="translate(50, 50) scale(1) translate(-50, -50)">
-                                    <!-- Crosshair -->
                                     <line x1="10" y1="50" x2="90" y2="50" stroke="var(--neon-secondary)" stroke-width="2"/>
                                     <line x1="50" y1="10" x2="50" y2="90" stroke="var(--neon-secondary)" stroke-width="2"/>
-                                    <!-- Ponto Central -->
                                     <circle cx="50" cy="50" r="5" fill="var(--neon-secondary)"/>
                                 </g>
-                                <!-- Texto "CALIBRANDO" -->
                                 <text x="50" y="55" font-size="8" text-anchor="middle" fill="var(--neon-secondary)" font-family="Consolas, Monospace">BUSCA...</text>
                             </svg>
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. Ajustes de Precisão (Simulação com Estabilizador) -->
                 <div id="section-precision" class="hud-card p-6 rounded-xl section-simulation-panel border-l-4 border-neon-primary">
                     <h4 class="text-xl font-bold mb-4 text-neon-primary">STATUS > ANTI_RECOIL</h4>
                     <div id="precision-simulation" class="text-lg font-mono space-y-3 terminal-mono p-0 bg-transparent">
                         <div id="prec-status-text" class="typing-text h-6"></div>
-                        <!-- Estabilizador de Recoil -->
                         <div class="grid grid-cols-2 gap-4 text-sm pt-2 border-t border-neon-secondary/20">
                             <p>DPI SELECIONADO: <span id="prec-value" class="text-3xl text-neon-secondary neon-glow font-bold">50%</span></p>
                             <div class="text-right">
@@ -367,9 +394,7 @@
             </div>
         </div>
 
-        <!-- Botão Abrir Free Fire (REFORÇADO) -->
         <div id="section-gamebutton" class="py-10 flex justify-center">
-            <!-- BOTÃO REDIMENSIONADO: px-8 py-4 (menor) e texto ajustado para ser responsivo -->
             <button id="ff-launch-button"
                onclick="openFreeFireApp()"
                class="px-8 py-4 rounded-xl text-xl md:text-2xl font-extrabold uppercase transition duration-300 reinforced-button text-white">
@@ -377,14 +402,12 @@
             </button>
         </div>
 
-        <!-- Rodapé Profissional -->
         <footer class="text-center py-8 border-t border-neon-primary/20 mt-10 text-gray-500 text-sm">
             <p>Módulo de Calibração **HFR-42** | Versão **V10.0** | &copy; 2025 Assistente FF.</p>
         </footer>
 
     </div>
 
-    <!-- JavaScript para a Lógica dos Toggles e Simulações -->
     <script>
         // Elementos do novo slider
         const slider = document.getElementById('aim-precision-slider');
@@ -424,9 +447,8 @@
             if (element && element.dataset.interval) {
                 clearInterval(element.dataset.interval);
                 element.classList.remove('typing-text');
+                // Mantém a altura fixa, mas limpa o texto
                 element.textContent = ''; 
-                // Garante que o elemento está resetado (limpando qualquer estilo dinâmico)
-                element.style.width = ''; 
             }
         }
 
@@ -471,12 +493,10 @@
                 await typeWriterEffect(statusTextElement, step.text);
                 
                 progressBar.style.width = step.progress + '%';
-                // Efeito visual suave no contador de FPS
                 fpsCounter.style.transition = 'text-shadow 0.3s, color 0.3s';
                 fpsCounter.textContent = step.fps; 
                 fpsCounter.classList.add('neon-glow');
                 
-                // Remove o brilho depois de um breve momento
                 setTimeout(() => fpsCounter.classList.remove('neon-glow'), 150);
             }
 
@@ -495,8 +515,8 @@
             const textElement = reticleElement.querySelector('text');
 
             // FASE 1: Rotação Rápida e Busca
-            spinGroup.style.animationDuration = '0.5s';
-            pulseGroup.style.animationDuration = '0.5s';
+            spinGroup.style.animation = 'reticle-spin 0.5s linear infinite';
+            pulseGroup.style.animation = 'reticle-pulse 0.5s ease-in-out infinite';
             textElement.textContent = 'BUSCA...';
             textElement.setAttribute('fill', 'var(--neon-secondary)');
             
@@ -505,8 +525,8 @@
             
             // FASE 2: Calibração Fina
             await typeWriterEffect(statusTextElement, 'EXECUTANDO | Ajustando parâmetros de DPI e Sensibilidade (360°)...');
-            spinGroup.style.animationDuration = '1.5s';
-            pulseGroup.style.animationDuration = '1.2s';
+            spinGroup.style.animation = 'reticle-spin 1.5s linear infinite';
+            pulseGroup.style.animation = 'reticle-pulse 1.2s ease-in-out infinite';
             textElement.textContent = 'CALIBRANDO';
             await new Promise(resolve => setTimeout(resolve, 3000));
             
@@ -525,7 +545,6 @@
             const stabilizer = document.getElementById('recoil-stabilizer'); 
             const precValueDisplay = document.getElementById('prec-value');
             
-            // Pega o valor atual do slider para a simulação
             const currentPrecision = document.getElementById('aim-precision-value').textContent; 
             
             // 1. Reset Visual
@@ -535,32 +554,24 @@
             stabilizer.classList.add('animate-pulse'); 
             stabilizer.classList.remove('neon-glow');
             stabilizer.textContent = '[ | | ]'; 
-            precValueDisplay.textContent = currentPrecision; // Exibe o valor do slider
+            precValueDisplay.textContent = currentPrecision; 
             
             // 2. Definição dos passos sequenciais
             const simulationSteps = [
-                // Inicialização
                 { text: `PROCESSANDO | Analisando o controle de Recoil para: ${currentPrecision}`, progress: 0, stabilizer: '[ | | ]', wait: 500 },
-                // Fase 1
                 { text: 'EXECUTANDO | Inicializando algoritmo Anti-Recoil (Fase 1/3)...', progress: 30, stabilizer: '[ > < ]', wait: 1500 },
-                // Fase 2
                 { text: 'EXECUTANDO | Análise de Dispersão de Projéteis em tempo real...', progress: 60, stabilizer: '[ > | < ]', wait: 1500 },
-                // Fase 3
                 { text: 'EXECUTANDO | Configurando estabilidade do giroscópio (Anti-Vibração)...', progress: 90, stabilizer: '[ | | ]', wait: 1000 },
-                // Finalização
                 { text: `CONCLUÍDO | Ajustes Finais executados. Recoil otimizado em ${currentPrecision}.`, progress: 100, stabilizer: '[ LOCK ]', wait: 0 },
             ];
             
             // 3. Execução sequencial
             for (const step of simulationSteps) {
-                // 3a. Atualiza a barra de progresso e o visual do estabilizador
                 progressBar.style.width = step.progress + '%';
                 stabilizer.textContent = step.stabilizer;
 
-                // 3b. Aguarda a digitação completa do texto (garante sincronia)
                 await typeWriterEffect(statusTextElement, step.text);
                 
-                // 3c. Aguarda o tempo de espera antes do próximo passo
                 await new Promise(resolve => setTimeout(resolve, step.wait));
             }
             
@@ -575,7 +586,6 @@
 
         function updateSliderVisual(value) {
             const percentage = value + '%';
-            // Garante que o slider também use o gradiente principal (Roxo/Ciano)
             slider.style.background = `linear-gradient(to right, var(--neon-secondary) ${percentage}, var(--bg-inactive) ${percentage})`;
         }
 
@@ -583,7 +593,6 @@
             appState.AimPrecisionPercentage = parseInt(value);
             valueDisplay.textContent = `${appState.AimPrecisionPercentage}%`;
             
-            // Atualiza o valor também na seção de precisão se ela estiver ativa
             const precValueDisplay = document.getElementById('prec-value');
             if(precValueDisplay) {
                 precValueDisplay.textContent = `${appState.AimPrecisionPercentage}%`;
@@ -593,8 +602,6 @@
         }
 
         function toggleFeature(feature) {
-            // Se a funcionalidade já estava ativa, a próxima ação é desativar.
-            // Se a funcionalidade estava inativa, a próxima ação é ativar.
             const willBeActive = !appState[feature]; 
             appState[feature] = willBeActive;
 
@@ -610,9 +617,7 @@
 
             if (sectionElement) {
                 if (willBeActive) {
-                    // ATIVAR: Mostra a seção e inicia a simulação
                     sectionElement.style.display = 'block';
-                    // Re-roda a animação de entrada (só visual)
                     sectionElement.classList.remove('section-enter-animation'); 
                     void sectionElement.offsetWidth;
                     sectionElement.classList.add('section-enter-animation');
@@ -629,15 +634,14 @@
                             break;
                     }
                 } else {
-                    // DESATIVAR: Esconde a seção e limpa o estado
                     sectionElement.classList.remove('section-enter-animation');
-                    // Oculta a seção imediatamente
+                    // Oculta a seção
                     sectionElement.style.display = 'none'; 
                     
-                    const statusTextId = `${feature.toLowerCase()}-status-text`;
+                    const statusTextId = `${feature.toLowerCase().slice(0, 4)}-status-text`;
                     clearTypingInterval(document.getElementById(statusTextId));
                     
-                    // Lógica para resetar visuais
+                    // Reset Visual
                     if (feature === 'Optimization' && document.getElementById('opt-progress-fill')) {
                          document.getElementById('opt-progress-fill').classList.remove('active');
                          document.getElementById('fps-counter').textContent = '30';
@@ -653,7 +657,7 @@
                         const reticleElement = document.getElementById('aim-reticle');
                         reticleElement.querySelector('.reticle-spin').style.animation = 'none';
                         reticleElement.querySelector('.reticle-base').style.animation = 'none';
-                        reticleElement.querySelector('text').textContent = 'BUSCA...'; // Volta ao texto inicial
+                        reticleElement.querySelector('text').textContent = 'BUSCA...'; 
                         reticleElement.querySelector('text').setAttribute('fill', 'var(--neon-secondary)');
                     }
                 }
@@ -671,4 +675,3 @@
     </script>
 </body>
 </html>
-
