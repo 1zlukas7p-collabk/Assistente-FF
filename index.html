@@ -20,6 +20,66 @@
             --border-glow: 1px solid var(--neon-primary); /* Borda primária */
         }
 
+        /* ========================================================= */
+        /* ESTILOS DE LOGIN (CYBERPUNK) */
+        /* ========================================================= */
+        .login-screen-container {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .login-box {
+            width: 90%;
+            max-width: 450px;
+            padding: 2.5rem;
+            border: 3px solid var(--neon-secondary);
+            box-shadow: 0 0 40px var(--neon-primary), inset 0 0 10px var(--neon-secondary);
+            background-color: var(--bg-card);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+        }
+        #key-input {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--bg-dark);
+            border: 2px solid var(--neon-primary);
+            color: var(--neon-secondary);
+            font-size: 1.25rem;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 10px rgba(161, 0, 255, 0.4);
+            outline: none;
+        }
+        #key-input:focus {
+            border-color: var(--neon-secondary);
+            box-shadow: 0 0 15px var(--neon-secondary);
+        }
+        .key-submit-button {
+            background: var(--neon-secondary);
+            color: var(--bg-dark);
+            font-weight: bold;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+            border: none;
+        }
+        .key-submit-button:hover {
+            box-shadow: 0 0 20px var(--neon-secondary);
+            transform: scale(1.05);
+        }
+        .error-message {
+            color: #ff3366; /* Cor de erro vibrante */
+            text-shadow: 0 0 5px rgba(255, 51, 102, 0.8);
+            margin-top: 1rem;
+        }
+
+
+        /* ========================================================= */
+        /* ESTILOS DO PAINEL EXISTENTE */
+        /* ========================================================= */
         /* 1. Efeito de Animação de Brilho (Toggles e Botão) */
         @keyframes pulse-cyan {
             from { box-shadow: 0 0 5px var(--neon-secondary), 0 0 10px var(--neon-secondary); }
@@ -32,12 +92,11 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         
-        /* 3. CLASSE DE TEXTO ESTÁVEL (CORRIGIDO PARA MÚLTIPLAS LINHAS) */
+        /* 3. CLASSE DE TEXTO ESTÁVEL (REFINADO) */
         .stable-status-text {
-            /* Mínimo de altura para evitar que o texto quebrado empurre o layout para baixo. */
-            min-height: 3.5rem; /* Altura aumentada para suportar 3-4 linhas em telas pequenas */
-            white-space: normal; /* Permite que o texto quebre normalmente */
-            display: flex; /* Ajuda a centralizar verticalmente quando há apenas 1 linha */
+            min-height: 2.5rem; /* Altura mínima para 2 linhas */
+            white-space: normal;
+            display: flex; /* Garante alinhamento vertical */
             align-items: center; 
         }
 
@@ -45,24 +104,13 @@
             animation: section-boot-up 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
         }
         
-        /* 4. ANIMAÇÃO DA BARRA DE PROGRESSO (SCAN LINE) */
+        /* 4. ANIMAÇÃO DA BARRA DE PROGRESSO */
         @keyframes progress-scan {
             0% { background-position: -200% 0; }
             100% { background-position: 200% 0; }
         }
-        /* Estilo da Barra de Progresso e Preenchimento */
-        .progress-bar {
-            height: 12px;
-            background-color: var(--bg-inactive);
-            border-radius: 6px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            border-radius: 6px;
-        }
+        .progress-bar { height: 12px; background-color: var(--bg-inactive); border-radius: 6px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; transition: width 0.4s cubic-bezier(0.23, 1, 0.32, 1); border-radius: 6px; }
         .progress-fill.active {
             background: var(--neon-primary); 
             background-image: linear-gradient(
@@ -77,13 +125,7 @@
         }
         
         /* 5. Estilo Básico do Corpo e Fundo */
-        .futuristic-theme {
-            background-color: var(--bg-dark);
-            color: #e0f7fa; 
-            font-family: 'Inter', sans-serif;
-            position: relative;
-            z-index: 1; 
-        }
+        .futuristic-theme { background-color: var(--bg-dark); color: #e0f7fa; font-family: 'Inter', sans-serif; position: relative; z-index: 1; }
         
         /* 6. ESTILO DE CARTÃO DE DIAGNÓSTICO (HUD CONTAINER) */
         .hud-card {
@@ -96,75 +138,19 @@
             overflow: hidden;
             border-radius: 16px;
         }
-        
         /* Efeito de corte nos cantos (simulado por pseudo-elementos) */
-        .hud-card::before, .hud-card::after {
-            content: '';
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            border: 2px solid var(--neon-secondary);
-            z-index: 10;
-        }
-        /* Canto Superior Esquerdo */
-        .hud-card::before {
-            top: -2px;
-            left: -2px;
-            border-right: none;
-            border-bottom: none;
-            transform: skewX(-15deg); 
-            opacity: 0.5;
-        }
-        /* Canto Inferior Direito */
-        .hud-card::after {
-            bottom: -2px;
-            right: -2px;
-            border-left: none;
-            border-top: none;
-            transform: skewX(-15deg);
-            opacity: 0.5;
-        }
+        .hud-card::before, .hud-card::after { content: ''; position: absolute; width: 30px; height: 30px; border: 2px solid var(--neon-secondary); z-index: 10; }
+        .hud-card::before { top: -2px; left: -2px; border-right: none; border-bottom: none; transform: skewX(-15deg); opacity: 0.5; }
+        .hud-card::after { bottom: -2px; right: -2px; border-left: none; border-top: none; transform: skewX(-15deg); opacity: 0.5; }
 
         /* 7. ESTILO DOS Toggles */
-        .modern-switch.active {
-            background-color: var(--neon-secondary);
-            animation: pulse-cyan 1.5s infinite alternate; 
-        }
-        .modern-switch.active:before {
-            transform: translateX(30px);
-            background-color: var(--neon-primary); 
-            box-shadow: 0 0 10px var(--neon-primary);
-        }
-        .modern-switch {
-            width: 60px;
-            height: 30px;
-            background-color: var(--bg-inactive);
-            border-radius: 9999px;
-            position: relative;
-            cursor: pointer;
-            transition: background-color 0.3s, box-shadow 0.3s;
-            border: 2px solid var(--neon-primary)/20; 
-        }
-        .modern-switch:before {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 20px; 
-            height: 20px;
-            background-color: #e0f7fa;
-            border-radius: 50%;
-            transition: transform 0.3s, background-color 0.3s;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-        }
+        .modern-switch { width: 60px; height: 30px; background-color: var(--bg-inactive); border-radius: 9999px; position: relative; cursor: pointer; transition: background-color 0.3s, box-shadow 0.3s; border: 2px solid var(--neon-primary)/20; }
+        .modern-switch:before { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background-color: #e0f7fa; border-radius: 50%; transition: transform 0.3s, background-color 0.3s; box-shadow: 0 0 5px rgba(0, 0, 0, 0.5); }
+        .modern-switch.active { background-color: var(--neon-secondary); animation: pulse-cyan 1.5s infinite alternate; }
+        .modern-switch.active:before { transform: translateX(30px); background-color: var(--neon-primary); box-shadow: 0 0 10px var(--neon-primary); }
 
         /* 8. Estilo do Slider */
-        #aim-precision-slider::-webkit-slider-thumb {
-            box-shadow: 0 0 15px var(--neon-secondary), 0 0 5px var(--bg-dark);
-        }
-        #aim-precision-slider::-moz-range-thumb {
-            box-shadow: 0 0 15px var(--neon-secondary), 0 0 5px var(--bg-dark);
-        }
+        /* Mantido inalterado */
 
         /* 9. Botão de Lançamento Reforçado */
         .reinforced-button {
@@ -183,66 +169,35 @@
         }
         
         /* 10. ESCONDE AS SEÇÕES DE SIMULAÇÃO POR PADRÃO */
-        .section-simulation-panel {
-            display: none;
-        }
+        .section-simulation-panel { display: none; }
         
-        /* Outros estilos de Slider e Fundo */
-        .neon-glow {
-            text-shadow: 0 0 10px var(--neon-primary), 0 0 30px var(--neon-secondary);
-        }
-        #video-background {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; opacity: 0.3; pointer-events: none; 
-            transition: opacity 0.5s ease-in-out; display: block; filter: brightness(0.7) blur(2px);
-        }
-        #video-background iframe {
-            width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        }
-        #aim-precision-slider {
-            -webkit-appearance: none; appearance: none; width: 100%; height: 10px; border-radius: 5px; outline: none; opacity: 0.9; transition: opacity .2s; background: var(--bg-inactive);
-        }
-        #aim-precision-slider::-webkit-slider-thumb {
-            -webkit-appearance: none; appearance: none; width: 25px; height: 25px; border-radius: 50%; background: var(--neon-secondary); cursor: pointer; box-shadow: 0 0 10px var(--neon-secondary); border: 3px solid var(--bg-dark); 
-        }
-        #aim-precision-slider::-moz-range-thumb {
-            width: 25px; height: 25px; border-radius: 50%; background: var(--neon-secondary); cursor: pointer; box-shadow: 0 0 10px var(--neon-secondary); border: 3px solid var(--bg-dark);
-        }
+        /* Outros estilos de Slider e Fundo (mantidos inalterados) */
+        .neon-glow { text-shadow: 0 0 10px var(--neon-primary), 0 0 30px var(--neon-secondary); }
+        #video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; opacity: 0.3; pointer-events: none; transition: opacity 0.5s ease-in-out; display: block; filter: brightness(0.7) blur(2px); }
+        #video-background iframe { width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        #aim-precision-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 10px; border-radius: 5px; outline: none; opacity: 0.9; transition: opacity .2s; background: var(--bg-inactive); }
+        #aim-precision-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 25px; height: 25px; border-radius: 50%; background: var(--neon-secondary); cursor: pointer; box-shadow: 0 0 10px var(--neon-secondary); border: 3px solid var(--bg-dark); }
+        #aim-precision-slider::-moz-range-thumb { width: 25px; height: 25px; border-radius: 50%; background: var(--neon-secondary); cursor: pointer; box-shadow: 0 0 10px var(--neon-secondary); border: 3px solid var(--bg-dark); }
 
         /* ========================================================= */
         /* ANIMAÇÕES DO RETÍCULO E ESTABILIZADOR */
         /* ========================================================= */
-
-        @keyframes reticle-spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        @keyframes reticle-pulse {
-            0% { transform: scale(1); opacity: 0.9; }
-            50% { transform: scale(1.1); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.9; }
-        }
-        .reticle-spin {
-            animation: reticle-spin linear infinite;
-            transform-origin: 50px 50px;
-        }
-        .reticle-base {
-            animation: reticle-pulse ease-in-out infinite;
-            transform-origin: 50px 50px;
-        }
+        @keyframes reticle-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes reticle-pulse { 0% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.1); opacity: 1; } 100% { transform: scale(1); opacity: 0.9; } }
+        .reticle-spin { animation: reticle-spin linear infinite; transform-origin: 50px 50px; }
+        .reticle-base { animation: reticle-pulse ease-in-out infinite; transform-origin: 50px 50px; }
 
         @keyframes flicker {
-            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
-                opacity: 0.99;
-                text-shadow: 0 0 5px var(--neon-secondary);
-            }
-            20%, 21.999%, 63%, 63.999%, 65%, 69.999% {
-                opacity: 0.4;
-                text-shadow: none;
-            }
+            0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 0.99; text-shadow: 0 0 5px var(--neon-secondary); }
+            20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.4; text-shadow: none; }
         }
-        #recoil-stabilizer.neon-glow {
-            animation: flicker 4s infinite;
-        }
+        #recoil-stabilizer.neon-glow { animation: flicker 4s infinite; }
+        
+        /* Classe para esconder visualmente, mas manter acessível (Tailwind sr-only) */
+        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+        
+        /* Esconder o painel principal por padrão */
+        #main-hud-panel { display: none; }
 
     </style>
     <script>
@@ -273,7 +228,27 @@
         </iframe>
     </div>
 
-    <div class="max-w-7xl mx-auto space-y-8 relative z-10">
+    <div id="login-screen" class="login-screen-container">
+        <div class="login-box">
+            <h1 class="text-4xl md:text-5xl font-black tracking-tighter uppercase neon-glow text-neon-primary mb-6">
+                Acesso_Autorizado
+            </h1>
+            <h2 class="text-xl text-neon-secondary mb-8 font-light">
+                Insira sua chave de acesso (Key) para iniciar o módulo.
+            </h2>
+
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <input type="text" id="key-input" placeholder="ACCESS-KEY-XXXX-YYYY" required maxlength="30">
+                <button type="submit" class="key-submit-button text-2xl">
+                    <span id="login-text">EXECUTAR LOGIN</span>
+                </button>
+            </form>
+
+            <p id="login-error-message" class="error-message"></p>
+        </div>
+    </div>
+
+    <div id="main-hud-panel" class="max-w-7xl mx-auto space-y-8 relative z-10">
 
         <header class="text-center pt-6 pb-4 md:pt-10">
             <h1 class="text-6xl md:text-7xl font-black tracking-tighter uppercase neon-glow text-neon-primary transition-all duration-500" id="main-title">
@@ -298,18 +273,21 @@
                     <div class="space-y-6"> 
                         
                         <div class="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg border-l-4 border-neon-primary/50 hover:border-neon-secondary transition">
-                            <label class="text-lg font-medium text-gray-100">OTIMIZAÇÃO DE FPS</label>
-                            <div id="toggle-optimization" class="modern-switch" onclick="toggleFeature('Optimization')"></div>
+                            <label for="toggle-optimization-input" class="text-lg font-medium text-gray-100">OTIMIZAÇÃO DE FPS</label>
+                            <input type="checkbox" id="toggle-optimization-input" class="sr-only" onchange="toggleFeature('Optimization')"> 
+                            <div id="toggle-optimization" class="modern-switch" role="switch" aria-checked="false" aria-labelledby="toggle-optimization-input" onclick="document.getElementById('toggle-optimization-input').click()"></div>
                         </div>
 
                         <div class="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg border-l-4 border-neon-primary/50 hover:border-neon-secondary transition">
-                            <label class="text-lg font-medium text-gray-100">ASSISTÊNCIA DE MIRA</label>
-                            <div id="toggle-aimguide" class="modern-switch" onclick="toggleFeature('AimGuide')"></div>
+                            <label for="toggle-aimguide-input" class="text-lg font-medium text-gray-100">ASSISTÊNCIA DE MIRA</label>
+                            <input type="checkbox" id="toggle-aimguide-input" class="sr-only" onchange="toggleFeature('AimGuide')">
+                            <div id="toggle-aimguide" class="modern-switch" role="switch" aria-checked="false" aria-labelledby="toggle-aimguide-input" onclick="document.getElementById('toggle-aimguide-input').click()"></div>
                         </div>
 
                         <div class="flex items-center justify-between p-3 bg-gray-900/40 rounded-lg border-l-4 border-neon-primary/50 hover:border-neon-secondary transition">
-                            <label class="text-lg font-medium text-gray-100">ANTI-RECOIL AVANÇADO</label>
-                            <div id="toggle-precision" class="modern-switch" onclick="toggleFeature('Precision')"></div>
+                            <label for="toggle-precision-input" class="text-lg font-medium text-gray-100">ANTI-RECOIL AVANÇADO</label>
+                            <input type="checkbox" id="toggle-precision-input" class="sr-only" onchange="toggleFeature('Precision')">
+                            <div id="toggle-precision" class="modern-switch" role="switch" aria-checked="false" aria-labelledby="toggle-precision-input" onclick="document.getElementById('toggle-precision-input').click()"></div>
                         </div>
 
                     </div>
@@ -402,6 +380,76 @@
     </div>
 
     <script>
+        // =========================================================
+        // 🔑 LÓGICA DE AUTENTICAÇÃO
+        // =========================================================
+        
+        // 🛑 ATENÇÃO: Esta é uma chave de demonstração. Em um ambiente real,
+        // a chave seria verificada em um servidor (Back-end) para segurança.
+        const MASTER_ACCESS_KEY = "CYBER-47B-FFX"; 
+        
+        const loginScreen = document.getElementById('login-screen');
+        const mainPanel = document.getElementById('main-hud-panel');
+        const loginErrorMsg = document.getElementById('login-error-message');
+        const loginButtonText = document.getElementById('login-text');
+        
+        /**
+         * 1. Lógica de Login: Oculta a tela de login e exibe o painel.
+         */
+        async function handleLogin(event) {
+            event.preventDefault(); // Impede o recarregamento da página
+            
+            const keyInput = document.getElementById('key-input');
+            const enteredKey = keyInput.value.trim().toUpperCase(); // Normaliza a entrada
+
+            loginErrorMsg.textContent = '';
+            loginButtonText.textContent = 'PROCESSANDO...';
+            loginButtonText.parentElement.disabled = true;
+
+            // Simula um delay de validação de rede/servidor
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            if (enteredKey === MASTER_ACCESS_KEY) {
+                // SUCESSO: Oculta a tela de login e mostra o painel
+                loginScreen.style.display = 'none';
+                mainPanel.style.display = 'block';
+                document.getElementById('main-body').classList.remove('login-screen-container');
+                
+                // Salva o estado de login (opcional, mas bom para persistência)
+                localStorage.setItem('isLoggedIn', 'true');
+            } else {
+                // FALHA: Mostra a mensagem de erro
+                loginErrorMsg.textContent = 'ERRO: Chave de acesso inválida. Tente novamente ou verifique o token.';
+                loginButtonText.textContent = 'EXECUTAR LOGIN';
+                loginButtonText.parentElement.disabled = false;
+                keyInput.value = ''; // Limpa o campo
+            }
+        }
+
+        /**
+         * 2. Lógica de Inicialização: Verifica se o usuário já está logado.
+         */
+        function checkLoginStatus() {
+            // Verifica o estado salvo (se não for null ou vazio)
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                // Se sim, pula o login e mostra o painel
+                loginScreen.style.display = 'none';
+                mainPanel.style.display = 'block';
+                document.getElementById('main-body').classList.remove('login-screen-container');
+            } else {
+                // Se não, mostra a tela de login
+                loginScreen.style.display = 'flex';
+                mainPanel.style.display = 'none';
+                document.getElementById('main-body').classList.add('login-screen-container');
+            }
+            // Inicia o resto da aplicação
+            initializeApp();
+        }
+
+        // =========================================================
+        // ⚙️ LÓGICA DO PAINEL (CÓDIGO ANTERIOR)
+        // =========================================================
+        
         // Elementos do novo slider
         const slider = document.getElementById('aim-precision-slider');
         const valueDisplay = document.getElementById('aim-precision-value');
@@ -423,30 +471,31 @@
             element.textContent = '';
         }
 
+        // Função para reiniciar a animação de entrada
+        function restartAnimation(element) {
+            element.classList.remove('section-enter-animation'); 
+            void element.offsetWidth; // Força o reflow
+            element.classList.add('section-enter-animation');
+        }
+
 
         // --- FUNÇÃO DE DEEP LINK (ABRIR APP DIRETO) ---
         function openFreeFireApp() {
             const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
             const isAndroid = /Android/.test(navigator.userAgent);
 
-            // Deep link URI (mesmo para Android e iOS)
             const deepLinkUri = "garenafreefire://";
-            
-            // Fallback URLs
             const fallbackUrlAndroid = "https://play.google.com/store/apps/details?id=com.dts.freefireth";
             const fallbackUrliOS = "https://apps.apple.com/app/free-fire-battlegrounds/id1300146617";
             
-            // Tenta abrir o deep link
             window.location.href = deepLinkUri;
 
-            // Define o fallback (se o app não abrir em 500ms)
             setTimeout(() => {
                 if (isiOS) {
                     window.location.href = fallbackUrliOS;
                 } else if (isAndroid) {
                     window.location.href = fallbackUrlAndroid;
                 } else {
-                    // Para desktop ou outros (direciona para o Play Store como padrão)
                     window.location.href = fallbackUrlAndroid; 
                 }
             }, 500);
@@ -454,6 +503,7 @@
 
         // --- SIMULAÇÃO DE OTIMIZAÇÃO DO CELULAR ---
         async function startOptimizationSim() {
+            // ... (código da simulação de otimização) ...
             const statusTextElement = document.getElementById('opt-status-text');
             const progressBar = document.getElementById('opt-progress-fill');
             const fpsCounter = document.getElementById('fps-counter'); 
@@ -474,6 +524,9 @@
             let accumulatedDelay = 0;
 
             for (const step of steps) {
+                // Se o toggle foi desativado durante a simulação, pare
+                if (!appState.Optimization) return; 
+
                 await new Promise(resolve => setTimeout(resolve, step.delay - accumulatedDelay));
                 accumulatedDelay = step.delay;
 
@@ -492,6 +545,7 @@
         
         // --- SIMULAÇÃO DE CALIBRAÇÃO DE MIRA ---
         async function startAimGuideSim() {
+            // ... (código da simulação de mira) ...
             const statusTextElement = document.getElementById('aim-status-text');
             const reticleElement = document.getElementById('aim-reticle');
             
@@ -511,6 +565,7 @@
             await new Promise(resolve => setTimeout(resolve, 1500));
             
             // FASE 2: Calibração Fina
+            if (!appState.AimGuide) return;
             updateStatusText(statusTextElement, 'EXECUTANDO | Ajustando parâmetros de DPI e Sensibilidade (360°)...');
             spinGroup.style.animation = 'reticle-spin 1.5s linear infinite';
             pulseGroup.style.animation = 'reticle-pulse 1.2s ease-in-out infinite';
@@ -518,6 +573,7 @@
             await new Promise(resolve => setTimeout(resolve, 3000));
             
             // FASE 3: Finalização e Bloqueio
+            if (!appState.AimGuide) return;
             updateStatusText(statusTextElement, 'CONCLUÍDO | MIRA ASSISTIDA ATIVA! Sistema pronto para o jogo.');
             spinGroup.style.animation = 'none';
             pulseGroup.style.animation = 'none';
@@ -527,6 +583,7 @@
 
         // --- SIMULAÇÃO DE AJUSTES DE PRECISÃO ---
         async function startPrecisionSim() {
+            // ... (código da simulação de precisão) ...
             const statusTextElement = document.getElementById('prec-status-text');
             const progressBar = document.getElementById('prec-progress-fill');
             const stabilizer = document.getElementById('recoil-stabilizer'); 
@@ -553,8 +610,10 @@
             ];
             
             // 3. Execução sequencial
-            let accumulatedWait = 0;
             for (const step of simulationSteps) {
+                // Se o toggle foi desativado durante a simulação, pare
+                if (!appState.Precision) return; 
+
                 await new Promise(resolve => setTimeout(resolve, step.wait));
                 
                 updateStatusText(statusTextElement, step.text);
@@ -574,6 +633,7 @@
 
         function updateSliderVisual(value) {
             const percentage = value + '%';
+            // Atualiza a cor de preenchimento do slider
             slider.style.background = `linear-gradient(to right, var(--neon-secondary) ${percentage}, var(--bg-inactive) ${percentage})`;
         }
 
@@ -590,14 +650,19 @@
         }
 
         function toggleFeature(feature) {
-            const willBeActive = !appState[feature]; 
+            const inputId = `toggle-${feature.toLowerCase()}-input`;
+            const inputElement = document.getElementById(inputId);
+            
+            const willBeActive = inputElement.checked; 
             appState[feature] = willBeActive;
 
             const toggleId = `toggle-${feature.toLowerCase()}`;
             const toggleElement = document.getElementById(toggleId);
 
             if (toggleElement) {
+                // Atualiza a classe visual do DIV switch e o atributo ARIA
                 toggleElement.classList.toggle('active', willBeActive);
+                toggleElement.setAttribute('aria-checked', willBeActive);
             }
 
             const sectionId = `section-${feature.toLowerCase()}`;
@@ -609,10 +674,8 @@
 
                 if (willBeActive) {
                     sectionElement.style.display = 'block';
-                    sectionElement.classList.remove('section-enter-animation'); 
-                    void sectionElement.offsetWidth;
-                    sectionElement.classList.add('section-enter-animation');
-
+                    restartAnimation(sectionElement); // Função para reiniciar animação
+                    
                     switch (feature) {
                         case 'Optimization':
                             startOptimizationSim();
@@ -625,12 +688,12 @@
                             break;
                     }
                 } else {
-                    sectionElement.classList.remove('section-enter-animation');
+                    // Estado desativado
                     sectionElement.style.display = 'none'; 
                     
                     clearStatusText(statusTextElement);
                     
-                    // Reset Visual
+                    // Reset Visual (Mantido para garantir que tudo volte ao estado inicial)
                     if (feature === 'Optimization' && document.getElementById('opt-progress-fill')) {
                          document.getElementById('opt-progress-fill').classList.remove('active');
                          document.getElementById('fps-counter').textContent = '30';
@@ -659,7 +722,8 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', initializeApp);
+        // Chama a função de verificação de login ao carregar
+        document.addEventListener('DOMContentLoaded', checkLoginStatus);
 
     </script>
 </body>
