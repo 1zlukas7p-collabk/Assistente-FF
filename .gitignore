@@ -1,18 +1,530 @@
-# Build and Release Folders
-bin-debug/
-bin-release/
-[Oo]bj/
-[Bb]in/
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistente FF – Otimização & Calibração (Rosa Neon)</title>
+    <!-- Carrega Tailwind CSS para um design responsivo e moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Variáveis de Cores Neon (AGORA ROSA/FÚCSIA) */
+        :root {
+            --neon-primary: #ff00ff; /* Fúcsia Neon (Rosa Principal) */
+            --neon-secondary: #ff66b2; /* Rosa Hot Pink (Destaque/Contraste) */
+            --bg-dark: #07061d; /* Fundo Ultra Escuro (Mantido para Contraste) */
+            --bg-card: rgba(44, 11, 30, 0.7); /* Fundo do Card com Transparência e toque rosado escuro */
+        }
 
-# Other files and folders
-.settings/
+        /* 1. Estilo Básico do Corpo (PERMANENTE) */
+        .futuristic-theme {
+            background-color: var(--bg-dark);
+            color: #fce7f3; /* Texto claro rosado */
+            transition: background-color 0.5s;
+            position: relative;
+            z-index: 1; 
+        }
 
-# Executables
-*.swf
-*.air
-*.ipa
-*.apk
+        /* 2. Fundo de Vídeo do YouTube (PERMANENTE E ATIVO POR PADRÃO) */
+        #video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0; 
+            opacity: 0.4;
+            pointer-events: none; 
+            transition: opacity 0.5s ease-in-out;
+            display: block; 
+        }
 
-# Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
-# should NOT be excluded as they contain compiler settings and other important
-# information for Eclipse / Flash Builder.
+        #video-background iframe {
+            /* Garante que o vídeo cubra toda a tela, mantendo a proporção 16:9 */
+            width: 100vw;
+            height: 56.25vw; 
+            min-height: 100vh;
+            min-width: 177.77vh; 
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* 3. Efeito Neon Glow (Brilho para Títulos e Interação) */
+        .neon-glow {
+            /* O brilho usa as novas cores Rosa/Fúcsia */
+            text-shadow: 0 0 5px var(--neon-primary), 0 0 15px var(--neon-primary), 0 0 30px var(--neon-secondary);
+        }
+
+        /* 4. Cartões Futuristas (Com Transparência e Blur) */
+        .futuristic-card {
+            background-color: var(--bg-card);
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 0, 255, 0.3); /* Borda em Rosa Principal */
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2; 
+        }
+
+        .futuristic-card:hover {
+            box-shadow: 0 0 30px var(--neon-secondary);
+            border-color: var(--neon-primary);
+        }
+
+        /* 5. Estilo dos Toggles (Switches Modernos) */
+        .modern-switch {
+            width: 60px;
+            height: 30px;
+            background-color: #374151; 
+            border-radius: 9999px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .modern-switch:before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: #e5e7eb;
+            border-radius: 50%;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .modern-switch.active {
+            background-color: var(--neon-primary); /* Fundo ativo Rosa Principal */
+            box-shadow: 0 0 8px var(--neon-primary);
+        }
+
+        .modern-switch.active:before {
+            transform: translateX(30px);
+            background-color: var(--neon-secondary); /* Bolinha ativa Rosa Hot Pink */
+        }
+
+        /* 6. Estilo do Slider (Precisão da Mira) */
+        #aim-precision-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            background: #374151;
+            outline: none;
+            opacity: 0.9;
+            transition: opacity .2s;
+        }
+        
+        /* Estilo do Thumb (Alavanca) no Webkit (Chrome, Safari) */
+        #aim-precision-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--neon-primary); /* Thumb Rosa Principal */
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--neon-primary);
+            border: 3px solid var(--bg-dark); /* Borda para destaque */
+        }
+        
+        /* Estilo do Thumb (Alavanca) no Firefox */
+        #aim-precision-slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: var(--neon-primary); /* Thumb Rosa Principal */
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--neon-primary);
+            border: 3px solid var(--bg-dark);
+        }
+
+        /* 7. Estilo da Barra de Progresso Simulada */
+        .progress-bar {
+            height: 15px;
+            background-color: #1f2937;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            /* Gradiente usando as novas cores Rosa/Fúcsia */
+            background: linear-gradient(90deg, var(--neon-secondary), var(--neon-primary));
+            transition: width 0.5s ease-out;
+            border-radius: 8px 0 0 8px;
+        }
+
+        /* 8. Ajustes para o corpo para acomodar o vídeo de fundo */
+        body {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+    <script>
+        // Configuração do Tailwind (Usa Inter como fonte)
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        // Tailwind agora usará as novas variáveis de cor rosa
+                        'neon-primary': 'var(--neon-primary)',
+                        'neon-secondary': 'var(--neon-secondary)',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="futuristic-theme min-h-screen font-sans p-4 md:p-8" id="main-body">
+    
+    <!-- Container para o Vídeo de Fundo (YouTube Embed) -->
+    <div id="video-background">
+        <iframe 
+            src="https://www.youtube.com/embed/hGig7acVkAg?autoplay=1&mute=1&loop=1&playlist=hGig7acVkAg&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&start=20"
+            frameborder="0"
+            allow="autoplay; encrypted-media; loop"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <!-- Container Principal Responsivo -->
+    <div class="max-w-5xl mx-auto space-y-10 relative z-10">
+
+        <!-- Header - Título e Explicação do Painel -->
+        <header class="text-center pt-6 pb-4 md:pt-10">
+            <h1 class="text-6xl md:text-7xl font-black tracking-tighter uppercase neon-glow text-neon-primary transition-all duration-500" id="main-title">
+                Assistente FF
+            </h1>
+            <h2 class="text-2xl md:text-3xl font-light text-neon-secondary mt-2 transition-all duration-500">
+                Otimização & Calibração
+            </h2>
+            <!-- NOVO TEXTO DE INSTRUÇÃO -->
+            <p class="mt-4 text-base text-gray-400 max-w-2xl mx-auto futuristic-card py-3 rounded-xl transition-all duration-500">
+                🎮 **Ative as funções abaixo para obter o melhor desempenho e precisão no Free Fire.**
+            </p>
+        </header>
+
+
+        <!-- Painel de Controle (Toggles e Slider) -->
+        <section class="futuristic-card p-6 md:p-8 rounded-2xl shadow-xl space-y-6">
+            <h3 class="text-3xl font-bold mb-5 text-neon-primary">⚙️ Painel de Controle Rápido</h3>
+
+            <!-- Toggles Simples (Grid) - COM 3 OPÇÕES -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 border-b border-gray-700 pb-5"> 
+                
+                <!-- Toggle Otimização do Celular -->
+                <div class="flex items-center justify-between p-3 bg-gray-900/40 rounded-xl">
+                    <label class="text-sm md:text-lg font-medium">Otimização do Celular</label>
+                    <div id="toggle-optimization" class="modern-switch" onclick="toggleFeature('Optimization')"></div>
+                </div>
+
+                <!-- Toggle Calibração de Mira -->
+                <div class="flex items-center justify-between p-3 bg-gray-900/40 rounded-xl">
+                    <label class="text-sm md:text-lg font-medium">Calibração de Mira</label>
+                    <div id="toggle-aimguide" class="modern-switch" onclick="toggleFeature('AimGuide')"></div>
+                </div>
+
+                <!-- Toggle Ajustes de Precisão -->
+                <div class="flex items-center justify-between p-3 bg-gray-900/40 rounded-xl">
+                    <label class="text-sm md:text-lg font-medium">Ajustes de Precisão</label>
+                    <div id="toggle-precision" class="modern-switch" onclick="toggleFeature('Precision')"></div>
+                </div>
+
+            </div>
+
+            <!-- Slider Precisão da Mira (0-100%) -->
+            <div class="p-4 bg-gray-900/40 rounded-xl space-y-4 border border-neon-secondary/50 mt-5">
+                <label for="aim-precision-slider" class="text-xl md:text-2xl font-bold text-neon-secondary flex justify-between items-center">
+                    <span>Precisão da Mira</span>
+                    <span id="aim-precision-value" class="text-4xl text-neon-primary neon-glow">50%</span>
+                </label>
+                <input type="range" id="aim-precision-slider" min="0" max="100" value="50" oninput="updateAimPrecision(this.value)" class="w-full">
+            </div>
+
+        </section>
+
+        <!-- Seções de Conteúdo (AGORA SÃO SIMULAÇÕES) -->
+        <section class="space-y-6">
+
+            <!-- 1. Otimização do Celular (Simulação) -->
+            <div id="section-optimization" class="futuristic-card p-6 md:p-8 rounded-2xl hidden">
+                <h4 class="text-2xl font-bold mb-3 text-neon-primary">📱 Otimização do Celular em Andamento...</h4>
+                <div id="optimization-simulation" class="text-lg text-gray-300 font-mono space-y-3">
+                    <!-- Conteúdo dinâmico da simulação de otimização -->
+                    <div id="opt-status-text">Iniciando varredura do sistema...</div>
+                    <div class="progress-bar">
+                        <div id="opt-progress-fill" class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Calibração de Mira (Simulação) -->
+            <div id="section-aimguide" class="futuristic-card p-6 md:p-8 rounded-2xl hidden">
+                <h4 class="text-2xl font-bold mb-3 text-neon-primary">🎯 Calibração de Mira em Andamento...</h4>
+                <div id="aimguide-simulation" class="text-center p-6 space-y-4">
+                    <div id="aim-status-text" class="text-xl font-mono text-neon-secondary">Ajustando parâmetros de DPI e Sensibilidade...</div>
+                    <div class="text-5xl neon-glow animate-pulse" id="aim-icon">⚙️</div>
+                </div>
+            </div>
+
+            <!-- 3. Ajustes de Precisão (Simulação) -->
+            <div id="section-precision" class="futuristic-card p-6 md:p-8 rounded-2xl hidden">
+                <h4 class="text-2xl font-bold mb-3 text-neon-primary">✨ Ajuste Fino de Precisão em Andamento...</h4>
+                <div id="precision-simulation" class="text-lg text-gray-300 font-mono space-y-3">
+                    <div id="prec-status-text">Analisando o controle de Recoil para: <span class="text-neon-primary font-bold" id="prec-value">50%</span></div>
+                    <div class="progress-bar">
+                        <div id="prec-progress-fill" class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Botão Oficial Free Fire (PERMANENTE - LOCALIZADO NO FINAL) -->
+        <div id="section-gamebutton" class="py-6 flex justify-center">
+            <a id="ff-launch-button"
+               href="https://play.google.com/store/apps/details?id=com.dts.freefireth" target="_blank"
+               class="px-10 py-4 rounded-full text-xl font-bold uppercase transition duration-300 transform hover:scale-105
+                      bg-neon-primary text-gray-900 neon-glow hover:bg-white hover:text-neon-secondary shadow-xl border-2 border-neon-primary">
+                ▶️ Abrir Free Fire
+            </a>
+        </div>
+
+        <!-- Rodapé Minimalista -->
+        <footer class="text-center py-8 border-t border-gray-700 mt-10 text-gray-500 text-sm">
+            <p>&copy; 2025 Assistente FF. Todos os direitos reservados. Não somos afiliados à Garena. Conteúdo 100% guia e seguro.</p>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript para a Lógica dos Toggles e Simulações -->
+    <script>
+        // Elementos do novo slider
+        const slider = document.getElementById('aim-precision-slider');
+        const valueDisplay = document.getElementById('aim-precision-value');
+
+        // Controles de Simulação (para limpar intervalos)
+        let simIntervals = {};
+        
+        // Estado inicial de todas as funcionalidades
+        let appState = {
+            Optimization: false,
+            AimGuide: false,
+            Precision: false,
+            AimPrecisionPercentage: 50,
+        };
+
+        // --- SIMULAÇÃO DE OTIMIZAÇÃO DO CELULAR ---
+        function startOptimizationSim() {
+            const statusText = document.getElementById('opt-status-text');
+            const progressBar = document.getElementById('opt-progress-fill');
+            
+            // 1. Reset
+            progressBar.style.width = '0%';
+            statusText.textContent = 'Iniciando varredura do sistema...';
+            
+            // Limpa intervalo anterior, se houver
+            clearInterval(simIntervals.Optimization);
+
+            let progress = 0;
+            const steps = [
+                { delay: 1000, progress: 30, text: 'Limpando cache de fundo de RAM... [OK]' },
+                { delay: 2000, progress: 65, text: 'Ajustando prioridade de núcleo da CPU...' },
+                { delay: 3500, progress: 95, text: 'Alocando banda de rede para Free Fire...' },
+                { delay: 4000, progress: 100, text: 'Otimização de sistema CONCLUÍDA! Desempenho máximo ativado.' },
+            ];
+            
+            // 2. Simular progresso
+            let startTime = Date.now();
+            let currentStepIndex = 0;
+
+            function runStep() {
+                if (currentStepIndex < steps.length) {
+                    const step = steps[currentStepIndex];
+                    const delay = step.delay - (Date.now() - startTime);
+                    
+                    setTimeout(() => {
+                        progressBar.style.width = step.progress + '%';
+                        statusText.textContent = step.text;
+                        currentStepIndex++;
+                        if (currentStepIndex < steps.length) {
+                             runStep(); // Próximo passo
+                        }
+                    }, Math.max(0, delay));
+                }
+            }
+            runStep();
+        }
+        
+        // --- SIMULAÇÃO DE CALIBRAÇÃO DE MIRA ---
+        function startAimGuideSim() {
+            const statusText = document.getElementById('aim-status-text');
+            const aimIcon = document.getElementById('aim-icon');
+            
+            // 1. Reset
+            aimIcon.textContent = '⚙️';
+            statusText.textContent = 'Iniciando varredura de sensibilidade...';
+            
+            // Limpa intervalo anterior, se houver
+            clearInterval(simIntervals.AimGuide);
+
+
+            let count = 0;
+            const steps = [
+                'Verificando estabilidade do toque...',
+                'Ajustando parâmetros de DPI e Sensibilidade...',
+                'Refinando o ponto de arrasto (drag)...',
+                'Calibração de Mira ATIVA! Boa Sorte.'
+            ];
+
+            // 2. Simular progresso com rotação e texto
+            aimIcon.classList.add('animate-spin');
+            simIntervals.AimGuide = setInterval(() => {
+                if (count < steps.length) {
+                    statusText.textContent = steps[count];
+                    count++;
+                } else {
+                    clearInterval(simIntervals.AimGuide);
+                    aimIcon.classList.remove('animate-spin');
+                    aimIcon.textContent = '✅';
+                    aimIcon.classList.remove('animate-pulse');
+                }
+            }, 1500);
+        }
+
+        // --- SIMULAÇÃO DE AJUSTES DE PRECISÃO ---
+        function startPrecisionSim() {
+            const statusText = document.getElementById('prec-status-text');
+            const progressBar = document.getElementById('prec-progress-fill');
+            const precValue = document.getElementById('prec-value');
+            
+            // 1. Reset
+            progressBar.style.width = '0%';
+            precValue.textContent = `${appState.AimPrecisionPercentage}%`;
+            statusText.textContent = `Analisando o controle de Recoil para: ${precValue.textContent}`;
+            
+            // Limpa intervalo anterior, se houver
+            clearInterval(simIntervals.Precision);
+
+            let progress = 0;
+            
+            // 2. Simular progresso
+            simIntervals.Precision = setInterval(() => {
+                if (progress < 100) {
+                    progress += 10;
+                    if (progress > 100) progress = 100;
+                    progressBar.style.width = progress + '%';
+
+                    if (progress < 50) {
+                        statusText.textContent = 'Análise de Recoil e Dispersão...';
+                    } else if (progress < 100) {
+                        statusText.textContent = 'Configurando estabilidade do giroscópio...';
+                    } else {
+                        statusText.textContent = `Ajustes Finais CONCLUÍDOS. Precisão otimizada em ${precValue.textContent}!`;
+                    }
+                } else {
+                    clearInterval(simIntervals.Precision);
+                }
+            }, 300);
+        }
+
+
+        // --- LÓGICA DE INTERFACE E CONTROLE ---
+
+        // Função para atualizar o visual do slider (preenchimento da cor)
+        function updateSliderVisual(value) {
+            const percentage = value + '%';
+            // Usa CSS personalizado para criar o efeito de preenchimento neon (agora rosa)
+            slider.style.background = `linear-gradient(to right, var(--neon-primary) ${percentage}, #374151 ${percentage})`;
+        }
+
+        // Handler para o slider (Atualiza o estado e a exibição)
+        function updateAimPrecision(value) {
+            appState.AimPrecisionPercentage = parseInt(value);
+            valueDisplay.textContent = `${appState.AimPrecisionPercentage}%`;
+            
+            // Se a seção de precisão estiver ativa, atualiza o valor da simulação
+            const precValueDisplay = document.getElementById('prec-value');
+            if (appState.Precision && precValueDisplay) {
+                precValueDisplay.textContent = `${appState.AimPrecisionPercentage}%`;
+            }
+
+            updateSliderVisual(appState.AimPrecisionPercentage);
+        }
+
+        // Função principal para manipular o estado e a interface (Toggles)
+        function toggleFeature(feature) {
+            // 1. Inverte o estado
+            appState[feature] = !appState[feature];
+
+            // 2. Manipulação do Toggle (Switch) visual
+            const toggleId = `toggle-${feature.toLowerCase()}`;
+            const toggleElement = document.getElementById(toggleId);
+
+            if (toggleElement) {
+                toggleElement.classList.toggle('active', appState[feature]);
+            }
+
+            // 3. Manipulação da Seção de Conteúdo (Simulação)
+            const sectionId = `section-${feature.toLowerCase()}`;
+            const sectionElement = document.getElementById(sectionId);
+
+            if (sectionElement) {
+                if (appState[feature]) {
+                    // ATIVAR
+                    sectionElement.style.display = 'block';
+                    
+                    // Inicia a Simulação
+                    switch (feature) {
+                        case 'Optimization':
+                            startOptimizationSim();
+                            break;
+                        case 'AimGuide':
+                            startAimGuideSim();
+                            break;
+                        case 'Precision':
+                            startPrecisionSim();
+                            break;
+                    }
+                } else {
+                    // DESATIVAR
+                    sectionElement.style.display = 'none';
+                    
+                    // Limpa Simulações ativas
+                    if (simIntervals[feature]) {
+                        clearInterval(simIntervals[feature]);
+                    }
+                    if (feature === 'AimGuide' && document.getElementById('aim-icon')) {
+                        document.getElementById('aim-icon').classList.remove('animate-spin');
+                    }
+                }
+            }
+        }
+
+        // Inicialização: Garante que o slider esteja configurado no estado inicial (50%).
+        function initializeApp() {
+            if (slider && valueDisplay) {
+                updateAimPrecision(appState.AimPrecisionPercentage);
+            }
+            
+            // Certifica-se de que todas as seções de simulação comecem escondidas, o que já é o padrão no HTML.
+        }
+
+        // Inicia a aplicação após o carregamento do DOM
+        document.addEventListener('DOMContentLoaded', initializeApp);
+
+    </script>
+</body>
+</html>
+
