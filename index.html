@@ -32,11 +32,13 @@
             100% { opacity: 1; transform: translateY(0) scale(1); }
         }
         
-        /* 3. CLASSE DE TEXTO ESTÁVEL (ANTIGA .typing-text REMOVIDA) */
+        /* 3. CLASSE DE TEXTO ESTÁVEL (CORRIGIDO PARA MÚLTIPLAS LINHAS) */
         .stable-status-text {
-            /* CORREÇÃO APLICADA: Força múltiplas linhas e garante altura mínima. */
-            min-height: 2.5rem; /* Aumentado para garantir 2 linhas completas */
-            white-space: normal;
+            /* Mínimo de altura para evitar que o texto quebrado empurre o layout para baixo. */
+            min-height: 3.5rem; /* Altura aumentada para suportar 3-4 linhas em telas pequenas */
+            white-space: normal; /* Permite que o texto quebre normalmente */
+            display: flex; /* Ajuda a centralizar verticalmente quando há apenas 1 linha */
+            align-items: center; 
         }
 
         .section-enter-animation {
@@ -207,10 +209,9 @@
         }
 
         /* ========================================================= */
-        /* ADIÇÕES CRUCIAIS PARA AS ANIMAÇÕES JS (Retículo e Estabilizador) */
+        /* ANIMAÇÕES DO RETÍCULO E ESTABILIZADOR */
         /* ========================================================= */
 
-        /* 11. ANIMAÇÃO DO RETÍCULO SVG (Calibração de Mira) */
         @keyframes reticle-spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
@@ -229,7 +230,6 @@
             transform-origin: 50px 50px;
         }
 
-        /* 12. ESTILO PARA O ESTABILIZADOR (ANTI-RECOIL) */
         @keyframes flicker {
             0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% {
                 opacity: 0.99;
@@ -414,8 +414,7 @@
             AimPrecisionPercentage: 50,
         };
 
-        // --- FUNÇÃO CENTRAL: ATUALIZAÇÃO INSTANTÂNEA DE TEXTO ---
-        // A função de digitação foi removida. O texto é inserido de uma vez.
+        // --- FUNÇÕES DE STATUS (AGORA INSTANTÂNEAS) ---
         function updateStatusText(element, text) {
             element.textContent = text;
         }
@@ -427,14 +426,30 @@
 
         // --- FUNÇÃO DE DEEP LINK (ABRIR APP DIRETO) ---
         function openFreeFireApp() {
-            const fallbackUrl = "https://play.google.com/store/apps/details?id=com.dts.freefireth";
-            const deepLinkUri = "com.dts.freefireth://"; 
+            const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isAndroid = /Android/.test(navigator.userAgent);
 
+            // Deep link URI (mesmo para Android e iOS)
+            const deepLinkUri = "garenafreefire://";
+            
+            // Fallback URLs
+            const fallbackUrlAndroid = "https://play.google.com/store/apps/details?id=com.dts.freefireth";
+            const fallbackUrliOS = "https://apps.apple.com/app/free-fire-battlegrounds/id1300146617";
+            
+            // Tenta abrir o deep link
             window.location.href = deepLinkUri;
 
-            const timeout = setTimeout(() => {
-                window.open(fallbackUrl, '_blank');
-            }, 300);
+            // Define o fallback (se o app não abrir em 500ms)
+            setTimeout(() => {
+                if (isiOS) {
+                    window.location.href = fallbackUrliOS;
+                } else if (isAndroid) {
+                    window.location.href = fallbackUrlAndroid;
+                } else {
+                    // Para desktop ou outros (direciona para o Play Store como padrão)
+                    window.location.href = fallbackUrlAndroid; 
+                }
+            }, 500);
         }
 
         // --- SIMULAÇÃO DE OTIMIZAÇÃO DO CELULAR ---
@@ -459,11 +474,9 @@
             let accumulatedDelay = 0;
 
             for (const step of steps) {
-                // Aguarda o tempo necessário para sincronizar com o progresso
                 await new Promise(resolve => setTimeout(resolve, step.delay - accumulatedDelay));
                 accumulatedDelay = step.delay;
 
-                // Atualização instantânea do texto
                 updateStatusText(statusTextElement, step.text);
                 
                 progressBar.style.width = step.progress + '%';
@@ -542,13 +555,10 @@
             // 3. Execução sequencial
             let accumulatedWait = 0;
             for (const step of simulationSteps) {
-                // Aguarda o tempo
                 await new Promise(resolve => setTimeout(resolve, step.wait));
                 
-                // Atualização instantânea do texto
                 updateStatusText(statusTextElement, step.text);
 
-                // Atualiza a barra de progresso e o visual do estabilizador
                 progressBar.style.width = step.progress + '%';
                 stabilizer.textContent = step.stabilizer;
             }
@@ -618,7 +628,6 @@
                     sectionElement.classList.remove('section-enter-animation');
                     sectionElement.style.display = 'none'; 
                     
-                    // Limpa o texto de status
                     clearStatusText(statusTextElement);
                     
                     // Reset Visual
