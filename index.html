@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assistente FF – Módulo de Calibração HUD V2.0</title>
+    <title>Assistente FF – Módulo de Calibração HUD V3.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* ========================================================= */
@@ -39,14 +39,14 @@
         .login-box {
             width: 90%; 
             max-width: 450px; 
-            padding: 3rem; /* Aumenta o padding para mais "respiro" */
-            border: 2px solid rgba(0, 234, 255, 0.6); /* Borda mais presente */
+            padding: 3rem; 
+            border: 2px solid rgba(0, 234, 255, 0.6); 
             background: rgba(10, 5, 20, 0.85); 
             backdrop-filter: blur(25px) saturate(180%); 
             -webkit-backdrop-filter: blur(25px) saturate(180%);
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), 0 0 60px rgba(161, 0, 255, 0.4); 
             border-radius: 20px; 
-            animation: login-fade-in 0.8s ease-out forwards; /* Animação de entrada */
+            animation: login-fade-in 0.8s ease-out forwards; 
             position: relative;
         }
         /* Detalhe de canto para visual de terminal/BIOS */
@@ -57,26 +57,26 @@
             left: 15px;
             font-family: monospace;
             font-size: 0.75rem;
-            color: #38bdf8; /* Azul claro para status */
+            color: #38bdf8; 
             opacity: 0.7;
         }
 
         #key-input {
             width: 100%; 
-            padding: 1.2rem; /* Mais altura */
-            background-color: rgba(0, 0, 0, 0.3); /* Fundo mais escuro */
-            border: 2px solid var(--neon-primary); /* Borda sólida */
-            border-bottom: 4px solid var(--neon-secondary); /* Detalhe inferior (input ativo) */
+            padding: 1.2rem; 
+            background-color: rgba(0, 0, 0, 0.3); 
+            border: 2px solid var(--neon-primary); 
+            border-bottom: 4px solid var(--neon-secondary); 
             color: var(--neon-secondary); 
             font-size: 1.4rem; 
             text-align: center; 
-            border-radius: 8px; /* Mais quadrado */
+            border-radius: 8px; 
             margin-bottom: 2rem; 
             box-shadow: 0 0 10px rgba(161, 0, 255, 0.2); 
             outline: none;
-            letter-spacing: 3px; /* Mais espaçamento para ser legível */
+            letter-spacing: 3px; 
             transition: all 0.3s;
-            font-family: monospace; /* Fonte mono para parecer KeyCode */
+            font-family: monospace; 
             text-transform: uppercase;
         }
         #key-input::placeholder { color: rgba(0, 234, 255, 0.4); }
@@ -88,7 +88,7 @@
         
         .key-submit-button, .key-generate-button {
             font-weight: bold; 
-            padding: 1rem 1.5rem; /* Mais padding */
+            padding: 1rem 1.5rem; 
             border-radius: 8px; 
             transition: all 0.3s; 
             border: none;
@@ -108,22 +108,15 @@
             transform: scale(1.01); 
         }
         .key-submit-button:disabled {
-            background: #3f3b55; /* Cor cinza/roxa escura */
+            background: #3f3b55; 
             cursor: not-allowed;
             box-shadow: none;
             color: #a0a0a0;
         }
         
+        /* Oculta o botão de Gerar Key do usuário, pois só o admin pode fazê-lo */
         .key-generate-button {
-            background: transparent; 
-            color: var(--neon-primary); 
-            border: 2px solid var(--neon-primary); /* Borda mais visível */
-            font-size: 1rem;
-            padding: 0.8rem 1.5rem;
-        }
-        .key-generate-button:hover { 
-            box-shadow: 0 0 20px var(--neon-primary); 
-            background: rgba(161, 0, 255, 0.2); 
+            display: none; 
         }
 
         .error-message { 
@@ -137,8 +130,7 @@
             font-family: monospace;
         }
         
-        /* Estilos do Modal e do Painel Principal (Ajustados para uniformidade) */
-        
+        /* Estilos do Modal (Ver Chave Atual) */
         .modal-key-dialog {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.9); z-index: 100;
@@ -181,9 +173,7 @@
             transform: scale(1.05);
         }
 
-        /* ========================================================= */
-        /* ESTILOS DO PAINEL E ANIMAÇÕES (MANTIDOS) */
-        /* ========================================================= */
+        /* Estilos do Painel HUD (mantidos) */
         
         @keyframes pulse-cyan { from { box-shadow: 0 0 5px var(--neon-secondary), 0 0 10px var(--neon-secondary); } to { box-shadow: 0 0 15px var(--neon-secondary), 0 0 35px var(--neon-secondary); } }
         @keyframes section-boot-up { 0% { opacity: 0; transform: translateY(30px) scale(0.98); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
@@ -271,26 +261,23 @@
                 </button>
             </form>
             
-            <button onclick="generateAndDisplayNewKey()" class="key-generate-button text-base mt-4">
-                ➕ GERAR & SALVAR CHAVE VÁLIDA (7 DIAS)
-            </button>
-
             <p id="login-error-message" class="error-message"></p>
         </div>
     </div>
     <div id="key-modal" class="modal-key-dialog hidden">
         <div class="modal-key-content">
-            <h3 class="text-3xl font-bold text-neon-primary mb-4">🔑 Chave de Acesso Válida</h3>
-            <p class="text-gray-300 mb-4" id="key-modal-info">Aguardando... (Expiração)</p>
+            <h3 class="text-3xl font-bold text-neon-primary mb-4">🔑 STATUS DA CHAVE DE ACESSO</h3>
+            
+            <p class="text-gray-300 mb-4" id="key-modal-info">Verificando expiração...</p>
             
             <div class="key-display-container">
-                <span id="current-valid-key" class="key-display"></span>
+                <span id="current-valid-key" class="key-display">CHAVE NÃO ENCONTRADA</span>
                 <button onclick="copyKeyToClipboard()" class="copy-button" id="copy-btn">
                     <span id="copy-text">📋 COPIAR</span>
                 </button>
             </div>
 
-            <p class="text-sm text-yellow-400 mt-2">AVISO: Esta chave é armazenada apenas no seu navegador. Salve-a.</p>
+            <p class="text-sm text-yellow-400 mt-2">AVISO: Esta chave está vinculada a este dispositivo/navegador até a data de expiração.</p>
             <button onclick="document.getElementById('key-modal').classList.add('hidden')" class="key-submit-button mt-4 text-lg">
                 FECHAR
             </button>
@@ -303,7 +290,7 @@
             <p class="text-yellow-400 mb-4">ACESSO CONCEDIDO: Admin Master Key ATIVA.</p>
             
             <div class="space-y-4 text-left">
-                <label class="block text-gray-200 font-bold">1. SELECIONE A DURAÇÃO DA NOVA KEY:</label>
+                <label class="block text-gray-200 font-bold">1. SELECIONE A DURAÇÃO DA NOVA KEY (Para o cliente):</label>
                 <select id="key-duration-select" class="w-full p-3 bg-gray-900/50 border border-red-500/50 rounded-lg text-neon-secondary text-lg">
                     <option value="7">7 Dias (Padrão)</option>
                     <option value="30">30 Dias</option>
@@ -314,10 +301,11 @@
                     ⚠️ GERAR NOVA KEY COM DURAÇÃO
                 </button>
                 <p id="admin-message" class="error-message text-center mt-2"></p>
+                <p class="text-xs text-gray-500 text-center">AVISO: A chave gerada substitui qualquer chave anterior neste dispositivo.</p>
             </div>
 
-            <button onclick="document.getElementById('admin-modal').classList.add('hidden'); document.getElementById('login-screen').style.display = 'flex';" class="key-generate-button mt-6 text-lg">
-                VOLTAR AO LOGIN
+            <button onclick="document.getElementById('admin-modal').classList.add('hidden'); handleAdminLogout();" class="key-generate-button mt-6 text-lg bg-red-800 hover:bg-red-900 border-none !text-white !p-3">
+                SAIR DO MODO ADMIN (Voltar ao Login)
             </button>
         </div>
     </div>
@@ -328,10 +316,10 @@
                 Assistente FF
             </h1>
             <h2 class="text-2xl md:text-3xl font-light text-neon-secondary mt-2 transition-all duration-500">
-                Módulo Cyber-Calibração V2.0 | Status: <span class="text-green-400 font-bold">ONLINE</span>
+                Módulo Cyber-Calibração V3.0 | Status: <span class="text-green-400 font-bold">ONLINE</span>
             </h2>
             <p class="mt-4 text-base text-gray-200 max-w-4xl mx-auto hud-card py-3 px-6 rounded-xl transition-all duration-500 border-none shadow-xl flex justify-between items-center">
-                <span>Clique nos controles para iniciar o diagnóstico e otimizar. 🛠️</span>
+                <span>Bem-vindo(a)! Otimize seu sistema abaixo. 🛠️</span>
                 <button onclick="displayCurrentKey()" class="text-xs font-bold text-neon-secondary hover:text-white transition duration-200 ml-4">
                     [VER KEY ATUAL/EXPIRAÇÃO]
                 </button>
@@ -450,7 +438,7 @@
         </div>
 
         <footer class="text-center py-8 border-t border-neon-primary/20 mt-10 text-gray-500 text-sm">
-            <p>Módulo de Calibração **HFR-42** | Versão **V2.0** | &copy; 2025 Assistente FF.</p>
+            <p>Módulo de Calibração **HFR-42** | Versão **V3.0** | &copy; 2025 Assistente FF.</p>
         </footer>
 
     </div>
@@ -462,7 +450,7 @@
         // =========================================================
         const KEY_STORAGE_ID = 'validAccessKey'; 
         const STATE_STORAGE_ID = 'ffAssistantAppState'; 
-        const ADMIN_MASTER_KEY = 'ADM-123456-BOSS'; // <-- CHAVE MESTRA DE ADMIN!
+        const ADMIN_MASTER_KEY = 'ADM-123456-BOSS'; // <-- CHAVE MESTRA!
         // =========================================================
 
         const loginScreen = document.getElementById('login-screen');
@@ -522,69 +510,66 @@
             loginButtonText.textContent = 'AUTENTICANDO...';
             loginButtonText.parentElement.disabled = true;
 
-            // Simula o tempo de autenticação para parecer mais profissional
             await new Promise(resolve => setTimeout(resolve, 1500));
             
             // --- Lógica de Key de Admin ---
             if (enteredKey === ADMIN_MASTER_KEY) {
+                keyInput.value = '';
                 showAdminPanel(); // Chamada para o painel de admin
                 return;
             }
             // --- FIM Lógica de Key de Admin ---
 
+            
+            // Verifica se a chave digitada é a chave válida armazenada (se houver)
             const storedKeyJSON = localStorage.getItem(KEY_STORAGE_ID);
             
-            // 1. Verifica se existe Key e se está no formato JSON
-            if (!storedKeyJSON) {
-                loginErrorMsg.textContent = 'ERRO [COD 404]: Nenhuma Key de acesso encontrada. Gere uma nova Key válida.';
-                loginButtonText.textContent = 'CONECTAR AO SISTEMA';
-                loginButtonText.parentElement.disabled = false;
-                keyInput.value = '';
-                return;
-            }
+            if (storedKeyJSON) {
+                try {
+                    const storedKeyData = JSON.parse(storedKeyJSON);
+                    const storedKey = storedKeyData.key;
+                    const expiryTime = storedKeyData.expiry;
 
-            try {
-                const storedKeyData = JSON.parse(storedKeyJSON);
-                const storedKey = storedKeyData.key;
-                const expiryTime = storedKeyData.expiry;
-
-                // 2. Verifica a validade e a expiração da Key
-                if (enteredKey === storedKey && isKeyFormatValid(enteredKey)) {
-                    if (Date.now() < expiryTime) {
-                        // SUCESSO e VÁLIDA
-                        loginScreen.style.display = 'none';
-                        mainPanel.style.display = 'block';
-                        document.getElementById('main-body').classList.remove('login-screen-container');
-                        
+                    // Se a chave digitada for a chave correta e válida
+                    if (enteredKey === storedKey) {
+                        if (Date.now() < expiryTime) {
+                            // SUCESSO e VÁLIDA: Procede para o HUD
+                            completeLogin();
+                            return;
+                        } else {
+                            // FALHA - CHAVE CORRETA, MAS EXPIRADA
+                            const duration = storedKeyData.durationDays;
+                            loginErrorMsg.textContent = `ERRO [COD 408]: Sua Key (${duration} dias) EXPIROU. Solicite uma nova chave.`;
+                            // Remove a chave expirada para que o usuário não consiga mais logar
+                            localStorage.removeItem(KEY_STORAGE_ID); 
+                        }
                     } else {
-                        // FALHA - CHAVE EXPIRADA
-                        const duration = storedKeyData.durationDays;
-                        loginErrorMsg.textContent = `ERRO [COD 408]: Sua Key (${duration} dias) EXPIROU. Solicite uma nova chave.`;
-                        loginButtonText.textContent = 'CONECTAR AO SISTEMA';
-                        loginButtonText.parentElement.disabled = false;
-                        keyInput.value = '';
+                        // FALHA - CHAVE INCORRETA/INVÁLIDA
+                        loginErrorMsg.textContent = 'ERRO [COD 403]: Chave inválida ou não reconhecida. Tente novamente.';
                     }
-
-                } else if (!isKeyFormatValid(enteredKey)) {
-                    // FALHA - FORMATO
-                    loginErrorMsg.textContent = 'ERRO [COD 401]: O formato da chave está incorreto. Use XXXXXX-YYYYYY-ZZZZZZ.';
-                    loginButtonText.textContent = 'CONECTAR AO SISTEMA';
-                    loginButtonText.parentElement.disabled = false;
-                    keyInput.value = '';
-                    
-                } else {
-                     // FALHA - CHAVE ERRADA
-                    loginErrorMsg.textContent = 'ERRO [COD 403]: Chave inválida ou não reconhecida. Tente novamente.';
-                    loginButtonText.textContent = 'CONECTAR AO SISTEMA';
-                    loginButtonText.parentElement.disabled = false;
-                    keyInput.value = '';
+                } catch (e) {
+                    loginErrorMsg.textContent = 'ERRO DE SISTEMA [JSON]: Chave inválida no armazenamento. Gere uma nova.';
+                    localStorage.removeItem(KEY_STORAGE_ID);
                 }
-            } catch (e) {
-                loginErrorMsg.textContent = 'ERRO DE SISTEMA [JSON]: Chave inválida no armazenamento. Gere uma nova.';
-                loginButtonText.textContent = 'CONECTAR AO SISTEMA';
-                loginButtonText.parentElement.disabled = false;
-                keyInput.value = '';
+            } else {
+                // Não há chave armazenada, o usuário precisa de uma
+                loginErrorMsg.textContent = 'ERRO [COD 404]: Nenhuma Key de acesso encontrada ou sua Key expirou. Solicite uma nova Key válida.';
             }
+
+            // Restaura o botão em caso de erro
+            loginButtonText.textContent = 'CONECTAR AO SISTEMA';
+            loginButtonText.parentElement.disabled = false;
+            keyInput.value = '';
+        }
+
+        /** Finaliza o login e exibe o painel principal. */
+        function completeLogin() {
+            loginScreen.style.display = 'none';
+            mainPanel.style.display = 'block';
+            document.getElementById('main-body').classList.remove('login-screen-container');
+            // Garante que o painel inicie com o estado correto
+            loadAppState(); 
+            initializeApp();
         }
 
         /** Copia a chave do modal para a área de transferência. */
@@ -593,7 +578,7 @@
             const key = keyElement.textContent;
             const copyBtn = document.getElementById('copy-text');
 
-            if (key) {
+            if (key && key !== 'CHAVE NÃO ENCONTRADA') {
                 navigator.clipboard.writeText(key).then(() => {
                     copyBtn.textContent = '✅ COPIADO!';
                     setTimeout(() => {
@@ -632,28 +617,24 @@
                      keyModalInfo.textContent = '';
                 }
             } else {
-                keyDisplayElement.textContent = 'Nenhuma chave válida encontrada. Gere uma nova Key.';
-                keyModalInfo.textContent = '';
+                keyDisplayElement.textContent = 'CHAVE NÃO ENCONTRADA';
+                keyModalInfo.innerHTML = '<span class="text-red-500 font-bold">Status: Não logado.</span>';
             }
             document.getElementById('key-modal').classList.remove('hidden');
         }
         
-        /** Gera e exibe a nova chave de acesso. */
-        function generateAndDisplayNewKey() {
-            const newKey = generateNewAccessKey(7); // Geração padrão de 7 dias
-            
-            displayCurrentKey(); // Atualiza o modal com a nova info de expiração
-            
-            loginErrorMsg.textContent = 'Nova Key de 7 dias gerada e salva no seu navegador. Use-a para fazer o Login.';
-        }
-
         // --- FUNÇÕES DE ADMIN ---
         function showAdminPanel() {
             loginScreen.style.display = 'none'; 
             mainPanel.style.display = 'none';   
             document.getElementById('admin-modal').classList.remove('hidden'); 
-            
             document.getElementById('admin-message').textContent = '';
+        }
+        
+        function handleAdminLogout() {
+             // Apenas oculta o modal de admin e volta para a tela de login
+            document.getElementById('admin-modal').classList.add('hidden'); 
+            document.getElementById('login-screen').style.display = 'flex';
         }
 
         function adminGenerateNewKey() {
@@ -665,23 +646,39 @@
             
             // Feedback no modal de admin
             const adminMsg = document.getElementById('admin-message');
-            adminMsg.textContent = `✅ NOVA KEY GERADA: ${newKey} (Duração: ${durationDays} dias)`;
+            adminMsg.textContent = `✅ NOVA KEY GERADA: ${newKey} (Duração: ${durationDays} dias). Copie e envie ao cliente.`;
             adminMsg.style.color = '#00eaff'; // Ciano para sucesso
             adminMsg.style.textShadow = '0 0 5px rgba(0, 234, 255, 0.8)';
+            
+            // Para sua conveniência, copia a chave gerada para a área de transferência do Admin
+            navigator.clipboard.writeText(newKey);
         }
         // --- FIM FUNÇÕES DE ADMIN ---
 
         /** Lógica de Inicialização. */
         function checkLoginStatus() {
-            let currentKey = localStorage.getItem(KEY_STORAGE_ID);
+            const storedKeyJSON = localStorage.getItem(KEY_STORAGE_ID);
             
-            if (!currentKey || !isKeyFormatValid(currentKey)) {
-                // Gera a primeira chave se não existir (7 dias)
-                generateNewAccessKey(7);
+            if (storedKeyJSON) {
+                try {
+                    const storedKeyData = JSON.parse(storedKeyJSON);
+                    
+                    if (Date.now() < storedKeyData.expiry) {
+                        // Chave válida no dispositivo: loga automaticamente
+                        completeLogin();
+                        return;
+                    } else {
+                        // Chave expirada: força o login/remoção
+                        localStorage.removeItem(KEY_STORAGE_ID);
+                    }
+                } catch (e) {
+                    // Erro ao processar: força o login/remoção
+                    localStorage.removeItem(KEY_STORAGE_ID);
+                }
             }
             
+            // Se chegou aqui, não há chave válida, exibe a tela de login
             keyInput.value = ''; 
-            
             loginScreen.style.display = 'flex';
             mainPanel.style.display = 'none';
             document.getElementById('main-body').classList.add('login-screen-container');
@@ -741,7 +738,7 @@
         }
         // --- FIM FUNÇÕES DE PERSISTÊNCIA ---
 
-        // --- FUNÇÕES DE SIMULAÇÃO DO PAINEL ---
+        // --- FUNÇÕES DE SIMULAÇÃO DO PAINEL (Mantidas do código anterior) ---
 
         function updateStatusText(element, text) { element.textContent = text; }
         function clearStatusText(element) { element.textContent = ''; }
