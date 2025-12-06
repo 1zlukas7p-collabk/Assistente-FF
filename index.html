@@ -687,3 +687,58 @@
     </script>
 </body>
 </html>
+🔑 CHAVE DE ACESSO EXCLUSIVA:
+                </label>
+                <input type="text" id="key-input" placeholder="XXXXXX-YYYYYY-ZZZZZZ" required maxlength="20">
+                
+                <button type="submit" class="key-submit-button text-2xl">
+                    <span id="login-text">CONECTAR AO SISTEMA</span>
+                </button>
+            </form>
+            
+            <p id="login-error-message" class="error-message"></p>
+        </div>
+    </div>
+    <div id="key-modal" class="modal-key-dialog hidden">
+        <div class="modal-key-content">
+            <h3 class="text-3xl font-bold text-neon-primary mb-4">🔑 STATUS DA CHAVE DE ACESSO</h3>
+            
+            <p class="text-gray-300 mb-4" id="key-modal-info">Verificando expiração...</p>
+            
+            <div class="key-display-container">
+                <span id="current-valid-key" class="key-display">CHAVE NÃO ENCONTRADA</span>
+                <button onclick="copyKeyToClipboard()" class="copy-button" id="copy-btn">
+                    <span id="copy-text">📋 COPIAR</span>
+                </button>
+            </div>
+
+            <p class="text-sm text-yellow-400 mt-2">AVISO: Esta chave está vinculada a este dispositivo/navegador até a data de expiração.</p>
+            <button onclick="document.getElementById('key-modal').classList.add('hidden')" class="key-submit-button mt-4 text-lg">
+                FECHAR
+            </button>
+        </div>
+    </div>
+
+    <div id="admin-modal" class="modal-key-dialog hidden">
+        <div class="modal-key-content">
+            <h3 class="text-3xl font-bold text-red-500 mb-4">👑 PAINEL DE GESTÃO DE CHAVES</h3>
+            <p class="text-yellow-400 mb-4">ACESSO CONCEDIDO: Admin Master Key ATIVA.</p>
+            
+            <div class="space-y-4 text-left">
+                <label class="block text-gray-200 font-bold">1. SELECIONE A DURAÇÃO DA NOVA KEY (Para o cliente):</label>
+                <select id="key-duration-select" class="w-full p-3 bg-gray-900/50 border border-red-500/50 rounded-lg text-neon-secondary text-lg">
+                    <option value="7">7 Dias (Padrão)</option>
+                    <option value="15">15 Dias</option>
+                    <option value="30">30 Dias</option>
+                </select>
+                
+                <button onclick="adminGenerateNewKey()" class="key-submit-button bg-red-600 hover:bg-red-700 text-2xl mt-4">
+                    ⚠️ GERAR NOVA KEY COM DURAÇÃO
+                </button>
+                <p id="admin-message" class="error-message text-center mt-2"></p>
+                <p class="text-xs text-gray-500 text-center">A nova chave será automaticamente copiada para sua área de transferência.</p>
+            </div>
+
+            <button onclick="document.getElementById('admin-modal').classList.add('hidden'); handleAdminLogout();" class="key-generate-button mt-6 text-lg bg-red-800 hover:bg-red-900 border-none !text-white !p-3">
+                SAIR DO MODO ADMIN
+            </button>
