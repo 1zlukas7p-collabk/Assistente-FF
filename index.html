@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assistente FF – Módulo de Calibração HUD V1</title>
+    <title>Assistente FF – Módulo de Calibração HUD V2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* ========================================================= */
@@ -20,60 +20,135 @@
         }
 
         /* ========================================================= */
-        /* ESTILOS DE LOGIN (NOVO DESIGN "GLASSMORFICO") */
+        /* ESTILOS DE LOGIN (Foco em Segurança/Profissionalismo) */
         /* ========================================================= */
-        .login-screen-container { height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; }
+        .login-screen-container { 
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+        }
+
+        /* ANIMAÇÃO DE BOOT-UP SUAVE */
+        @keyframes login-fade-in {
+            from { opacity: 0; transform: translateY(20px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
         
         .login-box {
-            width: 90%; max-width: 450px; padding: 2.5rem; 
-            border: 1px solid rgba(0, 234, 255, 0.4); /* Borda mais suave */
-            background: rgba(10, 5, 20, 0.75); /* Fundo semi-transparente */
-            backdrop-filter: blur(20px) saturate(150%); /* Efeito de vidro / Holograma */
-            -webkit-backdrop-filter: blur(20px) saturate(150%);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2), 0 0 50px rgba(161, 0, 255, 0.3); /* Sombra externa */
-            border-radius: 20px; /* Bordas mais arredondadas */
-            transform: perspective(1000px) rotateX(1deg); /* Leve 3D tilt */
+            width: 90%; 
+            max-width: 450px; 
+            padding: 3rem; /* Aumenta o padding para mais "respiro" */
+            border: 2px solid rgba(0, 234, 255, 0.6); /* Borda mais presente */
+            background: rgba(10, 5, 20, 0.85); 
+            backdrop-filter: blur(25px) saturate(180%); 
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), 0 0 60px rgba(161, 0, 255, 0.4); 
+            border-radius: 20px; 
+            animation: login-fade-in 0.8s ease-out forwards; /* Animação de entrada */
+            position: relative;
         }
-        
+        /* Detalhe de canto para visual de terminal/BIOS */
+        .login-box::before {
+            content: '[STATUS: READY]';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #38bdf8; /* Azul claro para status */
+            opacity: 0.7;
+        }
+
         #key-input {
-            width: 100%; padding: 1rem; background-color: rgba(255, 255, 255, 0.05); /* Fundo quase transparente */
-            border: 1px solid var(--neon-primary);
-            color: var(--neon-secondary); font-size: 1.25rem; text-align: center; border-radius: 10px;
-            margin-bottom: 1.5rem; box-shadow: 0 0 15px rgba(161, 0, 255, 0.3); outline: none;
-            letter-spacing: 2px;
+            width: 100%; 
+            padding: 1.2rem; /* Mais altura */
+            background-color: rgba(0, 0, 0, 0.3); /* Fundo mais escuro */
+            border: 2px solid var(--neon-primary); /* Borda sólida */
+            border-bottom: 4px solid var(--neon-secondary); /* Detalhe inferior (input ativo) */
+            color: var(--neon-secondary); 
+            font-size: 1.4rem; 
+            text-align: center; 
+            border-radius: 8px; /* Mais quadrado */
+            margin-bottom: 2rem; 
+            box-shadow: 0 0 10px rgba(161, 0, 255, 0.2); 
+            outline: none;
+            letter-spacing: 3px; /* Mais espaçamento para ser legível */
             transition: all 0.3s;
+            font-family: monospace; /* Fonte mono para parecer KeyCode */
+            text-transform: uppercase;
         }
-        #key-input::placeholder { color: rgba(0, 234, 255, 0.5); }
-        #key-input:focus { border-color: var(--neon-secondary); background-color: rgba(0, 234, 255, 0.05); box-shadow: 0 0 25px var(--neon-secondary); }
+        #key-input::placeholder { color: rgba(0, 234, 255, 0.4); }
+        #key-input:focus { 
+            border-color: var(--neon-secondary); 
+            background-color: rgba(0, 234, 255, 0.1); 
+            box-shadow: 0 0 30px var(--neon-secondary), 0 0 10px var(--neon-primary); 
+        }
         
         .key-submit-button, .key-generate-button {
-            font-weight: bold; padding: 0.8rem 1.5rem; border-radius: 10px; transition: all 0.3s; border: none;
-            width: 100%; text-transform: uppercase;
+            font-weight: bold; 
+            padding: 1rem 1.5rem; /* Mais padding */
+            border-radius: 8px; 
+            transition: all 0.3s; 
+            border: none;
+            width: 100%; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .key-submit-button {
-            background: var(--neon-secondary); color: var(--bg-dark); margin-bottom: 1rem;
-            box-shadow: 0 0 10px var(--neon-secondary);
+            background: var(--neon-secondary); 
+            color: var(--bg-dark); 
+            margin-bottom: 1rem;
+            box-shadow: 0 0 15px var(--neon-secondary);
+            font-size: 1.5rem;
         }
-        .key-submit-button:hover { box-shadow: 0 0 30px var(--neon-secondary), 0 0 5px var(--neon-primary); transform: scale(1.02); }
+        .key-submit-button:hover:not(:disabled) { 
+            box-shadow: 0 0 40px var(--neon-secondary), 0 0 10px var(--neon-primary); 
+            transform: scale(1.01); 
+        }
+        .key-submit-button:disabled {
+            background: #3f3b55; /* Cor cinza/roxa escura */
+            cursor: not-allowed;
+            box-shadow: none;
+            color: #a0a0a0;
+        }
         
         .key-generate-button {
-            background: transparent; color: var(--neon-primary); border: 1px solid var(--neon-primary);
-            font-size: 0.9rem;
+            background: transparent; 
+            color: var(--neon-primary); 
+            border: 2px solid var(--neon-primary); /* Borda mais visível */
+            font-size: 1rem;
+            padding: 0.8rem 1.5rem;
         }
-        .key-generate-button:hover { box-shadow: 0 0 15px var(--neon-primary); background: rgba(161, 0, 255, 0.1); }
+        .key-generate-button:hover { 
+            box-shadow: 0 0 20px var(--neon-primary); 
+            background: rgba(161, 0, 255, 0.2); 
+        }
 
-        .error-message { color: #ff3366; text-shadow: 0 0 5px rgba(255, 51, 102, 0.8); margin-top: 1rem; font-size: 0.9rem; }
+        .error-message { 
+            color: #ff3366; 
+            text-shadow: 0 0 8px rgba(255, 51, 102, 1); 
+            margin-top: 1.5rem; 
+            font-size: 1rem; 
+            font-weight: 600; 
+            border-top: 1px dashed #ff3366; 
+            padding-top: 1rem;
+            font-family: monospace;
+        }
         
-        /* Estilo para a caixa de diálogo da Key (popup) e Admin Panel */
+        /* Estilos do Modal e do Painel Principal (Ajustados para uniformidade) */
+        
         .modal-key-dialog {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.8); z-index: 100;
+            background-color: rgba(0, 0, 0, 0.9); z-index: 100;
             display: flex; justify-content: center; align-items: center;
         }
         .modal-key-content {
-            background: rgba(10, 5, 20, 0.9); backdrop-filter: blur(15px);
-            padding: 2rem; border-radius: 16px;
-            border: 3px solid var(--neon-secondary); box-shadow: 0 0 50px var(--neon-secondary);
+            background: var(--bg-card); backdrop-filter: blur(15px);
+            padding: 3rem; 
+            border-radius: 16px;
+            border: 3px solid var(--neon-secondary); box-shadow: 0 0 70px var(--neon-secondary)/50;
             width: 90%; max-width: 550px; text-align: center;
         }
         .key-display-container {
@@ -81,12 +156,12 @@
             background-color: var(--bg-inactive); 
             border: 1px solid var(--neon-secondary);
             border-radius: 8px;
-            margin: 1rem 0;
-            padding: 0.5rem;
+            margin: 1.5rem 0;
+            padding: 0.75rem; 
         }
         .key-display {
             color: var(--neon-secondary);
-            font-size: 1.4rem; padding: 0.5rem; 
+            font-size: 1.5rem; padding: 0.5rem; 
             font-family: monospace; letter-spacing: 3px;
             word-break: break-all;
             flex-grow: 1;
@@ -95,11 +170,14 @@
         }
         .copy-button {
             background: var(--neon-primary); color: white;
-            padding: 0.75rem; border-radius: 6px; margin-left: 10px;
+            padding: 0.75rem 1rem; border-radius: 6px; margin-left: 15px;
             transition: background 0.2s, transform 0.2s;
+            text-transform: uppercase;
+            font-weight: 700;
         }
         .copy-button:hover {
             background: var(--neon-secondary);
+            color: var(--bg-dark);
             transform: scale(1.05);
         }
 
@@ -178,25 +256,28 @@
             <h1 class="text-4xl md:text-5xl font-black tracking-tighter uppercase neon-glow text-neon-primary mb-2">
                 ASSISTENTE <span class="text-neon-secondary">FF</span>
             </h1>
-            <h2 class="text-xl text-gray-300 mb-8 font-light border-b border-neon-primary/20 pb-3">
-                <span class="text-neon-secondary">MÓDULO 42.1 |</span> AUTENTICAÇÃO NECESSÁRIA
+            <h2 class="text-xl text-gray-300 mb-8 font-light border-b-2 border-neon-secondary/30 pb-3">
+                <span class="text-neon-secondary font-bold">MÓDULO DE AUTENTICAÇÃO HFR-42</span>
             </h2>
 
             <form id="login-form" onsubmit="handleLogin(event)">
+                <label for="key-input" class="block text-left text-sm font-semibold text-gray-200 mb-2">
+                    🔑 CHAVE DE ACESSO EXCLUSIVA:
+                </label>
                 <input type="text" id="key-input" placeholder="XXXXXX-YYYYYY-ZZZZZZ" required maxlength="20">
+                
                 <button type="submit" class="key-submit-button text-2xl">
                     <span id="login-text">CONECTAR AO SISTEMA</span>
                 </button>
             </form>
             
-            <button onclick="generateAndDisplayNewKey()" class="key-generate-button text-base mt-2">
-                ⚙️ GERAR & SALVAR NOVA KEY DE ACESSO (7 DIAS)
+            <button onclick="generateAndDisplayNewKey()" class="key-generate-button text-base mt-4">
+                ➕ GERAR & SALVAR CHAVE VÁLIDA (7 DIAS)
             </button>
 
             <p id="login-error-message" class="error-message"></p>
         </div>
     </div>
-
     <div id="key-modal" class="modal-key-dialog hidden">
         <div class="modal-key-content">
             <h3 class="text-3xl font-bold text-neon-primary mb-4">🔑 Chave de Acesso Válida</h3>
@@ -369,7 +450,7 @@
         </div>
 
         <footer class="text-center py-8 border-t border-neon-primary/20 mt-10 text-gray-500 text-sm">
-            <p>Módulo de Calibração **HFR-42** | Versão **V10.0** | &copy; 2025 Assistente FF.</p>
+            <p>Módulo de Calibração **HFR-42** | Versão **V2.0** | &copy; 2025 Assistente FF.</p>
         </footer>
 
     </div>
@@ -377,7 +458,7 @@
     <script>
         
         // =========================================================
-        // NOVAS DEFINIÇÕES DE SEGURANÇA E ADMIN
+        // DEFINIÇÕES DE SEGURANÇA E ADMIN
         // =========================================================
         const KEY_STORAGE_ID = 'validAccessKey'; 
         const STATE_STORAGE_ID = 'ffAssistantAppState'; 
@@ -441,6 +522,7 @@
             loginButtonText.textContent = 'AUTENTICANDO...';
             loginButtonText.parentElement.disabled = true;
 
+            // Simula o tempo de autenticação para parecer mais profissional
             await new Promise(resolve => setTimeout(resolve, 1500));
             
             // --- Lógica de Key de Admin ---
@@ -477,7 +559,7 @@
                     } else {
                         // FALHA - CHAVE EXPIRADA
                         const duration = storedKeyData.durationDays;
-                        loginErrorMsg.textContent = `ERRO [COD 408]: Sua Key (${duration} dias) EXPIROU. Por favor, gere uma nova chave.`;
+                        loginErrorMsg.textContent = `ERRO [COD 408]: Sua Key (${duration} dias) EXPIROU. Solicite uma nova chave.`;
                         loginButtonText.textContent = 'CONECTAR AO SISTEMA';
                         loginButtonText.parentElement.disabled = false;
                         keyInput.value = '';
@@ -492,7 +574,7 @@
                     
                 } else {
                      // FALHA - CHAVE ERRADA
-                    loginErrorMsg.textContent = 'ERRO [COD 403]: Chave inválida. Tente novamente.';
+                    loginErrorMsg.textContent = 'ERRO [COD 403]: Chave inválida ou não reconhecida. Tente novamente.';
                     loginButtonText.textContent = 'CONECTAR AO SISTEMA';
                     loginButtonText.parentElement.disabled = false;
                     keyInput.value = '';
@@ -524,7 +606,7 @@
             }
         }
         
-        /** Exibe um modal (popup) com a chave atualmente salva. */
+        /** Exibe um modal (popup) com a chave atualmente salva e o status de expiração. */
         function displayCurrentKey() {
             const storedKeyJSON = localStorage.getItem(KEY_STORAGE_ID);
             const keyDisplayElement = document.getElementById('current-valid-key');
@@ -567,11 +649,10 @@
 
         // --- FUNÇÕES DE ADMIN ---
         function showAdminPanel() {
-            loginScreen.style.display = 'none'; // Esconde a tela de login
-            mainPanel.style.display = 'none';   // Garante que o painel principal esteja escondido
-            document.getElementById('admin-modal').classList.remove('hidden'); // Mostra o modal de admin
+            loginScreen.style.display = 'none'; 
+            mainPanel.style.display = 'none';   
+            document.getElementById('admin-modal').classList.remove('hidden'); 
             
-            // Limpa mensagem de erro anterior
             document.getElementById('admin-message').textContent = '';
         }
 
@@ -590,7 +671,7 @@
         }
         // --- FIM FUNÇÕES DE ADMIN ---
 
-        /** Lógica de Inicialização: Garante que uma chave exista, carrega o estado e prepara a tela. */
+        /** Lógica de Inicialização. */
         function checkLoginStatus() {
             let currentKey = localStorage.getItem(KEY_STORAGE_ID);
             
@@ -599,13 +680,13 @@
                 generateNewAccessKey(7);
             }
             
-            keyInput.value = ''; // Garante que o campo esteja vazio
+            keyInput.value = ''; 
             
             loginScreen.style.display = 'flex';
             mainPanel.style.display = 'none';
             document.getElementById('main-body').classList.add('login-screen-container');
 
-            loadAppState(); // Carrega o estado ANTES de inicializar o app
+            loadAppState(); // Carrega o estado persistente do HUD
             initializeApp();
         }
 
@@ -613,7 +694,6 @@
 
         /** Salva o estado atual (toggles e slider) no localStorage. */
         function saveAppState() {
-            // Garantir que a variável appState esteja sincronizada
             appState.AimPrecisionPercentage = parseInt(document.getElementById('aim-precision-slider').value);
             
             try {
@@ -636,7 +716,7 @@
                     const slider = document.getElementById('aim-precision-slider');
                     if (slider) {
                         slider.value = appState.AimPrecisionPercentage || 50;
-                        updateAimPrecision(slider.value, true); // O 'true' evita salvar novamente ao carregar
+                        updateAimPrecision(slider.value, true); 
                     }
                     
                     ['Optimization', 'AimGuide', 'Precision'].forEach(feature => {
@@ -667,6 +747,7 @@
         function clearStatusText(element) { element.textContent = ''; }
         function restartAnimation(element) { element.classList.remove('section-enter-animation'); void element.offsetWidth; element.classList.add('section-enter-animation'); }
 
+        // Simula o lançamento do aplicativo Free Fire
         function openFreeFireApp() {
             const isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
             const isAndroid = /Android/.test(navigator.userAgent);
@@ -777,7 +858,7 @@
             stabilizer.classList.remove('animate-pulse');
         }
         
-        // --- FUNÇÕES DE CONTROLE DE UI/ESTADO (Modificadas para Persistência) ---
+        // --- FUNÇÕES DE CONTROLE DE UI/ESTADO ---
 
         function updateSliderVisual(value) {
             const percentage = value + '%';
@@ -793,7 +874,7 @@
             
             updateSliderVisual(appState.AimPrecisionPercentage);
 
-            if (!isLoad) { // Salva o estado apenas se não estiver carregando
+            if (!isLoad) { 
                 saveAppState();
             }
         }
@@ -805,7 +886,6 @@
             const willBeActive = inputElement.checked; 
             appState[feature] = willBeActive;
 
-            // Salva o estado apenas se não estiver carregando
             if (!isLoad) { 
                 saveAppState();
             }
