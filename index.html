@@ -394,7 +394,8 @@
         async function handleLogin(event) {
             event.preventDefault(); 
             
-            const enteredKey = keyInput.value.trim();
+            // Certifique-se de que a entrada esteja formatada corretamente antes de comparar
+            const enteredKey = keyInput.value.trim().toUpperCase();
 
             loginErrorMsg.textContent = '';
             loginButtonText.textContent = 'AUTENTICANDO...';
@@ -463,7 +464,7 @@
         /** Gera e exibe a nova chave de acesso. */
         function generateAndDisplayNewKey() {
             const newKey = generateNewAccessKey();
-            keyInput.value = newKey; // Preenche o campo de input
+            // REMOVIDO: keyInput.value = newKey; // Não preenche o campo de input automaticamente
             
             document.getElementById('current-valid-key').textContent = newKey;
             document.getElementById('key-modal').classList.remove('hidden');
@@ -476,12 +477,13 @@
             let currentKey = localStorage.getItem(KEY_STORAGE_ID);
             
             if (!currentKey || !isKeyFormatValid(currentKey)) {
-                currentKey = generateNewAccessKey();
+                // Gera a primeira chave se não existir
+                generateNewAccessKey();
             }
             
-            keyInput.placeholder = currentKey; 
-            keyInput.value = ''; 
-
+            // REMOVIDO: keyInput.placeholder = currentKey; // Não mostra a chave como placeholder
+            keyInput.value = ''; // Garante que o campo esteja vazio
+            
             loginScreen.style.display = 'flex';
             mainPanel.style.display = 'none';
             document.getElementById('main-body').classList.add('login-screen-container');
