@@ -64,7 +64,7 @@
 
         .error-message { color: #ff3366; text-shadow: 0 0 5px rgba(255, 51, 102, 0.8); margin-top: 1rem; font-size: 0.9rem; }
         
-        /* Estilo para a caixa de diálogo da Key (popup) */
+        /* Estilo para a caixa de diálogo da Key (popup) e Admin Panel */
         .modal-key-dialog {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.8); z-index: 100;
@@ -190,7 +190,7 @@
             </form>
             
             <button onclick="generateAndDisplayNewKey()" class="key-generate-button text-base mt-2">
-                ⚙️ GERAR & SALVAR NOVA KEY DE ACESSO
+                ⚙️ GERAR & SALVAR NOVA KEY DE ACESSO (7 DIAS)
             </button>
 
             <p id="login-error-message" class="error-message"></p>
@@ -200,7 +200,7 @@
     <div id="key-modal" class="modal-key-dialog hidden">
         <div class="modal-key-content">
             <h3 class="text-3xl font-bold text-neon-primary mb-4">🔑 Chave de Acesso Válida</h3>
-            <p class="text-gray-300 mb-4">Use a chave abaixo para fazer o login:</p>
+            <p class="text-gray-300 mb-4" id="key-modal-info">Aguardando... (Expiração)</p>
             
             <div class="key-display-container">
                 <span id="current-valid-key" class="key-display"></span>
@@ -216,6 +216,30 @@
         </div>
     </div>
 
+    <div id="admin-modal" class="modal-key-dialog hidden">
+        <div class="modal-key-content">
+            <h3 class="text-3xl font-bold text-red-500 mb-4">👑 PAINEL DE GESTÃO DE CHAVES</h3>
+            <p class="text-yellow-400 mb-4">ACESSO CONCEDIDO: Admin Master Key ATIVA.</p>
+            
+            <div class="space-y-4 text-left">
+                <label class="block text-gray-200 font-bold">1. SELECIONE A DURAÇÃO DA NOVA KEY:</label>
+                <select id="key-duration-select" class="w-full p-3 bg-gray-900/50 border border-red-500/50 rounded-lg text-neon-secondary text-lg">
+                    <option value="7">7 Dias (Padrão)</option>
+                    <option value="30">30 Dias</option>
+                    <option value="365">1 Ano (365 Dias)</option>
+                </select>
+                
+                <button onclick="adminGenerateNewKey()" class="key-submit-button bg-red-600 hover:bg-red-700 text-2xl mt-4">
+                    ⚠️ GERAR NOVA KEY COM DURAÇÃO
+                </button>
+                <p id="admin-message" class="error-message text-center mt-2"></p>
+            </div>
+
+            <button onclick="document.getElementById('admin-modal').classList.add('hidden'); document.getElementById('login-screen').style.display = 'flex';" class="key-generate-button mt-6 text-lg">
+                VOLTAR AO LOGIN
+            </button>
+        </div>
+    </div>
     <div id="main-hud-panel" class="max-w-7xl mx-auto space-y-8 relative z-10">
 
         <header class="text-center pt-6 pb-4 md:pt-10">
@@ -228,7 +252,7 @@
             <p class="mt-4 text-base text-gray-200 max-w-4xl mx-auto hud-card py-3 px-6 rounded-xl transition-all duration-500 border-none shadow-xl flex justify-between items-center">
                 <span>Clique nos controles para iniciar o diagnóstico e otimizar. 🛠️</span>
                 <button onclick="displayCurrentKey()" class="text-xs font-bold text-neon-secondary hover:text-white transition duration-200 ml-4">
-                    [VER KEY ATUAL]
+                    [VER KEY ATUAL/EXPIRAÇÃO]
                 </button>
             </p>
         </header>
@@ -352,7 +376,13 @@
 
     <script>
         
-        const KEY_STORAGE_ID = 'validAccessKey'; // ID usado no localStorage para salvar a chave
+        // =========================================================
+        // NOVAS DEFINIÇÕES DE SEGURANÇA E ADMIN
+        // =========================================================
+        const KEY_STORAGE_ID = 'validAccessKey'; 
+        const STATE_STORAGE_ID = 'ffAssistantAppState'; 
+        const ADMIN_MASTER_KEY = 'ADM-123456-BOSS'; // <-- CHAVE MESTRA DE ADMIN!
+        // =========================================================
 
         const loginScreen = document.getElementById('login-screen');
         const mainPanel = document.getElementById('main-hud-panel');
@@ -366,22 +396,33 @@
             Optimization: false, AimGuide: false, Precision: false, AimPrecisionPercentage: 50,
         };
 
-        // --- FUNÇÕES DE GERAÇÃO E VALIDAÇÃO DE KEY ---
+        // --- FUNÇÕES DE GERAÇÃO E VALIDAÇÃO DE KEY COM EXPIRAÇÃO ---
 
         /** Gera um número aleatório de 6 dígitos. */
         function generateRandomSixDigits() {
             return Math.floor(100000 + Math.random() * 900000).toString();
         }
 
-        /** Gera uma chave de acesso válida no formato 6-6-6 e armazena. */
-        function generateNewAccessKey() {
+        /** Gera uma chave de acesso válida no formato 6-6-6 e armazena com EXPIRAÇÃO. */
+        function generateNewAccessKey(durationDays = 7) { 
             const part1 = generateRandomSixDigits();
             const part2 = generateRandomSixDigits();
             const part3 = generateRandomSixDigits();
-            const newKey = `${part1}-${part2}-${part3}`;
+            const newKeyString = `${part1}-${part2}-${part3}`;
             
-            localStorage.setItem(KEY_STORAGE_ID, newKey); 
-            return newKey;
+            // Cálculo da expiração em milissegundos
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + durationDays);
+            
+            const keyData = {
+                key: newKeyString,
+                expiry: expiryDate.getTime(),
+                durationDays: durationDays
+            };
+            
+            // Salva o OBJETO em formato JSON
+            localStorage.setItem(KEY_STORAGE_ID, JSON.stringify(keyData)); 
+            return newKeyString;
         }
         
         /** Verifica se a chave de acesso segue o padrão 6-6-6 numérico. */
@@ -394,7 +435,6 @@
         async function handleLogin(event) {
             event.preventDefault(); 
             
-            // Certifique-se de que a entrada esteja formatada corretamente antes de comparar
             const enteredKey = keyInput.value.trim().toUpperCase();
 
             loginErrorMsg.textContent = '';
@@ -403,24 +443,62 @@
 
             await new Promise(resolve => setTimeout(resolve, 1500));
             
-            const storedKey = localStorage.getItem(KEY_STORAGE_ID);
+            // --- Lógica de Key de Admin ---
+            if (enteredKey === ADMIN_MASTER_KEY) {
+                showAdminPanel(); // Chamada para o painel de admin
+                return;
+            }
+            // --- FIM Lógica de Key de Admin ---
+
+            const storedKeyJSON = localStorage.getItem(KEY_STORAGE_ID);
             
-            if (enteredKey === storedKey && isKeyFormatValid(enteredKey)) {
-                // SUCESSO
-                loginScreen.style.display = 'none';
-                mainPanel.style.display = 'block';
-                document.getElementById('main-body').classList.remove('login-screen-container');
-                
-            } else if (!isKeyFormatValid(enteredKey)) {
-                // FALHA - FORMATO
-                loginErrorMsg.textContent = 'ERRO [COD 401]: O formato da chave está incorreto. Use XXXXXX-YYYYYY-ZZZZZZ.';
+            // 1. Verifica se existe Key e se está no formato JSON
+            if (!storedKeyJSON) {
+                loginErrorMsg.textContent = 'ERRO [COD 404]: Nenhuma Key de acesso encontrada. Gere uma nova Key válida.';
                 loginButtonText.textContent = 'CONECTAR AO SISTEMA';
                 loginButtonText.parentElement.disabled = false;
                 keyInput.value = '';
-                
-            } else {
-                 // FALHA - CHAVE ERRADA/EXPIRADA
-                loginErrorMsg.textContent = 'ERRO [COD 403]: Chave inválida. Gere uma nova Key válida ou tente novamente.';
+                return;
+            }
+
+            try {
+                const storedKeyData = JSON.parse(storedKeyJSON);
+                const storedKey = storedKeyData.key;
+                const expiryTime = storedKeyData.expiry;
+
+                // 2. Verifica a validade e a expiração da Key
+                if (enteredKey === storedKey && isKeyFormatValid(enteredKey)) {
+                    if (Date.now() < expiryTime) {
+                        // SUCESSO e VÁLIDA
+                        loginScreen.style.display = 'none';
+                        mainPanel.style.display = 'block';
+                        document.getElementById('main-body').classList.remove('login-screen-container');
+                        
+                    } else {
+                        // FALHA - CHAVE EXPIRADA
+                        const duration = storedKeyData.durationDays;
+                        loginErrorMsg.textContent = `ERRO [COD 408]: Sua Key (${duration} dias) EXPIROU. Por favor, gere uma nova chave.`;
+                        loginButtonText.textContent = 'CONECTAR AO SISTEMA';
+                        loginButtonText.parentElement.disabled = false;
+                        keyInput.value = '';
+                    }
+
+                } else if (!isKeyFormatValid(enteredKey)) {
+                    // FALHA - FORMATO
+                    loginErrorMsg.textContent = 'ERRO [COD 401]: O formato da chave está incorreto. Use XXXXXX-YYYYYY-ZZZZZZ.';
+                    loginButtonText.textContent = 'CONECTAR AO SISTEMA';
+                    loginButtonText.parentElement.disabled = false;
+                    keyInput.value = '';
+                    
+                } else {
+                     // FALHA - CHAVE ERRADA
+                    loginErrorMsg.textContent = 'ERRO [COD 403]: Chave inválida. Tente novamente.';
+                    loginButtonText.textContent = 'CONECTAR AO SISTEMA';
+                    loginButtonText.parentElement.disabled = false;
+                    keyInput.value = '';
+                }
+            } catch (e) {
+                loginErrorMsg.textContent = 'ERRO DE SISTEMA [JSON]: Chave inválida no armazenamento. Gere uma nova.';
                 loginButtonText.textContent = 'CONECTAR AO SISTEMA';
                 loginButtonText.parentElement.disabled = false;
                 keyInput.value = '';
@@ -434,14 +512,12 @@
             const copyBtn = document.getElementById('copy-text');
 
             if (key) {
-                // Usa a API de Clipboard moderna
                 navigator.clipboard.writeText(key).then(() => {
                     copyBtn.textContent = '✅ COPIADO!';
                     setTimeout(() => {
                         copyBtn.textContent = '📋 COPIAR';
                     }, 2000);
                 }).catch(err => {
-                    // Fallback para navegadores mais antigos (menos comum)
                     console.error('Falha ao copiar:', err);
                     alert("Erro ao copiar. Tente selecionar a chave manualmente.");
                 });
@@ -450,48 +526,142 @@
         
         /** Exibe um modal (popup) com a chave atualmente salva. */
         function displayCurrentKey() {
-            const currentKey = localStorage.getItem(KEY_STORAGE_ID);
+            const storedKeyJSON = localStorage.getItem(KEY_STORAGE_ID);
             const keyDisplayElement = document.getElementById('current-valid-key');
+            const keyModalInfo = document.getElementById('key-modal-info');
             
-            if (currentKey) {
-                keyDisplayElement.textContent = currentKey;
+            if (storedKeyJSON) {
+                try {
+                    const keyData = JSON.parse(storedKeyJSON);
+                    const expiryDate = new Date(keyData.expiry);
+                    
+                    keyDisplayElement.textContent = keyData.key;
+                    
+                    const formattedDate = expiryDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                    
+                    if (Date.now() >= keyData.expiry) {
+                         keyModalInfo.innerHTML = `STATUS: <span class="text-red-500 font-bold">EXPIRADA!</span> (Era de ${keyData.durationDays} dias)`;
+                    } else {
+                         keyModalInfo.innerHTML = `DURAÇÃO: ${keyData.durationDays} dias | Válida até: <span class="text-neon-secondary font-bold">${formattedDate}</span>`;
+                    }
+
+                } catch (e) {
+                     keyDisplayElement.textContent = 'Erro ao processar Key. Gere uma nova.';
+                     keyModalInfo.textContent = '';
+                }
             } else {
                 keyDisplayElement.textContent = 'Nenhuma chave válida encontrada. Gere uma nova Key.';
+                keyModalInfo.textContent = '';
             }
             document.getElementById('key-modal').classList.remove('hidden');
         }
         
         /** Gera e exibe a nova chave de acesso. */
         function generateAndDisplayNewKey() {
-            const newKey = generateNewAccessKey();
-            // REMOVIDO: keyInput.value = newKey; // Não preenche o campo de input automaticamente
+            const newKey = generateNewAccessKey(7); // Geração padrão de 7 dias
             
-            document.getElementById('current-valid-key').textContent = newKey;
-            document.getElementById('key-modal').classList.remove('hidden');
+            displayCurrentKey(); // Atualiza o modal com a nova info de expiração
             
-            loginErrorMsg.textContent = 'Nova Key gerada e salva no seu navegador. Use-a para fazer o Login.';
+            loginErrorMsg.textContent = 'Nova Key de 7 dias gerada e salva no seu navegador. Use-a para fazer o Login.';
         }
 
-        /** Lógica de Inicialização: Garante que uma chave exista e prepara a tela. */
+        // --- FUNÇÕES DE ADMIN ---
+        function showAdminPanel() {
+            loginScreen.style.display = 'none'; // Esconde a tela de login
+            mainPanel.style.display = 'none';   // Garante que o painel principal esteja escondido
+            document.getElementById('admin-modal').classList.remove('hidden'); // Mostra o modal de admin
+            
+            // Limpa mensagem de erro anterior
+            document.getElementById('admin-message').textContent = '';
+        }
+
+        function adminGenerateNewKey() {
+            const select = document.getElementById('key-duration-select');
+            const durationDays = parseInt(select.value);
+            
+            // Gera a nova chave com a duração selecionada
+            const newKey = generateNewAccessKey(durationDays); 
+            
+            // Feedback no modal de admin
+            const adminMsg = document.getElementById('admin-message');
+            adminMsg.textContent = `✅ NOVA KEY GERADA: ${newKey} (Duração: ${durationDays} dias)`;
+            adminMsg.style.color = '#00eaff'; // Ciano para sucesso
+            adminMsg.style.textShadow = '0 0 5px rgba(0, 234, 255, 0.8)';
+        }
+        // --- FIM FUNÇÕES DE ADMIN ---
+
+        /** Lógica de Inicialização: Garante que uma chave exista, carrega o estado e prepara a tela. */
         function checkLoginStatus() {
             let currentKey = localStorage.getItem(KEY_STORAGE_ID);
             
             if (!currentKey || !isKeyFormatValid(currentKey)) {
-                // Gera a primeira chave se não existir
-                generateNewAccessKey();
+                // Gera a primeira chave se não existir (7 dias)
+                generateNewAccessKey(7);
             }
             
-            // REMOVIDO: keyInput.placeholder = currentKey; // Não mostra a chave como placeholder
             keyInput.value = ''; // Garante que o campo esteja vazio
             
             loginScreen.style.display = 'flex';
             mainPanel.style.display = 'none';
             document.getElementById('main-body').classList.add('login-screen-container');
 
+            loadAppState(); // Carrega o estado ANTES de inicializar o app
             initializeApp();
         }
 
-        // --- FUNÇÕES DE SIMULAÇÃO DO PAINEL (MANTIDAS) ---
+        // --- FUNÇÕES DE PERSISTÊNCIA (SALVAR/CARREGAR ESTADO) ---
+
+        /** Salva o estado atual (toggles e slider) no localStorage. */
+        function saveAppState() {
+            // Garantir que a variável appState esteja sincronizada
+            appState.AimPrecisionPercentage = parseInt(document.getElementById('aim-precision-slider').value);
+            
+            try {
+                const stateJSON = JSON.stringify(appState);
+                localStorage.setItem(STATE_STORAGE_ID, stateJSON);
+            } catch (e) {
+                console.error("Erro ao salvar o estado no localStorage", e);
+            }
+        }
+
+        /** Carrega o estado da aplicação do localStorage e o aplica ao HUD. */
+        function loadAppState() {
+            try {
+                const storedState = localStorage.getItem(STATE_STORAGE_ID);
+                if (storedState) {
+                    const loadedState = JSON.parse(storedState);
+                    
+                    appState = { ...appState, ...loadedState };
+
+                    const slider = document.getElementById('aim-precision-slider');
+                    if (slider) {
+                        slider.value = appState.AimPrecisionPercentage || 50;
+                        updateAimPrecision(slider.value, true); // O 'true' evita salvar novamente ao carregar
+                    }
+                    
+                    ['Optimization', 'AimGuide', 'Precision'].forEach(feature => {
+                        const inputId = `toggle-${feature.toLowerCase()}-input`;
+                        const inputElement = document.getElementById(inputId);
+                        
+                        if (inputElement) {
+                            const shouldBeActive = appState[feature];
+                            
+                            if (inputElement.checked !== shouldBeActive) {
+                                inputElement.checked = shouldBeActive;
+                                toggleFeature(feature, true); // O 'true' evita salvar novamente ao carregar
+                            }
+                        }
+                    });
+                    return true;
+                }
+            } catch (e) {
+                console.error("Erro ao carregar o estado do localStorage", e);
+            }
+            return false;
+        }
+        // --- FIM FUNÇÕES DE PERSISTÊNCIA ---
+
+        // --- FUNÇÕES DE SIMULAÇÃO DO PAINEL ---
 
         function updateStatusText(element, text) { element.textContent = text; }
         function clearStatusText(element) { element.textContent = ''; }
@@ -606,13 +776,15 @@
             stabilizer.classList.add('neon-glow');
             stabilizer.classList.remove('animate-pulse');
         }
+        
+        // --- FUNÇÕES DE CONTROLE DE UI/ESTADO (Modificadas para Persistência) ---
 
         function updateSliderVisual(value) {
             const percentage = value + '%';
             slider.style.background = `linear-gradient(to right, var(--neon-secondary) ${percentage}, var(--bg-inactive) ${percentage})`;
         }
 
-        function updateAimPrecision(value) {
+        function updateAimPrecision(value, isLoad = false) {
             appState.AimPrecisionPercentage = parseInt(value);
             valueDisplay.textContent = `${appState.AimPrecisionPercentage}%`;
             
@@ -620,14 +792,23 @@
             if(precValueDisplay) { precValueDisplay.textContent = `${appState.AimPrecisionPercentage}%`; }
             
             updateSliderVisual(appState.AimPrecisionPercentage);
+
+            if (!isLoad) { // Salva o estado apenas se não estiver carregando
+                saveAppState();
+            }
         }
 
-        function toggleFeature(feature) {
+        function toggleFeature(feature, isLoad = false) {
             const inputId = `toggle-${feature.toLowerCase()}-input`;
             const inputElement = document.getElementById(inputId);
             
             const willBeActive = inputElement.checked; 
             appState[feature] = willBeActive;
+
+            // Salva o estado apenas se não estiver carregando
+            if (!isLoad) { 
+                saveAppState();
+            }
 
             const toggleId = `toggle-${feature.toLowerCase()}`;
             const toggleElement = document.getElementById(toggleId);
@@ -680,7 +861,7 @@
         }
 
         function initializeApp() {
-            if (slider && valueDisplay) { updateAimPrecision(appState.AimPrecisionPercentage); }
+            if (slider && valueDisplay) { updateAimPrecision(appState.AimPrecisionPercentage, true); }
         }
 
         // Chama a função de verificação de login ao carregar
