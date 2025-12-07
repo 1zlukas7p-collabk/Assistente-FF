@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assistente FF – M5.0 (Completo)</title>
+    <title>Assistente FF – M5.0 (Compacto)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
@@ -63,21 +63,21 @@
         }
 
         /* ========================================================= */
-        /* ESTILOS DO PAINEL CENTRAL (HUD) */
+        /* ESTILOS DO PAINEL CENTRAL (HUD) - AJUSTADO PARA SER MENOR */
         /* ========================================================= */
         .main-panel-container {
             position: relative;
             z-index: 10;
-            padding-top: 5rem;
-            padding-bottom: 5rem;
+            padding-top: 5vh; /* Diminuído */
+            padding-bottom: 5vh; /* Diminuído */
             display: flex;
             justify-content: center;
         }
 
         .hud-frame {
-            width: 100%;
-            max-width: 900px;
-            padding: 2rem;
+            width: 95%;
+            max-width: 800px; /* Reduzido de 900px para 800px */
+            padding: 1.5rem; /* Reduzido de 2rem */
             background-color: var(--bg-card);
             backdrop-filter: blur(10px);
             border: 2px solid rgba(161, 0, 255, 0.4);
@@ -209,7 +209,26 @@
             transform: scale(1.05);
         }
         
-        /* Estilos Removidos ou Simplificados para o tema */
+        /* Estilos do Slider DPI - Melhorado */
+        #dpi-slider { 
+            -webkit-appearance: none; appearance: none; width: 100%; height: 8px; 
+            border-radius: 5px; outline: none; transition: opacity .2s; 
+            background: var(--bg-inactive); 
+            border: 1px solid rgba(161, 0, 255, 0.5); /* Borda Neon sutil */
+        }
+        #dpi-slider::-webkit-slider-thumb { 
+            -webkit-appearance: none; appearance: none; width: 20px; height: 20px; /* Thumb menor */
+            border-radius: 50%; background: var(--neon-primary); cursor: pointer; 
+            box-shadow: 0 0 15px var(--neon-primary); /* Sombra mais forte */
+            border: 3px solid var(--bg-dark); 
+            transition: all 0.2s;
+        }
+        #dpi-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px var(--neon-secondary);
+        }
+
+
         .ping-display {
             font-size: 3rem;
             font-weight: bold;
@@ -221,16 +240,6 @@
             font-weight: bold;
             text-shadow: 0 0 5px rgba(0, 255, 153, 0.6);
             font-family: monospace;
-        }
-        #dpi-slider { 
-            -webkit-appearance: none; appearance: none; width: 100%; height: 10px; 
-            border-radius: 5px; outline: none; transition: opacity .2s; 
-            background: var(--bg-inactive); 
-        }
-        #dpi-slider::-webkit-slider-thumb { 
-            -webkit-appearance: none; appearance: none; width: 25px; height: 25px; 
-            border-radius: 50%; background: var(--neon-secondary); cursor: pointer; 
-            box-shadow: 0 0 10px var(--neon-secondary); border: 3px solid var(--bg-dark); 
         }
         .activate-button {
             background: linear-gradient(90deg, #ff00ff 0%, var(--neon-primary) 100%);
@@ -307,22 +316,11 @@
             margin-bottom: 2rem; box-shadow: 0 0 10px rgba(161, 0, 255, 0.2); outline: none;
             letter-spacing: 3px; transition: all 0.3s; font-family: monospace; text-transform: uppercase;
         }
-        #key-input:focus { 
-            border-color: var(--neon-secondary); background-color: rgba(0, 234, 255, 0.1); 
-            box-shadow: 0 0 30px var(--neon-secondary), 0 0 10px var(--neon-primary); 
-        }
         .key-submit-button {
             font-weight: bold; padding: 1rem 1.5rem; border-radius: 8px; transition: all 0.3s; border: none;
             width: 100%; text-transform: uppercase; letter-spacing: 1px;
             background: var(--neon-secondary); color: var(--bg-dark); box-shadow: 0 0 15px var(--neon-secondary);
             font-size: 1.5rem;
-        }
-        .key-submit-button:hover:not(:disabled) { 
-            box-shadow: 0 0 40px var(--neon-secondary), 0 0 10px var(--neon-primary); 
-            transform: scale(1.01); 
-        }
-        .key-submit-button:disabled {
-            background: #3f3b55; cursor: not-allowed; box-shadow: none; color: #a0a0a0;
         }
         .error-message { 
             color: #ff3366; text-shadow: 0 0 8px rgba(255, 51, 102, 1); margin-top: 1.5rem; 
@@ -355,17 +353,6 @@
             border-radius: 6px; margin-left: 15px; transition: background 0.2s, transform 0.2s;
             text-transform: uppercase; font-weight: 700;
         }
-        .copy-button:hover {
-            background: var(--neon-secondary); color: var(--bg-dark); transform: scale(1.05);
-        }
-        .key-generate-button {
-            background: transparent; color: var(--neon-primary); border: 2px solid var(--neon-primary); 
-            font-size: 1rem; padding: 0.8rem 1.5rem; border-radius: 8px; transition: all 0.3s;
-        }
-        .key-generate-button:hover { 
-            box-shadow: 0 0 20px var(--neon-primary); background: rgba(161, 0, 255, 0.2); 
-        }
-
         #main-hud-panel { display: none; }
     </style>
     
@@ -469,8 +456,7 @@
 
     <div id="main-hud-panel" class="main-panel-container">
         <div class="hud-frame">
-            <header class="text-center mb-10">
-                <h1 class="text-5xl font-black uppercase neon-title text-neon-primary">
+            <header class="text-center mb-6"> <h1 class="text-5xl font-black uppercase neon-title text-neon-primary">
                     ASSISTENTE <span class="text-neon-secondary">FF</span>
                 </h1>
                 <h2 class="text-xl font-light text-gray-300 mt-2">
@@ -478,9 +464,7 @@
                 </h2>
             </header>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                <div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6"> <div>
                     <h3 class="text-2xl font-bold text-neon-secondary mb-4 border-b border-neon-secondary/50 pb-2">FUNÇÕES EXCLUSIVAS</h3>
 
                     <div class="module-box flex flex-col justify-between mb-4">
@@ -550,8 +534,7 @@
                 </div>
             </div>
             
-            <div class="text-center my-10">
-                <button id="activate-launch-btn" class="activate-button uppercase" aria-label="Ativar modificações e iniciar o jogo Free Fire">
+            <div class="text-center my-8"> <button id="activate-launch-btn" class="activate-button uppercase" aria-label="Ativar modificações e iniciar o jogo Free Fire">
                     ATIVAR MODS E INICIAR JOGO
                 </button>
             </div>
@@ -811,7 +794,8 @@
             D.dpiValue.textContent = `${appState.AimPrecisionPercentage}%`;
             
             const percentage = value + '%';
-            D.dpiSlider.style.background = `linear-gradient(to right, var(--neon-secondary) ${percentage}, var(--bg-inactive) ${percentage})`;
+            // Corrigido para usar a variável CSS --neon-primary para o preenchimento
+            D.dpiSlider.style.background = `linear-gradient(to right, var(--neon-primary) ${percentage}, var(--bg-inactive) ${percentage})`;
 
             if (!isLoad) { saveAppState(); }
         }
@@ -1037,7 +1021,7 @@
         }
 
         function activateModsAndLaunch() {
-            const activeCount = Object.values(appState).filter(val => val === true).length;
+            const activeCount = ['Optimization', 'AimGuide', 'Precision'].filter(feature => appState[feature]).length;
             let hzInfo = appState.ScreenHz > 0 ? ` + HZ: ${appState.ScreenHz}Hz` : '';
 
             if (activeCount > 0 || appState.ScreenHz > 0) {
