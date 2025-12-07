@@ -1,203 +1,80 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Remasterizado</title>
-
-<style>
-    body {
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(135deg, #111, #222, #000);
-        font-family: Arial, sans-serif;
-        color: #fff;
-        min-height: 100vh;
-    }
-
-    .container {
-        padding: 40px 20px;
-        max-width: 500px;
-        margin: auto;
-    }
-
-    .card {
-        background: rgba(255, 255, 255, 0.06);
-        backdrop-filter: blur(12px);
-        padding: 25px;
-        border-radius: 15px;
-        text-align: center;
-        box-shadow: 0 0 22px rgba(0,0,0,0.4);
-    }
-
-    .card h1 {
-        margin-bottom: 10px;
-    }
-
-    .card p {
-        opacity: 0.8;
-        margin-bottom: 18px;
-    }
-
-    select {
-        width: 100%;
-        padding: 12px;
-        border: none;
-        border-radius: 8px;
-        margin-bottom: 20px;
-        font-size: 16px;
-    }
-
-    .btn {
-        width: 100%;
-        padding: 12px;
-        background: #00bfff;
-        border: none;
-        border-radius: 8px;
-        font-size: 17px;
-        font-weight: bold;
-        cursor: pointer;
-        color: #000;
-        transition: 0.2s;
-    }
-
-    .btn:hover {
-        background: #00a0d4;
-    }
-
-    .funcoes {
-        margin-top: 30px;
-        background: rgba(255, 255, 255, 0.05);
-        padding: 25px;
-        border-radius: 15px;
-    }
-
-    .funcoes h2 {
-        text-align: center;
-        margin-bottom: 25px;
-    }
-
-    .oculto { display: none; }
-
-    /* Switch estilo idêntico ao site */
-    .switch {
-        display: flex;
-        align-items: center;
-        margin-bottom: 18px;
-    }
-
-    .switch input {
-        display: none;
-    }
-
-    .slider {
-        width: 48px;
-        height: 24px;
-        background: #555;
-        border-radius: 24px;
-        position: relative;
-        cursor: pointer;
-        transition: 0.3s;
-        margin-right: 10px;
-    }
-
-    .slider::before {
-        content: "";
-        width: 20px;
-        height: 20px;
-        background: white;
-        position: absolute;
-        top: 2px;
-        left: 2px;
-        border-radius: 50%;
-        transition: 0.3s;
-    }
-
-    input:checked + .slider {
-        background: #00bfff;
-    }
-
-    input:checked + .slider::before {
-        transform: translateX(24px);
-    }
-
-    .label {
-        font-size: 16px;
-    }
-
-    .btn.secundario {
-        margin-top: 20px;
-        background: #444;
-        color: #fff;
-    }
-
-    .btn.secundario:hover {
-        background: #555;
-    }
-</style>
-</head>
+    <meta charset="UTF-8">
+    <title>Painel Vinix - Recriação</title>
+    </head>
 <body>
 
-<div class="container">
+    <div class="background-rede">
+        </div>
 
-    <!-- CARD PRINCIPAL -->
-    <div class="card">
-        <h1>Painel Remasterizado</h1>
-        <p>Selecione seu sistema para continuar</p>
+    <div class="painel-principal">
 
-        <select id="sistema">
-            <option value="" disabled selected>Escolher Sistema</option>
-            <option>Android</option>
-            <option>iOS</option>
-        </select>
+        <div class="painel-cabecalho">
+            <img src="caminho/para/imagem_caveira.png" alt="Símbolo Vinix">
+        </div>
 
-        <button class="btn" onclick="mostrarFuncoes()">Continuar</button>
+        <div class="tabs">
+            <button class="tab-ativo">Funções</button>
+            <button>Info</button>
+        </div>
+
+        <p class="instrucao">Role o painel para baixo!</p>
+
+        <div class="funcoes-container">
+
+            <label class="checkbox-item">
+                <input type="checkbox" name="acertos-cabeca">
+                Facilitar acertos na cabeça
+            </label>
+
+            <label class="checkbox-item">
+                <input type="checkbox" name="aumentar-precisao">
+                Aumentar precisão/Diminuir recuo dos disparos
+            </label>
+
+            <div class="dropdown-container">
+                <label for="modo-selecao">Modo (Diablo's)</label>
+                <select id="modo-selecao">
+                    <option value="diablos" selected>Diablo's</option>
+                    </select>
+            </div>
+        </div>
+
+        <hr class="separador">
+
+        <div class="sistema-container">
+            <div class="logo-vinix">
+                <p>VINIX</p>
+                <p>FREESTYLE</p>
+            </div>
+
+            <div class="sistema-status">
+                <span>Sistem: </span>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider">On</span>
+                </label>
+            </div>
+
+            <div class="plataforma-selecao">
+                <label class="radio-item">
+                    <input type="radio" name="sistema" value="android" checked>
+                    Android
+                </label>
+                <label class="radio-item">
+                    <input type="radio" name="sistema" value="ios">
+                    iOS
+                </label>
+            </div>
+        </div>
+
+        <button class="botao-ativar">
+            Ativar auxílio Vinix!
+        </button>
+
     </div>
-
-    <!-- PAINEL DE FUNÇÕES -->
-    <div id="funcoes" class="funcoes oculto">
-        <h2>Funções Disponíveis</h2>
-
-        <label class="switch">
-            <input type="checkbox">
-            <span class="slider"></span>
-            <span class="label">Ajuste de Estabilidade</span>
-        </label>
-
-        <label class="switch">
-            <input type="checkbox">
-            <span class="slider"></span>
-            <span class="label">Controle de Recuperação</span>
-        </label>
-
-        <label class="switch">
-            <input type="checkbox">
-            <span class="slider"></span>
-            <span class="label">Assistência Direcional</span>
-        </label>
-
-        <label class="switch">
-            <input type="checkbox">
-            <span class="slider"></span>
-            <span class="label">Otimização de Sensibilidade</span>
-        </label>
-
-        <button class="btn secundario">Aplicar Configurações</button>
-    </div>
-
-</div>
-
-<script>
-function mostrarFuncoes() {
-    const select = document.getElementById("sistema");
-    const blocoFuncoes = document.getElementById("funcoes");
-
-    if (select.value !== "") {
-        blocoFuncoes.classList.remove("oculto");
-        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-    }
-}
-</script>
 
 </body>
 </html>
