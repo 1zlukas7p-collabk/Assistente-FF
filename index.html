@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assistente FF – Módulo de Otimização V4.0</title>
+    <title>Assistente FF – Módulo de Otimização V4.1 – Edição Avançada</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         /* ========================================================= */
-        /* VARIÁVEIS DE COR E ESTILO - TEMA CYBERPUNK (ROXO/CIANO)   */
+        /* VARIÁVEIS DE COR E ESTILO - TEMA CYBERPUNK AVANÇADO     */
         /* ========================================================= */
         :root {
             --neon-primary: #a100ff; /* Roxo Profundo */
             --neon-secondary: #00eaff; /* Ciano Vibrante */
             --bg-dark: #07061d; /* Fundo Ultra Escuro */
-            --bg-card: rgba(10, 5, 20, 0.9); /* Fundo do Card */
+            --bg-card: rgba(10, 5, 20, 0.95); /* Fundo do Card Mais Opaco */
             --bg-inactive: #1f1e33;
-            --shadow-primary: 0 0 25px rgba(161, 0, 255, 0.6);
-            --shadow-secondary: 0 0 25px rgba(0, 234, 255, 0.6);
+            --shadow-primary: 0 0 35px rgba(161, 0, 255, 0.7), inset 0 0 10px rgba(161, 0, 255, 0.2);
+            --shadow-secondary: 0 0 35px rgba(0, 234, 255, 0.7), inset 0 0 10px rgba(0, 234, 255, 0.2);
             --border-glow: 1px solid var(--neon-primary);
+            --accent-glow-cyan: 0 0 15px var(--neon-secondary), 0 0 30px var(--neon-secondary);
+            --accent-glow-purple: 0 0 15px var(--neon-primary), 0 0 30px var(--neon-primary);
         }
 
         /* ========================================================= */
@@ -29,12 +32,14 @@
             font-family: 'Inter', sans-serif; 
             position: relative; 
             min-height: 100vh;
+            overflow-x: hidden; /* Evita scroll horizontal em alguns efeitos */
         }
 
         /* Fundo de Vídeo e Efeito de Matriz */
         #video-background { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; 
-            z-index: 0; opacity: 0.3; pointer-events: none; filter: brightness(0.7) blur(2px); 
+            z-index: 0; opacity: 0.2; pointer-events: none; filter: brightness(0.6) blur(3px) grayscale(50%); 
+            transition: opacity 1s ease-in-out; /* Suaviza a entrada do fundo */
         }
         #video-background iframe { 
             width: 100vw; height: 56.25vw; min-height: 100vh; min-width: 177.77vh; 
@@ -48,17 +53,37 @@
             z-index: 1;
             background-image: repeating-linear-gradient(
                 to bottom,
-                rgba(0, 0, 0, 0.05), 
-                rgba(0, 0, 0, 0.5) 1px,
+                rgba(0, 0, 0, 0.08), /* Linhas um pouco mais visíveis */
+                rgba(0, 0, 0, 0.6) 1px,
                 transparent 1px,
                 transparent 2px
             ),
             linear-gradient(
                 to bottom, 
-                rgba(7, 6, 29, 0.3), 
-                rgba(7, 6, 29, 1)
+                rgba(7, 6, 29, 0.4), /* Gradiente mais sutil no topo */
+                rgba(7, 6, 29, 1) 70% /* Escurece mais rápido para o fundo sólido */
             );
             pointer-events: none;
+            animation: matrix-scroll 60s linear infinite; /* Animação de rolagem lenta */
+        }
+
+        @keyframes matrix-scroll {
+            from { background-position: 0 0; }
+            to { background-position: 0 100%; }
+        }
+
+        /* Efeito de glitch no título principal */
+        .glitch-text {
+            animation: glitch-anim 2s infinite alternate linear;
+        }
+
+        @keyframes glitch-anim {
+            0% { text-shadow: none; }
+            20% { text-shadow: var(--accent-glow-cyan); transform: skew(-5deg); }
+            40% { text-shadow: var(--accent-glow-purple); transform: skew(3deg); }
+            60% { text-shadow: var(--accent-glow-cyan); transform: skew(-2deg); }
+            80% { text-shadow: var(--accent-glow-purple); transform: skew(1deg); }
+            100% { text-shadow: none; }
         }
 
         /* ========================================================= */
@@ -75,36 +100,37 @@
 
         .hud-frame {
             width: 100%;
-            max-width: 900px;
-            padding: 2rem;
+            max-width: 950px; /* Pouco mais largo */
+            padding: 3rem; /* Mais preenchimento */
             background-color: var(--bg-card);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(161, 0, 255, 0.4);
-            border-radius: 20px;
+            backdrop-filter: blur(15px) saturate(150%); /* Blur mais intenso */
+            border: 2px solid rgba(161, 0, 255, 0.6); /* Borda mais definida */
+            border-radius: 25px; /* Bordas mais suaves */
             box-shadow: var(--shadow-primary);
             position: relative;
-            animation: boot-up 0.8s ease-out forwards;
+            animation: boot-up 1s ease-out forwards; /* Animação mais longa */
+            overflow: hidden; /* Para garantir que o pseudo-elemento da borda não vaze */
         }
 
         /* Animação de entrada do painel */
         @keyframes boot-up {
-            from { opacity: 0; transform: translateY(50px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from { opacity: 0; transform: translateY(80px) scale(0.9); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
         }
 
-        /* Efeito de Borda Neon Animada */
+        /* Efeito de Borda Neon Animada (mais complexo) */
         .hud-frame::before {
             content: '';
             position: absolute;
-            top: -5px; bottom: -5px; left: -5px; right: -5px;
-            border-radius: 25px;
-            background: linear-gradient(45deg, var(--neon-primary), var(--neon-secondary), var(--neon-primary));
-            background-size: 400% 400%;
+            top: -10px; bottom: -10px; left: -10px; right: -10px; /* Borda mais espessa */
+            border-radius: 30px; /* Acompanha o raio do pai */
+            background: linear-gradient(45deg, #ff00ff, var(--neon-primary), var(--neon-secondary), #00ffff, var(--neon-primary)); /* Gradiente mais rico */
+            background-size: 600% 600%; /* Mais áreas para animar */
             z-index: -1;
-            opacity: 0.8;
-            filter: blur(15px);
-            transition: all 0.5s ease-in-out;
-            animation: border-glow-animate 5s infinite alternate;
+            opacity: 0.9;
+            filter: blur(20px); /* Blur mais intenso para o brilho */
+            animation: border-glow-animate 10s ease-in-out infinite alternate,
+                       hue-rotate 20s linear infinite; /* Animação de cor e rotação de hue */
         }
 
         @keyframes border-glow-animate {
@@ -113,215 +139,341 @@
             100% { background-position: 0% 50%; }
         }
 
-        .neon-title {
-            text-shadow: 0 0 15px var(--neon-primary), 0 0 35px var(--neon-secondary);
+        @keyframes hue-rotate {
+            from { filter: blur(20px) hue-rotate(0deg); }
+            to { filter: blur(20px) hue-rotate(360deg); }
         }
 
-        /* Estilo para as caixas de função e diagnóstico */
+        .neon-title {
+            font-family: 'Orbitron', sans-serif; /* Fonte mais futurista */
+            text-shadow: var(--accent-glow-purple), var(--accent-glow-cyan); /* Combina os brilhos */
+        }
+
+        /* Estilo para as caixas de função e diagnóstico - com efeito hover */
         .module-box {
-            padding: 1.5rem;
-            background-color: rgba(30, 30, 50, 0.7);
-            border-radius: 12px;
-            border-left: 5px solid var(--neon-primary);
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            padding: 1.8rem; /* Mais preenchimento */
+            background-color: rgba(30, 30, 50, 0.8); /* Fundo mais escuro */
+            border-radius: 15px; /* Bordas mais suaves */
+            border-left: 6px solid var(--neon-primary); /* Borda mais grossa */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.6), inset 0 0 5px rgba(255, 255, 255, 0.05); /* Sombra mais profunda */
+            transition: all 0.3s ease-in-out;
+        }
+        .module-box:hover {
+            transform: translateY(-5px) scale(1.01);
+            border-left-color: var(--neon-secondary); /* Muda a cor da borda ao hover */
+            box-shadow: var(--shadow-secondary); /* Brilho secundário ao hover */
         }
         
-        /* Estilos dos Toggles Modernos */
+        /* Estilos dos Toggles Modernos (mais avançado) */
         .modern-switch {
-            width: 60px; height: 30px; 
+            width: 70px; height: 35px; /* Maior */
             background-color: var(--bg-inactive); 
             border-radius: 9999px; position: relative; cursor: pointer; 
-            transition: background-color 0.3s, box-shadow 0.3s; 
-            border: 2px solid var(--neon-primary)/20;
+            transition: background-color 0.4s, box-shadow 0.4s, border-color 0.4s; 
+            border: 3px solid rgba(161, 0, 255, 0.3); /* Borda sutil */
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.4);
         }
         .modern-switch:before {
-            content: ''; position: absolute; top: 3px; left: 3px; 
-            width: 20px; height: 20px; background-color: #e0f7fa; 
-            border-radius: 50%; transition: transform 0.3s, background-color 0.3s; 
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            content: ''; position: absolute; top: 4px; left: 4px; /* Ajuste de posição */
+            width: 25px; height: 25px; background-color: #e0f7fa; 
+            border-radius: 50%; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1.2), background-color 0.4s, box-shadow 0.4s; /* Animação mais suave e elástica */
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
         }
         .modern-switch.active {
-            background-color: var(--neon-secondary); 
-            box-shadow: 0 0 15px var(--neon-secondary); 
+            background: linear-gradient(90deg, var(--neon-primary) 0%, var(--neon-secondary) 100%); /* Gradiente vibrante */
+            box-shadow: var(--shadow-secondary); /* Brilho intenso */
+            border-color: var(--neon-secondary);
         }
         .modern-switch.active:before {
-            transform: translateX(30px); 
-            background-color: var(--neon-primary); 
-            box-shadow: 0 0 10px var(--neon-primary);
+            transform: translateX(35px); /* Deslocamento maior */
+            background-color: #fff; /* Bolinha branca */
+            box-shadow: var(--accent-glow-primary); /* Brilho na bolinha */
+        }
+        .modern-switch:active:before { /* Efeito de click pressionado */
+            width: 30px; 
+            box-shadow: 0 0 15px var(--neon-secondary);
         }
 
         /* Estilos para a parte de Conexão/Ping */
         .ping-display {
-            font-size: 3rem;
+            font-size: 3.5rem; /* Maior */
             font-weight: bold;
             color: var(--neon-secondary);
-            text-shadow: 0 0 10px var(--neon-secondary);
+            text-shadow: var(--accent-glow-cyan); /* Brilho do ciano */
+            font-family: 'Share Tech Mono', monospace; /* Fonte tech */
+            animation: text-flicker 1.5s infinite alternate; /* Efeito de flicker sutil */
+        }
+
+        @keyframes text-flicker {
+            0%, 100% { opacity: 1; text-shadow: var(--accent-glow-cyan); }
+            50% { opacity: 0.8; text-shadow: none; }
         }
 
         .status-secure {
             color: #00ff99;
             font-weight: bold;
-            text-shadow: 0 0 5px rgba(0, 255, 153, 0.6);
-            font-family: monospace;
+            text-shadow: 0 0 8px rgba(0, 255, 153, 0.8);
+            font-family: 'Share Tech Mono', monospace;
+            animation: secure-pulse 2s infinite alternate;
+        }
+        @keyframes secure-pulse {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; text-shadow: 0 0 12px rgba(0, 255, 153, 1); }
         }
         
-        /* Estilos do Slider DPI */
+        /* Estilos do Slider DPI (mais detalhado) */
         #dpi-slider { 
-            -webkit-appearance: none; appearance: none; width: 100%; height: 10px; 
-            border-radius: 5px; outline: none; transition: opacity .2s; 
+            -webkit-appearance: none; appearance: none; width: 100%; height: 12px; /* Mais espesso */
+            border-radius: 6px; outline: none; transition: background 0.3s ease-in-out; 
             background: var(--bg-inactive); 
+            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.6);
         }
         #dpi-slider::-webkit-slider-thumb { 
-            -webkit-appearance: none; appearance: none; width: 25px; height: 25px; 
-            border-radius: 50%; background: var(--neon-secondary); cursor: pointer; 
-            box-shadow: 0 0 10px var(--neon-secondary); border: 3px solid var(--bg-dark); 
+            -webkit-appearance: none; appearance: none; width: 30px; height: 30px; /* Maior */
+            border-radius: 50%; background: linear-gradient(45deg, var(--neon-secondary), #00ffff); cursor: grab; 
+            box-shadow: var(--accent-glow-cyan), 0 0 15px var(--neon-primary); /* Brilho duplo */
+            border: 4px solid var(--bg-dark); /* Borda do polegar mais grossa */
+            transition: all 0.2s ease-in-out;
+        }
+        #dpi-slider::-webkit-slider-thumb:active { /* Efeito ao arrastar */
+            cursor: grabbing;
+            transform: scale(1.1);
+            box-shadow: 0 0 25px var(--neon-secondary), 0 0 40px var(--neon-secondary);
         }
 
-        /* Estilo do Botão Principal ATIVAR */
+        /* Estilo do Botão Principal ATIVAR (mais impactante) */
         .activate-button {
             background: linear-gradient(90deg, #ff00ff 0%, var(--neon-primary) 100%);
             color: white;
-            padding: 1rem 3rem;
-            font-size: 1.5rem;
-            font-weight: bold;
-            border-radius: 15px;
-            border: 3px solid var(--neon-secondary);
-            box-shadow: 0 0 20px #ff00ff, 0 0 40px var(--neon-primary);
-            transition: all 0.3s;
-            text-shadow: 0 0 5px black;
+            padding: 1.2rem 3.5rem; /* Maior */
+            font-size: 1.8rem; /* Maior */
+            font-weight: 900; /* Mais bold */
+            border-radius: 20px; /* Mais arredondado */
+            border: 4px solid var(--neon-secondary); /* Borda mais grossa */
+            box-shadow: 0 0 25px #ff00ff, 0 0 50px var(--neon-primary);
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1.2); /* Animação elástica */
+            text-shadow: 0 0 8px black, 0 0 15px var(--neon-primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            font-family: 'Orbitron', sans-serif;
         }
         .activate-button:hover {
             background: linear-gradient(90deg, var(--neon-secondary) 0%, #00eaff 100%);
             color: var(--bg-dark);
             border-color: var(--neon-primary);
-            box-shadow: 0 0 30px var(--neon-secondary), 0 0 60px var(--neon-secondary);
-            transform: scale(1.02);
+            box-shadow: 0 0 40px var(--neon-secondary), 0 0 80px var(--neon-secondary);
+            transform: scale(1.05); /* Escala mais agressiva */
+            text-shadow: 0 0 5px var(--neon-primary);
+        }
+        .activate-button::after { /* Efeito de brilho "swipe" */
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: skewX(-20deg);
+            transition: all 0.7s ease;
+        }
+        .activate-button:hover::after {
+            left: 100%;
         }
 
         /* Estilo da área de Key (roda-pé) */
         .key-info-footer {
-            background-color: rgba(30, 30, 50, 0.7);
-            padding: 0.75rem;
-            border-radius: 10px;
-            font-family: monospace;
+            background-color: rgba(30, 30, 50, 0.85); /* Mais opaco */
+            padding: 1rem; /* Mais preenchimento */
+            border-radius: 12px; /* Mais arredondado */
+            font-family: 'Share Tech Mono', monospace;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-top: 2px dashed rgba(0, 234, 255, 0.3); /* Borda superior estilizada */
+            margin-top: 3rem;
         }
         
         .key-text {
             color: var(--neon-secondary);
-            font-size: 1rem;
-            letter-spacing: 1px;
+            font-size: 1.1rem;
+            letter-spacing: 1.5px;
+            flex-grow: 1; /* Permite que o texto ocupe mais espaço */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Corta o texto se for muito longo */
+            white-space: nowrap;
+        }
+        .key-text .text-neon-primary { /* Estilo da data de expiração */
+            font-weight: bold;
+            text-shadow: 0 0 8px var(--neon-primary);
         }
 
         .copy-key-icon {
             color: white;
             background: var(--neon-primary);
-            padding: 0.5rem;
-            border-radius: 5px;
+            padding: 0.7rem 1.2rem; /* Maior */
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.8rem;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1.2);
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px var(--neon-primary);
+            margin-left: 1rem;
         }
         .copy-key-icon:hover {
             background: var(--neon-secondary);
             color: var(--bg-dark);
-            box-shadow: 0 0 10px var(--neon-secondary);
+            box-shadow: 0 0 20px var(--neon-secondary);
+            transform: scale(1.05);
         }
 
         /* ========================================================= */
-        /* ESTILOS DE LOGIN (MANTIDOS E ADAPTADOS) */
+        /* ESTILOS DE LOGIN E MODAIS (APRIMORADOS) */
         /* ========================================================= */
         .login-screen-container { 
             height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; 
         }
         @keyframes login-fade-in {
-            from { opacity: 0; transform: translateY(20px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from { opacity: 0; transform: translateY(50px) scale(0.95); filter: blur(5px); }
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
         }
         .login-box {
-            width: 90%; max-width: 450px; padding: 3rem; 
-            border: 2px solid rgba(0, 234, 255, 0.6); 
-            background: rgba(10, 5, 20, 0.85); 
+            width: 90%; max-width: 500px; /* Mais largo */
+            padding: 4rem; /* Mais preenchimento */
+            border: 3px solid rgba(0, 234, 255, 0.7); /* Borda mais grossa */
+            background: rgba(10, 5, 20, 0.9); /* Mais opaco */
             backdrop-filter: blur(25px) saturate(180%); 
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), 0 0 60px rgba(161, 0, 255, 0.4); 
-            border-radius: 20px; 
-            animation: login-fade-in 0.8s ease-out forwards; 
+            box-shadow: 0 4px 50px rgba(0, 0, 0, 0.6), 0 0 80px rgba(161, 0, 255, 0.5); /* Sombras mais intensas */
+            border-radius: 25px; /* Mais arredondado */
+            animation: login-fade-in 1s ease-out forwards; 
             position: relative;
+            overflow: hidden; /* Para o pseudo-elemento da borda */
         }
-        .login-box::before {
-            content: '[STATUS: READY]';
-            position: absolute; top: 10px; left: 15px; font-family: monospace; font-size: 0.75rem; color: #38bdf8; opacity: 0.7;
+        .login-box::before { /* Brilho da borda animado no login */
+            content: '';
+            position: absolute;
+            top: -5px; bottom: -5px; left: -5px; right: -5px;
+            border-radius: 30px;
+            background: linear-gradient(45deg, var(--neon-primary), var(--neon-secondary), var(--neon-primary));
+            background-size: 400% 400%;
+            z-index: -1;
+            opacity: 0.7;
+            filter: blur(10px);
+            animation: border-glow-animate 7s infinite alternate;
         }
+        .login-box::after { /* Elemento de "status" no canto */
+            content: 'SYSTEM ONLINE _';
+            position: absolute; bottom: 15px; right: 20px; font-family: 'Share Tech Mono', monospace; 
+            font-size: 0.9rem; color: #00ff99; text-shadow: 0 0 5px #00ff99; opacity: 0.8;
+            animation: blink-cursor 0.7s infinite;
+        }
+
+        @keyframes blink-cursor {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0; }
+        }
+
+        .login-box .neon-glow {
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: var(--accent-glow-purple);
+        }
+
         #key-input {
-            width: 100%; padding: 1.2rem; background-color: rgba(0, 0, 0, 0.3); 
-            border: 2px solid var(--neon-primary); border-bottom: 4px solid var(--neon-secondary); 
-            color: var(--neon-secondary); font-size: 1.4rem; text-align: center; border-radius: 8px; 
-            margin-bottom: 2rem; box-shadow: 0 0 10px rgba(161, 0, 255, 0.2); outline: none;
-            letter-spacing: 3px; transition: all 0.3s; font-family: monospace; text-transform: uppercase;
+            width: 100%; padding: 1.5rem; background-color: rgba(0, 0, 0, 0.5); /* Mais escuro */
+            border: 3px solid var(--neon-primary); border-bottom: 5px solid var(--neon-secondary); /* Bordas mais grossas */
+            color: var(--neon-secondary); font-size: 1.6rem; text-align: center; border-radius: 10px; 
+            margin-bottom: 2.5rem; box-shadow: 0 0 15px rgba(161, 0, 255, 0.3); outline: none;
+            letter-spacing: 4px; transition: all 0.4s ease; font-family: 'Share Tech Mono', monospace; text-transform: uppercase;
         }
         #key-input:focus { 
-            border-color: var(--neon-secondary); background-color: rgba(0, 234, 255, 0.1); 
-            box-shadow: 0 0 30px var(--neon-secondary), 0 0 10px var(--neon-primary); 
+            border-color: var(--neon-secondary); background-color: rgba(0, 234, 255, 0.15); 
+            box-shadow: 0 0 40px var(--neon-secondary), 0 0 15px var(--neon-primary); 
         }
         .key-submit-button {
-            font-weight: bold; padding: 1rem 1.5rem; border-radius: 8px; transition: all 0.3s; border: none;
-            width: 100%; text-transform: uppercase; letter-spacing: 1px;
-            background: var(--neon-secondary); color: var(--bg-dark); box-shadow: 0 0 15px var(--neon-secondary);
-            font-size: 1.5rem;
+            font-weight: 900; padding: 1.2rem 2rem; border-radius: 10px; transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1.2); border: none;
+            width: 100%; text-transform: uppercase; letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--neon-secondary) 0%, #00ffff 100%); /* Gradiente vibrante */
+            color: var(--bg-dark); box-shadow: 0 0 20px var(--neon-secondary);
+            font-size: 1.6rem;
+            font-family: 'Orbitron', sans-serif;
         }
         .key-submit-button:hover:not(:disabled) { 
-            box-shadow: 0 0 40px var(--neon-secondary), 0 0 10px var(--neon-primary); 
-            transform: scale(1.01); 
+            box-shadow: 0 0 50px var(--neon-secondary), 0 0 20px var(--neon-primary); 
+            transform: scale(1.02); 
+            filter: brightness(1.2);
         }
         .key-submit-button:disabled {
             background: #3f3b55; cursor: not-allowed; box-shadow: none; color: #a0a0a0;
+            filter: grayscale(80%);
+            transform: none;
         }
         .error-message { 
-            color: #ff3366; text-shadow: 0 0 8px rgba(255, 51, 102, 1); margin-top: 1.5rem; 
-            font-size: 1rem; font-weight: 600; border-top: 1px dashed #ff3366; padding-top: 1rem;
-            font-family: monospace;
+            color: #ff5588; text-shadow: 0 0 10px rgba(255, 85, 136, 1); margin-top: 2rem; 
+            font-size: 1.1rem; font-weight: 700; border-top: 2px dashed #ff5588; padding-top: 1.5rem;
+            font-family: 'Share Tech Mono', monospace;
+            animation: error-pulse 1s infinite alternate;
+        }
+        @keyframes error-pulse {
+            0% { opacity: 0.9; text-shadow: 0 0 5px rgba(255, 85, 136, 0.5); }
+            100% { opacity: 1; text-shadow: 0 0 15px rgba(255, 85, 136, 1); }
         }
 
         .modal-key-dialog {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.9); z-index: 100;
+            background-color: rgba(0, 0, 0, 0.95); z-index: 1000; /* Z-index mais alto */
             display: flex; justify-content: center; align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-key-dialog.active { /* Nova classe para controlar visibilidade */
+            opacity: 1;
+            visibility: visible;
         }
         .modal-key-content {
-            background: var(--bg-card); backdrop-filter: blur(15px);
-            padding: 3rem; border-radius: 16px;
-            border: 3px solid var(--neon-secondary); box-shadow: 0 0 70px var(--neon-secondary)/50;
-            width: 90%; max-width: 550px; text-align: center;
+            background: var(--bg-card); backdrop-filter: blur(20px) saturate(150%);
+            padding: 3.5rem; border-radius: 20px;
+            border: 3px solid var(--neon-secondary); box-shadow: 0 0 80px var(--neon-secondary)/60;
+            width: 90%; max-width: 600px; text-align: center;
+            transform: translateY(20px) scale(0.98);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .modal-key-dialog.active .modal-key-content {
+            transform: translateY(0) scale(1);
         }
         .key-display-container {
             display: flex; align-items: center; justify-content: space-between;
-            background-color: var(--bg-inactive); border: 1px solid var(--neon-secondary);
-            border-radius: 8px; margin: 1.5rem 0; padding: 0.75rem; 
+            background-color: var(--bg-inactive); border: 2px solid var(--neon-secondary);
+            border-radius: 10px; margin: 1.8rem 0; padding: 1rem; 
+            box-shadow: inset 0 0 10px rgba(0, 234, 255, 0.2);
         }
         .key-display {
-            color: var(--neon-secondary); font-size: 1.5rem; padding: 0.5rem; 
-            font-family: monospace; letter-spacing: 3px; word-break: break-all;
+            color: var(--neon-secondary); font-size: 1.6rem; padding: 0.5rem; 
+            font-family: 'Share Tech Mono', monospace; letter-spacing: 2px; word-break: break-all;
             flex-grow: 1; text-align: left; padding-left: 1rem;
         }
         .copy-button {
-            background: var(--neon-primary); color: white; padding: 0.75rem 1rem; 
-            border-radius: 6px; margin-left: 15px; transition: background 0.2s, transform 0.2s;
+            background: var(--neon-primary); color: white; padding: 1rem 1.5rem; 
+            border-radius: 8px; margin-left: 15px; transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
             text-transform: uppercase; font-weight: 700;
+            box-shadow: 0 0 15px var(--neon-primary);
         }
         .copy-button:hover {
-            background: var(--neon-secondary); color: var(--bg-dark); transform: scale(1.05);
+            background: var(--neon-secondary); color: var(--bg-dark); transform: scale(1.08);
+            box-shadow: 0 0 25px var(--neon-secondary);
         }
         .key-generate-button {
             background: transparent; color: var(--neon-primary); border: 2px solid var(--neon-primary); 
-            font-size: 1rem; padding: 0.8rem 1.5rem; border-radius: 8px; transition: all 0.3s;
+            font-size: 1.1rem; padding: 1rem 1.8rem; border-radius: 10px; transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: bold;
         }
         .key-generate-button:hover { 
-            box-shadow: 0 0 20px var(--neon-primary); background: rgba(161, 0, 255, 0.2); 
+            box-shadow: 0 0 25px var(--neon-primary); background: rgba(161, 0, 255, 0.25); 
+            transform: scale(1.02);
         }
         
-        #main-hud-panel { display: none; }
+        #main-hud-panel { display: none; } /* Escondido por padrão */
     </style>
     <script>
         tailwind.config = {
@@ -329,6 +481,8 @@
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        sharetech: ['Share Tech Mono', 'monospace'],
                     },
                     colors: {
                         'neon-primary': 'var(--neon-primary)',
@@ -353,15 +507,15 @@
 
     <div id="login-screen" class="login-screen-container">
         <div class="login-box">
-            <h1 class="text-4xl md:text-5xl font-black tracking-tighter uppercase neon-glow text-neon-primary mb-2">
+            <h1 class="text-5xl md:text-6xl font-black tracking-tighter uppercase neon-glow text-neon-primary mb-3 glitch-text">
                 ASSISTENTE <span class="text-neon-secondary">FF</span>
             </h1>
-            <h2 class="text-xl text-gray-300 mb-8 font-light border-b-2 border-neon-secondary/30 pb-3">
+            <h2 class="text-xl text-gray-300 mb-10 font-light border-b-2 border-neon-secondary/40 pb-4 font-sharetech">
                 <span class="text-neon-secondary font-bold">MÓDULO DE AUTENTICAÇÃO HFR-42</span>
             </h2>
 
             <form id="login-form" onsubmit="handleLogin(event)">
-                <label for="key-input" class="block text-left text-sm font-semibold text-gray-200 mb-2">
+                <label for="key-input" class="block text-left text-sm font-semibold text-gray-200 mb-3 font-sharetech">
                     🔑 CHAVE DE ACESSO EXCLUSIVA:
                 </label>
                 <input type="text" id="key-input" placeholder="XXXXXX-YYYYYY-ZZZZZZ" required maxlength="20">
