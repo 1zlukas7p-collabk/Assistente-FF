@@ -1,522 +1,140 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Auxílio Free Fire 2025 🔥 | Legítimo & Anti-Ban</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            background: linear-gradient(135deg, #0c0c0c 0%, #1a0033 50%, #330066 100%);
-            color: #fff;
-            font-family: 'Roboto', sans-serif;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        header {
-            text-align: center;
-            padding: 30px 0;
-            background: rgba(0,0,0,0.8);
-            border-radius: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 0 50px #ff00ff;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-        
-        @keyframes glow {
-            from { box-shadow: 0 0 50px #ff00ff; }
-            to { box-shadow: 0 0 100px #00ffff; }
-        }
-        
-        h1 {
-            font-family: 'Orbitron', monospace;
-            font-size: 2.5em;
-            background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            font-size: 1.2em;
-            opacity: 0.8;
-            color: #00ffff;
-        }
-        
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .tab-btn {
-            padding: 12px 24px;
-            background: rgba(255,255,255,0.1);
-            border: 2px solid #ff00ff;
-            color: #fff;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
-        }
-        
-        .tab-btn.active {
-            background: linear-gradient(45deg, #ff00ff, #00ffff);
-            box-shadow: 0 0 20px #ff00ff;
-        }
-        
-        .tab-content {
-            display: none;
-            background: rgba(0,0,0,0.7);
-            border-radius: 20px;
-            padding: 30px;
-            border: 2px solid #00ffff;
-            box-shadow: 0 0 30px rgba(0,255,255,0.3);
-            animation: slideIn 0.5s ease-out;
-        }
-        
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .section {
-            margin-bottom: 40px;
-        }
-        
-        h2 {
-            font-family: 'Orbitron', monospace;
-            font-size: 1.8em;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #ffff00;
-        }
-        
-        .slider-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .slider-item {
-            background: rgba(255,255,255,0.05);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            border: 1px solid #ff00ff;
-        }
-        
-        .slider-label {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #00ffff;
-        }
-        
-        input[type="range"] {
-            width: 100%;
-            height: 8px;
-            background: #333;
-            border-radius: 10px;
-            outline: none;
-            -webkit-appearance: none;
-        }
-        
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 25px;
-            height: 25px;
-            background: linear-gradient(45deg, #ff00ff, #00ffff);
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 10px #ff00ff;
-        }
-        
-        .slider-value {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #ffff00;
-            margin-top: 10px;
-        }
-        
-        .presets {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        
-        .preset-btn {
-            padding: 10px 20px;
-            background: rgba(0,255,255,0.2);
-            border: 1px solid #00ffff;
-            color: #fff;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .preset-btn:hover {
-            background: #00ffff;
-            color: #000;
-        }
-        
-        #copy-code {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(45deg, #ff00ff, #00ffff);
-            color: #000;
-            border: none;
-            border-radius: 15px;
-            font-size: 1.2em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        #copy-code:hover {
-            box-shadow: 0 0 30px #ff00ff;
-            transform: scale(1.02);
-        }
-        
-        #settings-code {
-            background: #000;
-            border: 2px solid #00ffff;
-            padding: 20px;
-            border-radius: 15px;
-            font-family: monospace;
-            font-size: 1.1em;
-            word-break: break-all;
-            margin-top: 20px;
-            min-height: 100px;
-        }
-        
-        .tier-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-        }
-        
-        .tier-card {
-            background: linear-gradient(135deg, rgba(255,0,255,0.2), rgba(0,255,255,0.2));
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            border: 2px solid;
-        }
-        
-        .tier-s { border-color: #ffd700; }
-        .tier-a { border-color: #00ff00; }
-        .tier-b { border-color: #ff6600; }
-        
-        .tier-title {
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-        
-        .char-list {
-            list-style: none;
-        }
-        
-        .char-list li {
-            padding: 8px;
-            background: rgba(255,255,255,0.1);
-            margin: 5px 0;
-            border-radius: 10px;
-        }
-        
-        .loadout-generator {
-            text-align: center;
-        }
-        
-        #generate-loadout {
-            padding: 15px 30px;
-            background: linear-gradient(45deg, #00ff00, #ffff00);
-            color: #000;
-            border: none;
-            border-radius: 15px;
-            font-size: 1.2em;
-            cursor: pointer;
-            margin: 20px 0;
-        }
-        
-        #loadout-result {
-            background: #000;
-            border: 2px solid #00ff00;
-            padding: 20px;
-            border-radius: 15px;
-            font-family: monospace;
-            font-size: 1.2em;
-        }
-        
-        .tips {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        
-        .tip {
-            background: rgba(0,255,0,0.1);
-            padding: 20px;
-            border-radius: 15px;
-            border-left: 5px solid #00ff00;
-        }
-        
-        @media (max-width: 768px) {
-            h1 { font-size: 2em; }
-            .slider-container { grid-template-columns: 1fr; }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Painel FF Auxílio 2025</h1>
-            <p class="subtitle">100% Legítimo | Headshot Fácil | No Recoil | Suba Capa Rápido 🔥</p>
-        </header>
-        
-        <nav>
-            <button class="tab-btn active" onclick="showTab('sensi')">Sensibilidade</button>
-            <button class="tab-btn" onclick="showTab('chars')">Personagens</button>
-            <button class="tab-btn" onclick="showTab('loadout')">Loadout Aleatório</button>
-            <button class="tab-btn" onclick="showTab('tips')">Dicas Pro</button>
-        </nav>
-        
-        <div id="sensi" class="tab-content active">
-            <div class="section">
-                <h2>🔥 Calculadora de Sensibilidade (0-200)</h2>
-                <p style="text-align: center; opacity: 0.8;">Ajuste os sliders e copie o código pronto pro FF! Baseado nas melhores configs 2025.<grok-card data-id="6b73d2" data-type="citation_card"></grok-card><grok-card data-id="56a682" data-type="citation_card"></grok-card></p>
-                
-                <div class="presets">
-                    <button class="preset-btn" onclick="loadPreset('headshot')">Headshot Xitada</button>
-                    <button class="preset-btn" onclick="loadPreset('balanced')">Balanceada</button>
-                    <button class="preset-btn" onclick="loadPreset('lowend')">Low-End (2-4GB)</button>
-                </div>
-                
-                <div class="slider-container">
-                    <div class="slider-item">
-                        <div class="slider-label">Geral</div>
-                        <input type="range" id="general" min="0" max="200" value="100">
-                        <div class="slider-value" id="general-val">100</div>
-                    </div>
-                    <div class="slider-item">
-                        <div class="slider-label">Ponto Vermelho</div>
-                        <input type="range" id="reddot" min="0" max="200" value="90">
-                        <div class="slider-value" id="reddot-val">90</div>
-                    </div>
-                    <div class="slider-item">
-                        <div class="slider-label">Mira 2x</div>
-                        <input type="range" id="scope2x" min="0" max="200" value="85">
-                        <div class="slider-value" id="scope2x-val">85</div>
-                    </div>
-                    <div class="slider-item">
-                        <div class="slider-label">Mira 4x</div>
-                        <input type="range" id="scope4x" min="0" max="200" value="75">
-                        <div class="slider-value" id="scope4x-val">75</div>
-                    </div>
-                    <div class="slider-item">
-                        <div class="slider-label">AWM/Sniper</div>
-                        <input type="range" id="sniper" min="0" max="200" value="50">
-                        <div class="slider-value" id="sniper-val">50</div>
-                    </div>
-                    <div class="slider-item">
-                        <div class="slider-label">Olhadinha Livre</div>
-                        <input type="range" id="freelook" min="0" max="200" value="80">
-                        <div class="slider-value" id="freelook-val">80</div>
-                    </div>
-                </div>
-                
-                <div class="slider-item" style="grid-column: 1 / -1;">
-                    <div class="slider-label">DPI (300-600)</div>
-                    <input type="range" id="dpi" min="300" max="600" value="411">
-                    <div class="slider-value" id="dpi-val">411</div>
-                </div>
-                
-                <button id="copy-code" onclick="copySettings()">📋 Copiar Configs Pro FF</button>
-                <div id="settings-code">Ajuste os sliders acima e clique em copiar!</div>
-            </div>
+// app/page.tsx (Next.js 14+ App Router)
+'use client';
+
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { Power, Zap, Crosshair, Smartphone, Activity, Shield, Gamepad2 } from 'lucide-react';
+
+export default function App() {
+  const [aim, setAim] = useState(false);
+  const [optm, setOptm] = useState(false);
+  const [hz144, setHz144] = useState(false);
+  const [ultra, setUltra] = useState(false);
+  const [head, setHead] = useState(false);
+  const [magic, setMagic] = useState(false);
+
+  const openFreeFire = () => {
+    // Funciona em Android e iOS (deep link oficial da Garena)
+    window.location.href = "garenafreefire://";
+    // Fallback para quem não tem instalado
+    setTimeout(() => {
+      if (confirm("Free Fire não abriu? Deseja baixar agora?")) {
+        window.location.href = "https://ff.garena.com";
+      }
+    }, 1500);
+  };
+
+  return (
+    <>
+      <div className="min-h-screen bg-gradient-to-br from-black via-purple-900 to-black text-white overflow-hidden">
+        {/* Background animado */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 animate-pulse"></div>
         </div>
-        
-        <div id="chars" class="tab-content">
-            <div class="section">
-                <h2>🏆 Tier List Personagens Dez/2025</h2>
-                <p style="text-align: center; opacity: 0.8;">Melhores pra subir capa! S = Meta Atual.<grok-card data-id="1195eb" data-type="citation_card"></grok-card><grok-card data-id="ed4b0b" data-type="citation_card"></grok-card></p>
-                <div class="tier-grid">
-                    <div class="tier-card tier-s">
-                        <div class="tier-title">S Tier 🔥</div>
-                        <ul class="char-list">
-                            <li>DJ Alok</li>
-                            <li>Kassie</li>
-                            <li>Chrono</li>
-                            <li>A124</li>
-                            <li>Dimitri</li>
-                        </ul>
-                    </div>
-                    <div class="tier-card tier-a">
-                        <div class="tier-title">A Tier 💎</div>
-                        <ul class="char-list">
-                            <li>Laura</li>
-                            <li>K (KSHMR)</li>
-                            <li>Moco</li>
-                            <li>Jota</li>
-                            <li>Kelly</li>
-                        </ul>
-                    </div>
-                    <div class="tier-card tier-b">
-                        <div class="tier-title">B Tier ⚡</div>
-                        <ul class="char-list">
-                            <li>Hayato</li>
-                            <li>Tatsuya</li>
-                            <li>Homer</li>
-                            <li>Xayne</li>
-                            <li>Kenta</li>
-                        </ul>
-                    </div>
-                </div>
+
+        <div className="relative z-10 p-6 max-w-md mx-auto">
+          {/* Header */}
+          <motion.div 
+            initial={{ y: -50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="text-center mb-10 mt-10"
+          >
+            <h1 className="text-5xl font-black bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-400">
+              ELITE PANEL
+            </h1>
+            <p className="text-gray-400 mt-2">Visual Config • 100% Safe</p>
+          </motion.div>
+
+          <div className="space-y-5">
+            {/* Aim Calibration */}
+            <PanelButton icon={<Crosshair />} label="Calibração de Mira" active={aim} onClick={() => setAim(!aim)} color="from-green-500 to-emerald-600" />
+
+            {/* Otimização */}
+            <PanelButton icon={<Zap />} label="Otimizador Gráfico" active={optm} onClick={() => setOptm(!optm)} color="from-yellow-500 to-orange-600" />
+
+            {/* 144Hz Force */}
+            <PanelButton icon={<Activity />} label="Forçar 144Hz" active={hz144} onClick={() => setHz144(!hz144)} color="from-cyan-500 to-blue-600" />
+
+            {/* Ultra Sensi */}
+            <PanelButton icon={<Gamepad2 />} label="Ultra Sensibilidade" active={ultra} onClick={() => setUltra(!ultra)} color="from-pink-500 to-rose-600" />
+
+            {/* Headshot Magnet */}
+            <PanelButton icon={<Shield />} label="Imã de Headshot" active={head} onClick={() => setHead(!head)} color="from-red-500 to-red-700" />
+
+            {/* Magic Bullet */}
+            <PanelButton icon={<Power />} label="Magic Visual" active={magic} onClick={() => setMagic(!magic)} color="from-purple-500 to-indigo-600" />
+          </div>
+
+          {/* Status */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.8 }}
+            className="mt-10 bg-black bg-opacity-60 backdrop-blur-lg rounded-2xl p-6 border border-purple-500"
+          >
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-gray-400 text-sm">Status do Sistema</p>
+                <p className="text-2xl font-bold text-green-400">ATIVO • VISUAL</p>
+              </div>
+              <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full animate-pulse"></div>
             </div>
+          </motion.div>
+
+          {/* Botão ABRIR FREE FIRE */}
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={openFreeFire}
+            className="mt-12 w-full py-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl font-black text-3xl shadow-2xl hover:shadow-purple-500/50 transition-all"
+          >
+            <span className="flex items-center justify-center gap-4">
+              <Gamepad2 size={40} />
+              ABRIR FREE FIRE
+              <Gamepad2 size={40} />
+            </span>
+          </motion.button>
+
+          <p className="text-center text-gray-500 text-xs mt-6">
+            Painel 100% visual • Sem risco de ban • Apenas estilo
+          </p>
         </div>
-        
-        <div id="loadout" class="tab-content">
-            <div class="section">
-                <h2>🎲 Gerador de Loadout Aleatório</h2>
-                <p style="text-align: center; opacity: 0.8;">Gera loadout meta pra qualquer mapa!</p>
-                <button id="generate-loadout" onclick="generateLoadout()">Gerar Loadout 🔥</button>
-                <div id="loadout-result">Clique pra gerar!</div>
-            </div>
+      </div>
+    </>
+  );
+}
+
+// Componente reutilizável
+function PanelButton({ icon, label, active, onClick, color }: any) {
+  return (
+    <motion.button
+      whileTap={{ scale: 0.95 }}
+      onClick={onClick}
+      className={`w-full p-6 rounded-2xl backdrop-blur-lg border-2 transition-all ${
+        active 
+          ? `bg-gradient-to-r ${color} border-white shadow-2xl shadow-purple-500/50` 
+          : 'bg-black bg-opacity-60 border-gray-700'
+      }`}
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-5">
+          <div className={`p-3 rounded-xl ${active ? 'bg-white bg-opacity-20' : 'bg-gray-800'}`}>
+            {icon}
+          </div>
+          <div className="text-left">
+            <p className="font-bold text-xl">{label}</p>
+            <p className={`text-sm ${active ? 'text-white' : 'text-gray-500'}`}>
+              {active ? '● ATIVADO' : '○ DESATIVADO'}
+            </p>
+          </div>
         </div>
-        
-        <div id="tips" class="tab-content">
-            <div class="section">
-                <h2>💡 Dicas Pro 2025</h2>
-                <div class="tips">
-                    <div class="tip">
-                        <strong>Headshot Drag:</strong> Geral 90-110, Red Dot 85-100. Pratique no treino!
-                    </div>
-                    <div class="tip">
-                        <strong>HUD 2 Dedos:</strong> Botão tiro 35%, Mira 30%. Fire button no polegar direito.
-                    </div>
-                    <div class="tip">
-                        <strong>Low-End:</strong> Ative 60FPS alto, feche apps. DPI 400-450.
-                    </div>
-                    <div class="tip">
-                        <strong>Hot Drops:</strong> Clock Tower, Brazil, Pochinok. Rápido kill pra capa.
-                    </div>
-                    <div class="tip">
-                        <strong>No Recoil:</strong> Use 4x baixa (70), mire no pescoço pros HS.
-                    </div>
-                    <div class="tip">
-                        <strong>Combos:</strong> Alok + Jota pra rush insano!
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        // Tab system
-        function showTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            event.target.classList.add('active');
-        }
-        
-        // Sliders update
-        const sliders = ['general', 'reddot', 'scope2x', 'scope4x', 'sniper', 'freelook', 'dpi'];
-        sliders.forEach(id => {
-            const slider = document.getElementById(id);
-            const val = document.getElementById(id + '-val');
-            slider.oninput = () => val.textContent = slider.value;
-        });
-        
-        // Presets (baseados em dados 2025)
-        function loadPreset(type) {
-            if (type === 'headshot') {
-                document.getElementById('general').value = 141;
-                document.getElementById('reddot').value = 105;
-                document.getElementById('scope2x').value = 180;
-                document.getElementById('scope4x').value = 83;
-                document.getElementById('sniper').value = 148;
-                document.getElementById('freelook').value = 100;
-                document.getElementById('dpi').value = 411;
-            } else if (type === 'balanced') {
-                document.getElementById('general').value = 100;
-                document.getElementById('reddot').value = 90;
-                document.getElementById('scope2x').value = 85;
-                document.getElementById('scope4x').value = 75;
-                document.getElementById('sniper').value = 50;
-                document.getElementById('freelook').value = 80;
-                document.getElementById('dpi').value = 450;
-            } else if (type === 'lowend') {
-                document.getElementById('general').value = 90;
-                document.getElementById('reddot').value = 80;
-                document.getElementById('scope2x').value = 75;
-                document.getElementById('scope4x').value = 65;
-                document.getElementById('sniper').value = 40;
-                document.getElementById('freelook').value = 70;
-                document.getElementById('dpi').value = 400;
-            }
-            sliders.forEach(id => {
-                const slider = document.getElementById(id);
-                const val = document.getElementById(id + '-val');
-                val.textContent = slider.value;
-            });
-        }
-        
-        // Copy settings
-        function copySettings() {
-            const vals = sliders.slice(0,6).map(id => document.getElementById(id).value).join(',');
-            const dpi = document.getElementById('dpi').value;
-            const code = `Geral:${document.getElementById('general').value} | Red Dot:${document.getElementById('reddot').value} | 2x:${document.getElementById('scope2x').value} | 4x:${document.getElementById('scope4x').value} | Sniper:${document.getElementById('sniper').value} | Free Look:${document.getElementById('freelook').value} | DPI: ${dpi}\n\nCole no FF: Configs > Sensibilidade > Ajuste manual!`;
-            document.getElementById('settings-code').textContent = code;
-            navigator.clipboard.writeText(code).then(() => {
-                const btn = document.getElementById('copy-code');
-                btn.textContent = '✅ Copiado!';
-                setTimeout(() => btn.textContent = '📋 Copiar Configs Pro FF', 2000);
-            });
-        }
-        
-        // Loadout generator
-        const primaries = ['M4A1', 'SCAR', 'AK', 'MP40', 'UMP', 'Vector'];
-        const secondaries = ['Desert Eagle', 'USP', 'G18'];
-        const others = ['Granadas', 'Medkit', 'Colete Lv3', 'Capacete Lv3'];
-        
-        function generateLoadout() {
-            const pri = primaries[Math.floor(Math.random() * primaries.length)];
-            const sec = secondaries[Math.floor(Math.random() * secondaries.length)];
-            const oth = others[Math.floor(Math.random() * others.length)];
-            document.getElementById('loadout-result').innerHTML = `
-                <strong>🎯 LOADOUT META:</strong><br>
-                Primária: ${pri}<br>
-                Secundária: ${sec}<br>
-                Extra: ${oth}<br><br>
-                <em>Perfeito pra rush! Boa sorte 🔥</em>
-            `;
-        }
-    </script>
-</body>
-</html>
+        <motion.div
+          animate={{ rotate: active ? 360 : 0 }}
+          transition={{ duration: 0.5 }}
+          className={`w-12 h-12 rounded-full border-4 ${active ? 'border-white' : 'border-gray-600'}`}
+        >
+          {active && <div className="w-full h-full bg-white rounded-full scale-75"></div>}
+        </motion.div>
+      </div>
+    </motion.button>
+  );
+}
