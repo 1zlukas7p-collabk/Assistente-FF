@@ -6,7 +6,7 @@
     <title>RYUKO PAINEL</title>
     <style>
         :root {
-            --primary: #00f5c1; /* Verde Ryuko */
+            --primary: #00f5c1; 
             --bg-dark: #050505;
             --card-bg: #111;
             --input-bg: #1a1a1a;
@@ -27,7 +27,6 @@
             overflow-x: hidden;
         }
 
-        /* --- TELAS --- */
         .screen { display: none; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 0.4s; }
         .active { display: block; }
 
@@ -53,7 +52,6 @@
 
         h1 { font-size: 22px; text-transform: lowercase; margin-bottom: 25px; text-shadow: 0 0 10px var(--primary); }
 
-        /* --- INPUTS E BOTÕES --- */
         .input-group { text-align: left; margin-bottom: 15px; }
         .input-field {
             width: 100%; background: var(--input-bg); border: 1px solid #333;
@@ -65,7 +63,6 @@
             text-transform: uppercase; margin-top: 10px;
         }
 
-        /* --- ÍCONES E FUNÇÕES --- */
         .func-name { display: flex; align-items: center; gap: 12px; font-size: 14px; text-align: left; }
         .ryuko-icon { width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; }
 
@@ -82,12 +79,11 @@
         input:checked + .slider { background: var(--primary); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* --- TABS --- */
         .tab-menu { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #222; }
         .tab-btn { background: none; border: none; color: var(--text-dim); padding: 10px; font-weight: bold; cursor: pointer; }
         .tab-btn.active-tab { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
-        /* --- MODAIS E PROGRESSO --- */
+        /* Modais */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.92); z-index: 1000; justify-content: center; align-items: center;
@@ -119,7 +115,7 @@
         <div class="card">
             <div class="logo-main"><img src="RYUKO_SENS.png" alt="Logo"></div>
             <h1>ryuko painel</h1>
-            <p style="font-size: 10px; color: var(--text-dim); margin-bottom: 20px;">esse painel foi criado pelo ryuko no intuito da sua mira ficar mais leve e lisa removendo bugs e tremedeira</p>
+            <p style="font-size: 10px; color: var(--text-dim); margin-bottom: 20px;">esse painel foi criado pelo ryuko para deixar sua mira leve e estável.</p>
             
             <div class="tab-menu">
                 <button id="btn-mira" class="tab-btn active-tab" onclick="switchTab('mira')">Mira</button>
@@ -133,35 +129,35 @@
                         <svg class="ryuko-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="2"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"/></svg>
                         Assistência de Mira Leve
                     </span>
-                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
                     <span class="func-name">
                         <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M4,8 V5 H8 M16,5 H20 V8 M20,16 V19 H16 M8,19 H4 V16" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="2" fill="none"/></svg>
                         Assistência de Mira Precisa
                     </span>
-                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
                     <span class="func-name">
                         <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,4 V20 M6,12 A6,6 0 0,0 18,12" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="4" r="2" stroke="currentColor" stroke-width="2" fill="none"/></svg>
                         Estabilização de Mira
                     </span>
-                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
                     <span class="func-name">
                         <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,4 L12,14 M9,7 L12,4 L15,7 M12,20 L12,10 M9,17 L12,20 L15,17" stroke="currentColor" stroke-width="2" fill="none"/></svg>
                         Controle de Recuo
                     </span>
-                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
                     <span class="func-name">
                         <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M4,17 A10,10 0 1,1 20,17" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="12" x2="16" y2="8" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
                         Ajuste Fino de Precisão
                     </span>
-                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
             </div>
 
@@ -171,35 +167,35 @@
                         <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M13,3 L13,10 L19,10 L11,21 L11,14 L5,14 L13,3 Z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
                         Otimização de FPS
                     </span>
-                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
                     <span class="func-name">
                         <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M10,8 C11,6 13,6 14,8 M17,11 A5,5 0 0,0 7,11 A5,5 0 0,0 17,11 M11,14 A2,2 0 1,1 11,18 A2,2 0 1,1 11,14" stroke="currentColor" stroke-width="2" fill="none"/><path d="M17,11 L20,9 A3,3 0 0,1 23,12 A3,3 0 0,1 20,15 L17,11 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
                         Redução de Delay
                     </span>
-                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
                     <span class="func-name">
                         <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,2 L4,5 V11 A8,8 0 0,0 12,19 A8,8 0 0,0 20,11 V5 L12,2 Z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
                         Estabilidade de Sistema
                     </span>
-                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
                     <span class="func-name">
                         <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M8,4 L16,12 L12,12 L14,18 L11,19 L9,13 L8,13 Z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M16,12 L19,9" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Ajuste Sensibilidade Touch
+                        Sensibilidade Touch
                     </span>
-                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
                     <span class="func-name">
                         <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M17,5 A10,10 0 0,0 7,15 M10,10 A5,5 0 0,1 15,15" stroke="currentColor" stroke-width="2" fill="none"/><path d="M17,5 L20,2 L22,4 L19,7 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Modo Desempenho Máximo
+                        Desempenho Máximo
                     </span>
-                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
             </div>
 
@@ -213,22 +209,22 @@
         <div class="modal-box">
             <div style="color: #ff007f; font-size: 40px; margin-bottom: 10px;">⚠️</div>
             <h2>ATENÇÃO</h2>
-            <p style="font-size: 12px; color: #aaa; margin-bottom: 20px;">O compartilhamento de login resultará no bloqueio automático do acesso.<br><br>Este painel é permitido apenas para uso em um único telefone.</p>
-            <label style="font-size: 13px;"><input type="checkbox" id="aceito"> Li e aceito os termos acima</label>
+            <p style="font-size: 12px; color: #aaa; margin-bottom: 20px;">O compartilhamento de login resultará no bloqueio automático.<br><br>Permitido apenas em um único telefone.</p>
+            <label style="font-size: 13px;"><input type="checkbox" id="aceito"> Li e aceito os termos</label>
             <button class="btn-green" style="margin-top: 20px;" onclick="confirmAttention()">CONFIRMAR</button>
         </div>
     </div>
 
     <div id="modal-progress" class="modal-overlay">
         <div class="modal-box">
-            <h3 style="font-size: 16px;">Configurando...</h3>
+            <h3 id="progress-text" style="font-size: 16px;">Configurando...</h3>
             <div class="progress-container"><div id="bar" class="progress-bar"></div></div>
         </div>
     </div>
 
     <div id="loading-initial">
         <div class="spinner"></div>
-        <p style="margin-top:15px; font-weight: bold; color: var(--primary);">Carregando painel...</p>
+        <p style="margin-top:15px; font-weight: bold; color: var(--primary);">Carregando...</p>
     </div>
 
     <script>
@@ -258,9 +254,36 @@
             document.getElementById('btn-desempenho').classList.toggle('active-tab', tab === 'desempenho');
         }
 
+        // NOVA FUNÇÃO: Animação para cada toggle
+        function handleToggle(checkbox) {
+            const isChecked = checkbox.checked;
+            checkbox.checked = !isChecked; // Reverte o clique inicial para esperar a animação
+            
+            const modal = document.getElementById('modal-progress');
+            const bar = document.getElementById('bar');
+            const text = document.getElementById('progress-text');
+            
+            text.innerText = isChecked ? "Ativando..." : "Desativando...";
+            modal.style.display = 'flex';
+            bar.style.width = '0%';
+            
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    checkbox.checked = isChecked; // Aplica o estado real
+                    setTimeout(() => modal.style.display = 'none', 400);
+                } else {
+                    width += 5;
+                    bar.style.width = width + '%';
+                }
+            }, 30);
+        }
+
         function startFF() {
             const modal = document.getElementById('modal-progress');
             const bar = document.getElementById('bar');
+            document.getElementById('progress-text').innerText = "Configurando...";
             modal.style.display = 'flex';
             let width = 0;
             const interval = setInterval(() => {
