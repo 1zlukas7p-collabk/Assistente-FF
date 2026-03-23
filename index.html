@@ -6,7 +6,7 @@
     <title>RYUKO PAINEL</title>
     <style>
         :root {
-            --primary: #00f5c1; 
+            --primary: #00f5c1; /* Verde Ryuko da imagem */
             --bg-dark: #050505;
             --card-bg: #111;
             --input-bg: #1a1a1a;
@@ -25,8 +25,10 @@
             align-items: center;
             min-height: 100vh;
             overflow-x: hidden;
+            background-image: radial-gradient(circle at center, rgba(0, 50, 40, 0.2) 0%, rgba(0, 0, 0, 1) 100%);
         }
 
+        /* --- TELAS E ANIMAÇÕES --- */
         .screen { display: none; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 0.4s; }
         .active { display: block; }
 
@@ -38,10 +40,12 @@
             padding: 30px 20px;
             text-align: center;
             border: 1px solid #222;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
 
+        /* --- LOGO E TÍTULOS --- */
         .logo-main {
-            width: 80px; height: 80px;
+            width: 90px; height: 90px;
             border-radius: 50%;
             border: 2px solid var(--primary);
             margin: 0 auto 15px;
@@ -52,40 +56,23 @@
 
         h1 { font-size: 22px; text-transform: lowercase; margin-bottom: 25px; text-shadow: 0 0 10px var(--primary); }
 
+        /* --- FORMULÁRIOS --- */
         .input-group { text-align: left; margin-bottom: 15px; }
         .input-field {
             width: 100%; background: var(--input-bg); border: 1px solid #333;
             border-radius: 12px; padding: 15px; color: white; outline: none;
         }
-
         .btn-green {
             background: var(--primary); color: black; border: none; width: 100%;
             padding: 16px; border-radius: 12px; font-weight: 900; cursor: pointer;
-            text-transform: uppercase; margin-top: 10px;
+            text-transform: uppercase; margin-top: 10px; transition: 0.3s;
         }
 
-        /* --- MODAIS --- */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.92); z-index: 1000; justify-content: center; align-items: center;
-        }
+        /* --- ÍCONES SVG --- */
+        .func-name { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+        .ryuko-icon { width: 22px; height: 22px; color: var(--primary); display: block; }
 
-        .modal-box { 
-            background: #151515; padding: 30px; border-radius: 20px; 
-            width: 90%; max-width: 340px; text-align: center; border: 1px solid #333; 
-        }
-
-        /* --- PROGRESS BAR (EFEITO CINZA) --- */
-        .progress-container {
-            width: 100%; background: #333; height: 10px; 
-            border-radius: 10px; margin: 20px 0; overflow: hidden;
-        }
-        .progress-bar {
-            width: 0%; height: 100%; background: #888; 
-            transition: width 0.1s linear;
-        }
-
-        /* --- TABS --- */
+        /* --- COMPONENTES DO PAINEL --- */
         .tab-menu { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #222; }
         .tab-btn { background: none; border: none; color: var(--text-dim); padding: 10px; font-weight: bold; cursor: pointer; }
         .tab-btn.active-tab { color: var(--primary); border-bottom: 2px solid var(--primary); }
@@ -95,13 +82,27 @@
             background: #181818; padding: 15px; border-radius: 15px; margin-bottom: 10px;
         }
 
-        /* Switch */
+        /* Switch Customizado */
         .switch { position: relative; width: 40px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #333; border-radius: 20px; transition: .3s; }
         .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .3s; }
         input:checked + .slider { background: var(--primary); }
         input:checked + .slider:before { transform: translateX(20px); }
+
+        /* --- MODAIS --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.92); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-box { 
+            background: #151515; padding: 30px; border-radius: 20px; 
+            width: 90%; max-width: 340px; text-align: center; border: 1px solid #333; 
+        }
+
+        /* Barra de Progresso Cinza */
+        .progress-container { width: 100%; background: #333; height: 10px; border-radius: 10px; margin: 20px 0; overflow: hidden; }
+        .progress-bar { width: 0%; height: 100%; background: #888; transition: width 0.1s linear; }
 
         /* LOADING INICIAL */
         #loading-initial { display: none; position: fixed; top: 0; width: 100%; height: 100%; background: black; z-index: 2000; flex-direction: column; justify-content: center; align-items: center; }
@@ -135,19 +136,49 @@
             </div>
 
             <div id="tab-mira">
-                <div class="function-row"><span>🎯 Assistência de Mira Leve</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-                <div class="function-row"><span>🔍 Assistência de Mira Precisa</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-                <div class="function-row"><span>⚓ Estabilização de Mira</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-                <div class="function-row"><span>✂️ Controle de Recuo</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-                <div class="function-row"><span>📈 Ajuste Fino de Precisão</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+                <div class="function-row">
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="2"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"/></svg>
+                        Assistência de Mira Leve
+                    </span>
+                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M4,8 V5 H8 M16,5 H20 V8 M20,16 V19 H16 M8,19 H4 V16" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                        Assistência de Mira Precisa
+                    </span>
+                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,4 V20 M6,12 A6,6 0 0,0 18,12" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="4" r="2" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                        Estabilização de Mira
+                    </span>
+                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,4 L12,14 M9,7 L12,4 L15,7 M12,20 L12,10 M9,17 L12,20 L15,17" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                        Controle de Recuo
+                    </span>
+                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M4,17 A10,10 0 1,1 20,17" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="12" x2="16" y2="8" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+                        Ajuste Fino de Precisão
+                    </span>
+                    <label class="switch"><input type="checkbox"><span class="slider"></span></label>
+                </div>
             </div>
 
             <div id="tab-desempenho" style="display:none;">
                 <div class="function-row"><span>⚡ Otimização de FPS</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
                 <div class="function-row"><span>🚀 Redução de Delay</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
                 <div class="function-row"><span>🛡️ Estabilidade de Sistema</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-                <div class="function-row"><span>📱 Ajuste Sensibilidade Touch</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
-                <div class="function-row"><span>🔥 Modo Desempenho Máximo</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+                <div class="function-row"><span>📱 Sensibilidade Touch</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
+                <div class="function-row"><span>🔥 Desempenho Máximo</span><label class="switch"><input type="checkbox"><span class="slider"></span></label></div>
             </div>
 
             <button class="btn-green" style="background: #181818; color: white; border: 1px solid #333; display: flex; align-items: center; justify-content: center; gap: 10px;" onclick="startFF()">
@@ -168,10 +199,8 @@
 
     <div id="modal-progress" class="modal-overlay">
         <div class="modal-box">
-            <h3 id="progress-text" style="font-size: 16px;">Configurando...</h3>
-            <div class="progress-container">
-                <div id="bar" class="progress-bar"></div>
-            </div>
+            <h3 style="font-size: 16px;">Configurando...</h3>
+            <div class="progress-container"><div id="bar" class="progress-bar"></div></div>
         </div>
     </div>
 
@@ -212,7 +241,6 @@
             const bar = document.getElementById('bar');
             modal.style.display = 'flex';
             let width = 0;
-            
             const interval = setInterval(() => {
                 if (width >= 100) {
                     clearInterval(interval);
@@ -222,7 +250,7 @@
                     width += 2;
                     bar.style.width = width + '%';
                 }
-            }, 50); // Velocidade da barra
+            }, 50);
         }
     </script>
 </body>
