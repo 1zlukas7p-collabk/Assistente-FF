@@ -1,252 +1,176 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Target, Crosshair, Anchor, MoveDown, MousePointer2, 
-  Zap, Activity, ShieldCheck, Fingerprint, Cpu, LogIn, Gamepad2,
-  ChevronRight, Smartphone
-} from 'lucide-react';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import SHA256 from "crypto-js/sha256";
+import { motion } from "framer-motion";
 
-// --- CONFIGURAÇÃO DAS FUNÇÕES (DADOS) ---
-const MIRA_FUNCTIONS = [
-  { id: 'm1', name: 'Assistência de Mira Leve', icon: <Target size={20}/> },
-  { id: 'm2', name: 'Assistência de Mira Precisa', icon: <Crosshair size={20}/> },
-  { id: 'm3', name: 'Estabilização de Mira', icon: <Anchor size={20}/> },
-  { id: 'm4', name: 'Controle de Recuo', icon: <MoveDown size={20}/> },
-  { id: 'm5', name: 'Ajuste Fino de Precisão', icon: <MousePointer2 size={20}/> },
-];
+/* ================== AUTH ================== */
+const FIXED_PASSWORD_HASH = SHA256("117").toString();
 
-const PERF_FUNCTIONS = [
-  { id: 'd1', name: 'Otimização de FPS', icon: <Zap size={20}/> },
-  { id: 'd2', name: 'Redução de Delay', icon: <Activity size={20}/> },
-  { id: 'd3', name: 'Estabilidade de Sistema', icon: <ShieldCheck size={20}/> },
-  { id: 'd4', name: 'Ajuste Sensi Touch', icon: <Fingerprint size={20}/> },
-  { id: 'd5', name: 'Modo Desempenho Máximo', icon: <Cpu size={20}/> },
-];
+function validateLogin(user: string, pass: string) {
+  return user.length > 0 && SHA256(pass).toString() === FIXED_PASSWORD_HASH;
+}
 
-export default function RyukoSensUltimate() {
-  const [isLogged, setIsLogged] = useState(false);
-  const [user, setUser] = useState('');
-  const [password, setPassword] = useState('');
-  const [activeTab, setActiveTab] = useState<'mira' | 'perf'>('mira');
-  const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [loadingText, setLoadingText] = useState('CONFIGURANDO...');
-
-  // Lógica de Autenticação
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === '117') {
-      setLoadingText("AUTENTICANDO...");
-      setLoading(true);
-      setTimeout(() => {
-        setIsLogged(true);
-        setLoading(false);
-      }, 1500);
-    } else {
-      alert("CHAVE INCORRETA. ACESSO NEGADO.");
-    }
-  };
-
-  // Simulação de Ativação de Função
-  const triggerAction = (name: string, isChecked: boolean) => {
-    if(!isChecked) return;
-    setLoadingText(name.toUpperCase());
-    setLoading(true);
-    setProgress(0);
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setTimeout(() => setLoading(false), 400);
-          return 100;
-        }
-        return prev + 5;
-      });
-    }, 30);
-  };
-
+/* ================== UI ================== */
+function Input({ type, placeholder, value, onChange }: any) {
   return (
-    <div className="min-h-screen bg-[#020202] text-white selection:bg-[#00f5c1]/30 overflow-hidden relative font-sans">
-      
-      {/* --- BACKGROUND NEOX ANIMADO (PALAVRAS FLUTUANTES) --- */}
-      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none overflow-hidden flex justify-around">
-        {[1, 2, 3, 4].map((col) => (
-          <motion.div 
-            key={col}
-            initial={{ y: col % 2 === 0 ? -1000 : 0 }}
-            animate={{ y: col % 2 === 0 ? 0 : -1000 }}
-            transition={{ duration: 25 + col * 5, repeat: Infinity, ease: "linear" }}
-            className="flex flex-col gap-20 text-[6vw] font-black text-[#00f5c1] leading-none whitespace-nowrap opacity-20 italic"
-            style={{ writingMode: 'vertical-rl' }}
-          >
-            RYUKO SENS PERFORMANCE MIRA FPS NEON PRECISA HEADSHOT DELAY
-          </motion.div>
-        ))}
+    <input
+      type={type}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      className="w-full p-3 bg-black/40 border border-purple-500 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+    />
+  );
+}
+
+function Button({ children, onClick }: any) {
+  return (
+    <motion.button
+      whileHover={{ scale: 1.05 }}
+      className="px-6 py-3 rounded-xl bg-purple-600 text-white shadow-lg hover:shadow-purple-500/50 transition"
+      onClick={onClick}
+    >
+      {children}
+    </motion.button>
+  );
+}
+
+/* ================== BACKGROUND ================== */
+function BackgroundParticles() {
+  return (
+    <div className="fixed inset-0 -z-10 overflow-hidden">
+      {[...Array(30)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-1 h-1 bg-purple-500 rounded-full"
+          initial={{ opacity: 0 }}
+          animate={{ y: ["0%", "100%"], opacity: [0, 1, 0] }}
+          transition={{ duration: 5 + i, repeat: Infinity }}
+          style={{
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ================== SIDEBAR ================== */
+function Sidebar() {
+  return (
+    <div className="w-64 h-screen bg-black/80 border-r border-purple-500 p-4">
+      <h2 className="text-white text-xl mb-6">Ryuko Sens</h2>
+      <ul className="space-y-4 text-gray-300">
+        <li>🎯 Mira</li>
+        <li>⚡ Desempenho</li>
+        <li>⚙️ Configurações</li>
+      </ul>
+    </div>
+  );
+}
+
+/* ================== MAIN ================== */
+export default function Page() {
+  const router = useRouter();
+
+  const [logged, setLogged] = useState(false);
+  const [user, setUser] = useState("");
+  const [pass, setPass] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (localStorage.getItem("auth") === "true") {
+      setLogged(true);
+    }
+  }, []);
+
+  function handleLogin() {
+    if (validateLogin(user, pass)) {
+      localStorage.setItem("auth", "true");
+      setLogged(true);
+    } else {
+      setError("Credenciais inválidas");
+    }
+  }
+
+  /* ================== LOGIN ================== */
+  if (!logged) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-black text-white">
+        <BackgroundParticles />
+
+        <div className="p-8 bg-black/60 backdrop-blur-xl rounded-2xl w-80 border border-purple-500">
+          <h1 className="text-2xl mb-6 text-center">Ryuko Sens</h1>
+
+          <Input
+            type="text"
+            placeholder="Usuário"
+            value={user}
+            onChange={(e: any) => setUser(e.target.value)}
+          />
+
+          <div className="mt-4">
+            <Input
+              type="password"
+              placeholder="Senha"
+              value={pass}
+              onChange={(e: any) => setPass(e.target.value)}
+            />
+          </div>
+
+          {error && <p className="text-red-500 mt-3">{error}</p>}
+
+          <div className="mt-6">
+            <Button onClick={handleLogin}>Entrar</Button>
+          </div>
+        </div>
       </div>
+    );
+  }
 
-      <AnimatePresence mode="wait">
-        {!isLogged ? (
-          /* --- TELA DE LOGIN PROFISSIONAL --- */
-          <motion.div 
-            key="login"
-            initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: -20 }}
-            className="relative z-10 flex items-center justify-center min-h-screen p-6"
-          >
-            <div className="w-full max-w-sm bg-zinc-900/60 backdrop-blur-3xl border border-white/10 p-10 rounded-[45px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-center">
-              <div className="mb-10">
-                <div className="w-24 h-24 rounded-full border-2 border-[#00f5c1] p-1.5 mx-auto mb-6 shadow-[0_0_30px_rgba(0,245,193,0.3)] bg-black/40">
-                  <img src="/RYUKO_SENS.png" alt="Ryuko" className="w-full h-full rounded-full object-cover" />
-                </div>
-                <h1 className="text-4xl font-black tracking-tighter text-[#00f5c1] italic">RYUKO SENS!</h1>
-                <div className="h-1 w-12 bg-[#00f5c1] mx-auto mt-2 rounded-full shadow-[0_0_10px_#00f5c1]"></div>
-              </div>
+  /* ================== DASHBOARD ================== */
+  return (
+    <div className="flex bg-black text-white min-h-screen">
+      <Sidebar />
 
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="group relative">
-                  <input 
-                    type="text" placeholder="USER ID" value={user} onChange={e => setUser(e.target.value)} required
-                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-5 focus:border-[#00f5c1]/50 outline-none transition-all placeholder:text-zinc-600 font-bold"
-                  />
-                </div>
-                <div className="group relative">
-                  <input 
-                    type="password" placeholder="SECURITY KEY" value={password} onChange={e => setPassword(e.target.value)} required
-                    className="w-full bg-black/40 border border-white/10 rounded-2xl px-6 py-5 focus:border-[#00f5c1]/50 outline-none transition-all placeholder:text-zinc-600 font-bold"
-                  />
-                </div>
-                <button 
-                  type="submit" 
-                  className="w-full bg-[#00f5c1] text-black font-black py-5 rounded-2xl flex items-center justify-center gap-3 hover:shadow-[0_0_40px_rgba(0,245,193,0.5)] transition-all active:scale-95 text-sm tracking-widest"
-                >
-                  AUTENTICAR <ChevronRight size={20} />
-                </button>
-              </form>
-              <p className="mt-8 text-[10px] text-zinc-500 tracking-[0.3em] font-mono">ENCRYPTED CONNECTION V4.1</p>
-            </div>
-          </motion.div>
-        ) : (
-          /* --- DASHBOARD PREMIUM --- */
-          <motion.div 
-            key="dashboard"
-            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-            className="relative z-10 max-w-lg mx-auto min-h-screen flex flex-col p-6 pt-10"
-          >
-            {/* HEADER DASHBOARD */}
-            <header className="flex items-center justify-between mb-8 bg-zinc-900/40 backdrop-blur-md p-5 rounded-[30px] border border-white/5">
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <img src="/RYUKO_SENS.png" className="w-12 h-12 rounded-full border border-[#00f5c1]/30 shadow-md" alt="User" />
-                  <div className="absolute bottom-0 right-0 w-3 h-3 bg-[#00f5c1] rounded-full border-2 border-zinc-900 animate-pulse"></div>
-                </div>
-                <div>
-                  <h2 className="font-bold text-sm tracking-tight text-zinc-300">Olá, <span className="text-white">{user || 'Operator'}</span></h2>
-                  <p className="text-[9px] text-[#00f5c1] font-mono tracking-widest uppercase">Licença Ativa</p>
-                </div>
-              </div>
-              <div className="p-3 bg-black/40 rounded-2xl border border-white/5">
-                <Smartphone size={18} className="text-zinc-500" />
-              </div>
-            </header>
+      <div className="flex-1 p-8">
+        <h1 className="text-3xl mb-6">Dashboard</h1>
 
-            {/* SELETOR DE CATEGORIA (TABS) */}
-            <div className="flex p-1.5 bg-zinc-900/80 rounded-[22px] border border-white/10 mb-6 shadow-inner">
-              <button 
-                onClick={() => setActiveTab('mira')}
-                className={`flex-1 py-4 rounded-xl text-[10px] font-black tracking-widest transition-all ${activeTab === 'mira' ? 'bg-[#00f5c1] text-black shadow-lg shadow-[#00f5c1]/20' : 'text-zinc-500 hover:text-zinc-300'}`}
-              >
-                TARGET OPS
-              </button>
-              <button 
-                onClick={() => setActiveTab('perf')}
-                className={`flex-1 py-4 rounded-xl text-[10px] font-black tracking-widest transition-all ${activeTab === 'perf' ? 'bg-[#00f5c1] text-black shadow-lg shadow-[#00f5c1]/20' : 'text-zinc-500 hover:text-zinc-300'}`}
-              >
-                SYSTEM OPS
-              </button>
-            </div>
+        <div className="grid grid-cols-2 gap-6">
+          {/* MIRA */}
+          <div className="p-6 bg-black/60 rounded-xl border border-purple-500">
+            <h2 className="text-xl mb-4">🎯 Mira</h2>
+            <ul className="space-y-2">
+              <li>Assistência Leve</li>
+              <li>Assistência Precisa</li>
+              <li>Estabilização</li>
+              <li>Controle de Recuo</li>
+              <li>Ajuste Fino</li>
+            </ul>
+          </div>
 
-            {/* LISTA DE MÓDULOS */}
-            <div className="flex-1 space-y-3 overflow-y-auto max-h-[480px] pr-2 scrollbar-hide">
-              <AnimatePresence mode="popLayout">
-                {(activeTab === 'mira' ? MIRA_FUNCTIONS : PERF_FUNCTIONS).map((item) => (
-                  <motion.div 
-                    layout
-                    initial={{ x: -10, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: 10, opacity: 0 }}
-                    key={item.id} className="flex items-center justify-between p-5 bg-zinc-900/30 rounded-[24px] border border-white/5 hover:bg-zinc-800/40 transition-all group"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="p-2.5 bg-black/50 rounded-xl text-[#00f5c1] group-hover:shadow-[0_0_15px_rgba(0,245,193,0.2)] transition-all">
-                        {item.icon}
-                      </div>
-                      <span className="text-sm font-bold text-zinc-200">{item.name}</span>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input 
-                        type="checkbox" 
-                        onChange={(e) => triggerAction(item.name, e.target.checked)}
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#00f5c1]"></div>
-                    </label>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
+          {/* DESEMPENHO */}
+          <div className="p-6 bg-black/60 rounded-xl border border-purple-500">
+            <h2 className="text-xl mb-4">⚡ Desempenho</h2>
+            <ul className="space-y-2">
+              <li>FPS</li>
+              <li>Delay</li>
+              <li>Estabilidade</li>
+              <li>Sensibilidade Touch</li>
+              <li>Modo Máximo</li>
+            </ul>
+          </div>
+        </div>
 
-            {/* BOTÃO START FREE FIRE */}
-            <div className="pt-6 pb-4">
-              <button 
-                onClick={() => window.location.href = "freefire://"}
-                className="w-full py-6 rounded-[28px] bg-transparent border-2 border-[#00f5c1]/50 text-[#00f5c1] font-black tracking-[0.3em] text-xs hover:bg-[#00f5c1] hover:text-black transition-all shadow-[0_10px_30px_rgba(0,245,193,0.1)] flex items-center justify-center gap-4 group active:scale-95"
-              >
-                <Gamepad2 size={22} className="group-hover:rotate-12 transition-transform" /> 
-                INICIAR FREE FIRE
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* --- OVERLAY DE PROCESSAMENTO (LOADER) --- */}
-      <AnimatePresence>
-        {loading && (
-          <motion.div 
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-center p-10"
-          >
-            <div className="relative w-32 h-32 mb-10">
-              <div className="absolute inset-0 border-b-2 border-[#00f5c1] rounded-full animate-spin"></div>
-              <div className="absolute inset-4 border-t-2 border-[#00f5c1]/40 rounded-full animate-reverse-spin"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <img src="/RYUKO_SENS.png" className="w-14 h-14 rounded-full opacity-50" alt="logo" />
-              </div>
-            </div>
-            <h3 className="text-[#00f5c1] font-black text-sm tracking-[0.5em] mb-6 italic text-center">
-              {loadingText}
-            </h3>
-            {progress > 0 && (
-              <div className="w-64 h-1.5 bg-zinc-900 rounded-full overflow-hidden border border-white/5">
-                <motion.div 
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                  className="h-full bg-[#00f5c1] shadow-[0_0_20px_#00f5c1]"
-                />
-              </div>
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <style jsx global>{`
-        @keyframes reverse-spin {
-          from { transform: rotate(360deg); }
-          to { transform: rotate(0deg); }
-        }
-        .animate-reverse-spin { animation: reverse-spin 1.5s linear infinite; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
+        <div className="mt-10">
+          <Button onClick={() => (window.location.href = "freefire://")}>
+            Abrir Free Fire
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
