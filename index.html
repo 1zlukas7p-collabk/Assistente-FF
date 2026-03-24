@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RYUKO PAINEL</title>
+    <title>RYUKO PAINEL UNIVERSAL</title>
     <style>
         :root {
             --primary: #00f5c1; 
@@ -18,13 +18,12 @@
         body {
             background-color: var(--bg-dark);
             color: white;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
         .screen { display: none; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 0.4s; }
@@ -52,49 +51,46 @@
 
         h1 { font-size: 22px; text-transform: lowercase; margin-bottom: 25px; text-shadow: 0 0 10px var(--primary); }
 
-        .input-group { text-align: left; margin-bottom: 15px; }
         .input-field {
             width: 100%; background: var(--input-bg); border: 1px solid #333;
-            border-radius: 12px; padding: 15px; color: white; outline: none;
-        }
-        .btn-green {
-            background: var(--primary); color: black; border: none; width: 100%;
-            padding: 16px; border-radius: 12px; font-weight: 900; cursor: pointer;
-            text-transform: uppercase; margin-top: 10px;
+            border-radius: 12px; padding: 15px; color: white; outline: none; margin-bottom: 15px; font-size: 16px;
         }
 
-        .func-name { display: flex; align-items: center; gap: 12px; font-size: 14px; text-align: left; }
-        .ryuko-icon { width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; }
+        .btn-green {
+            background: var(--primary); color: black; border: none; width: 100%;
+            padding: 16px; border-radius: 14px; font-weight: 900; cursor: pointer;
+            text-transform: uppercase;
+        }
 
         .function-row {
             display: flex; justify-content: space-between; align-items: center;
             background: #181818; padding: 15px; border-radius: 15px; margin-bottom: 10px;
         }
 
+        .func-name { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+        .ryuko-icon { width: 20px; height: 20px; color: var(--primary); }
+
+        /* Switch */
         .switch { position: relative; width: 40px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #333; border-radius: 20px; transition: .3s; }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .3s; }
-        input:checked + .slider { background: var(--primary); }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(20px); }
 
         .tab-menu { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #222; }
-        .tab-btn { background: none; border: none; color: var(--text-dim); padding: 10px; font-weight: bold; cursor: pointer; }
+        .tab-btn { background: none; border: none; color: var(--text-dim); padding: 10px; font-weight: bold; }
         .tab-btn.active-tab { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
         /* Modais */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.92); z-index: 1000; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center;
         }
-        .modal-box { background: #151515; padding: 30px; border-radius: 20px; width: 90%; max-width: 340px; text-align: center; border: 1px solid #333; }
+        .modal-box { background: #151515; padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; border: 1px solid #333; }
         
         .progress-container { width: 100%; background: #333; height: 8px; border-radius: 10px; margin: 20px 0; overflow: hidden; }
         .progress-bar { width: 0%; height: 100%; background: #888; transition: width 0.1s linear; }
-
-        #loading-initial { display: none; position: fixed; top: 0; width: 100%; height: 100%; background: black; z-index: 2000; flex-direction: column; justify-content: center; align-items: center; }
-        .spinner { width: 40px; height: 40px; border: 4px solid #222; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -103,10 +99,8 @@
         <div class="card">
             <div class="logo-main"><img src="RYUKO_SENS.png" alt="Logo"></div>
             <h1>ryuko painel</h1>
-            <div class="input-group"><input type="text" class="input-field" placeholder="Login"></div>
-            <div class="input-group"><input type="password" id="pass" class="input-field" placeholder="Senha"></div>
+            <input type="password" id="pass" class="input-field" placeholder="Digite a Senha">
             <button class="btn-green" onclick="tryLogin()">Entrar</button>
-            <p style="font-size: 10px; color: #444; margin-top: 20px;">powered by ryuko</p>
         </div>
     </div>
 
@@ -114,78 +108,45 @@
         <div class="card">
             <div class="logo-main"><img src="RYUKO_SENS.png" alt="Logo"></div>
             <h1>ryuko painel</h1>
-            <p style="font-size: 10px; color: var(--text-dim); margin-bottom: 20px;">painel ryuko para otimização de mira e sistema.</p>
             
             <div class="tab-menu">
                 <button id="btn-mira" class="tab-btn active-tab" onclick="switchTab('mira')">Mira</button>
-                <button id="btn-desempenho" class="tab-btn" onclick="switchTab('desempenho')">Desempenho</button>
-                <button class="tab-btn" onclick="location.reload()">Sair</button>
+                <button id="btn-desempenho" class="tab-btn" onclick="switchTab('desempenho')">Sistema</button>
             </div>
 
             <div id="tab-mira">
                 <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="2"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"/></svg>
-                        Assistência de Mira Leve
-                    </span>
-                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
-                </div>
-                </div>
-
-            <div id="tab-desempenho" style="display:none;">
-                <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M13,3 L13,10 L19,10 L11,21 L11,14 L5,14 L13,3 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Otimização de FPS
-                    </span>
+                    <span class="func-name">🎯 Aimbot Injetor</span>
                     <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
             </div>
 
-            <button class="btn-green" style="background: #1a1a1a; color: white; border: 1px solid #333; display: flex; align-items: center; justify-content: center; gap: 10px;" onclick="startFF()">
+            <div id="tab-desempenho" style="display:none;">
+                <div class="function-row">
+                    <span class="func-name">⚡ Boost FPS</span>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+            </div>
+
+            <button class="btn-green" style="background: #1a1a1a; color: white; border: 1px solid #333; margin-top: 20px;" onclick="startFF()">
                 🎮 Entrar no Free Fire
             </button>
         </div>
     </div>
 
-    <div id="modal-attention" class="modal-overlay">
-        <div class="modal-box">
-            <div style="color: #ff007f; font-size: 40px;">⚠️</div>
-            <h2>ATENÇÃO</h2>
-            <p style="font-size: 12px; color: #aaa;">Uso permitido apenas em um dispositivo.</p>
-            <label style="font-size: 13px;"><input type="checkbox" id="aceito"> Aceito os termos</label>
-            <button class="btn-green" style="margin-top: 20px;" onclick="confirmAttention()">CONFIRMAR</button>
-        </div>
-    </div>
-
     <div id="modal-progress" class="modal-overlay">
         <div class="modal-box">
-            <h3 id="progress-text">Configurando...</h3>
+            <h3 id="progress-text" style="font-size: 16px;">Configurando...</h3>
             <div class="progress-container"><div id="bar" class="progress-bar"></div></div>
         </div>
-    </div>
-
-    <div id="loading-initial">
-        <div class="spinner"></div>
     </div>
 
     <script>
         function tryLogin() {
             if(document.getElementById('pass').value === "117") {
-                document.getElementById('loading-initial').style.display = 'flex';
-                setTimeout(() => {
-                    document.getElementById('loading-initial').style.display = 'none';
-                    document.getElementById('modal-attention').style.display = 'flex';
-                }, 1000);
-            } else { alert("Senha incorreta!"); }
-        }
-
-        function confirmAttention() {
-            if(document.getElementById('aceito').checked) {
-                document.getElementById('modal-attention').style.display = 'none';
                 document.getElementById('screen-login').classList.remove('active');
                 document.getElementById('screen-main').classList.add('active');
-            }
+            } else { alert("Senha incorreta!"); }
         }
 
         function switchTab(tab) {
@@ -209,29 +170,38 @@
                     clearInterval(interval);
                     checkbox.checked = isChecked;
                     setTimeout(() => modal.style.display = 'none', 300);
-                } else { width += 5; bar.style.width = width + '%'; }
-            }, 20);
+                } else {
+                    width += 10;
+                    bar.style.width = width + '%';
+                }
+            }, 30);
         }
 
-        // REDIRECIONAMENTO PARA O FREE FIRE
         function startFF() {
             const modal = document.getElementById('modal-progress');
             const bar = document.getElementById('bar');
-            document.getElementById('progress-text').innerText = "Iniciando Jogo...";
+            document.getElementById('progress-text').innerText = "Injetando no Game...";
             modal.style.display = 'flex';
             let width = 0;
             const interval = setInterval(() => {
                 if (width >= 100) {
                     clearInterval(interval);
-                    // Tenta abrir o Free Fire (comum ou Max)
-                    window.location.href = "intent:#Intent;package=com.dts.freefireth;end";
                     
-                    // Fallback para o Max caso o normal não abra (opcional)
+                    // LÓGICA HÍBRIDA:
+                    // 1. Tenta abrir como iPhone (iOS)
+                    window.location.href = "freefire://";
+                    
+                    // 2. Se for Android, o link acima falha silenciosamente e o debaixo executa
                     setTimeout(() => {
-                        modal.style.display = 'none';
-                    }, 1000);
-                } else { width += 2; bar.style.width = width + '%'; }
-            }, 30);
+                        window.location.href = "intent://#Intent;scheme=androidamigosff;package=com.dts.freefireth;end";
+                    }, 500);
+
+                    setTimeout(() => modal.style.display = 'none', 1000);
+                } else {
+                    width += 2;
+                    bar.style.width = width + '%';
+                }
+            }, 40);
         }
     </script>
 </body>
