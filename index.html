@@ -24,6 +24,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .screen { display: none; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 0.4s; }
@@ -67,8 +68,8 @@
             background: #181818; padding: 15px; border-radius: 15px; margin-bottom: 10px;
         }
 
-        .func-name { display: flex; align-items: center; gap: 12px; font-size: 14px; }
-        .ryuko-icon { width: 20px; height: 20px; color: var(--primary); }
+        .func-name { display: flex; align-items: center; gap: 12px; font-size: 14px; text-align: left; }
+        .ryuko-icon { width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; }
 
         /* Switch */
         .switch { position: relative; width: 40px; height: 20px; }
@@ -79,13 +80,13 @@
         input:checked + .slider:before { transform: translateX(20px); }
 
         .tab-menu { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #222; }
-        .tab-btn { background: none; border: none; color: var(--text-dim); padding: 10px; font-weight: bold; }
+        .tab-btn { background: none; border: none; color: var(--text-dim); padding: 10px; font-weight: bold; cursor: pointer; }
         .tab-btn.active-tab { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
         /* Modais */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.92); z-index: 1000; justify-content: center; align-items: center;
         }
         .modal-box { background: #151515; padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; border: 1px solid #333; }
         
@@ -111,19 +112,32 @@
             
             <div class="tab-menu">
                 <button id="btn-mira" class="tab-btn active-tab" onclick="switchTab('mira')">Mira</button>
-                <button id="btn-desempenho" class="tab-btn" onclick="switchTab('desempenho')">Sistema</button>
+                <button id="btn-desempenho" class="tab-btn" onclick="switchTab('desempenho')">Desempenho</button>
             </div>
 
             <div id="tab-mira">
                 <div class="function-row">
-                    <span class="func-name">🎯 Aimbot Injetor</span>
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="2"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"/></svg>
+                        Aimbot iOS Premium
+                    </span>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,4 V20 M6,12 A6,6 0 0,0 18,12" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="4" r="2" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                        Estabilizador de Mira
+                    </span>
                     <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
             </div>
 
             <div id="tab-desempenho" style="display:none;">
                 <div class="function-row">
-                    <span class="func-name">⚡ Boost FPS</span>
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M13,3 L13,10 L19,10 L11,21 L11,14 L5,14 L13,3 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                        Otimização de FPS
+                    </span>
                     <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
             </div>
@@ -156,6 +170,7 @@
             document.getElementById('btn-desempenho').classList.toggle('active-tab', tab === 'desempenho');
         }
 
+        // Animação para os botões de Ativar/Desativar
         function handleToggle(checkbox) {
             const isChecked = checkbox.checked;
             checkbox.checked = !isChecked; 
@@ -177,24 +192,25 @@
             }, 30);
         }
 
+        // REDIRECIONAMENTO HÍBRIDO (O que você pediu)
         function startFF() {
             const modal = document.getElementById('modal-progress');
             const bar = document.getElementById('bar');
             document.getElementById('progress-text').innerText = "Injetando no Game...";
             modal.style.display = 'flex';
+            bar.style.width = '0%';
             let width = 0;
             const interval = setInterval(() => {
                 if (width >= 100) {
                     clearInterval(interval);
                     
-                    // LÓGICA HÍBRIDA:
-                    // 1. Tenta abrir como iPhone (iOS)
+                    // TENTA IPHONE (iOS) PRIMEIRO
                     window.location.href = "freefire://";
                     
-                    // 2. Se for Android, o link acima falha silenciosamente e o debaixo executa
+                    // TENTA ANDROID LOGO EM SEGUIDA
                     setTimeout(() => {
                         window.location.href = "intent://#Intent;scheme=androidamigosff;package=com.dts.freefireth;end";
-                    }, 500);
+                    }, 600);
 
                     setTimeout(() => modal.style.display = 'none', 1000);
                 } else {
