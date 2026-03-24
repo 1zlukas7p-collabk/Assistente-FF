@@ -24,7 +24,25 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
+            overflow: hidden;
+        }
+
+        /* --- NOTIFICAÇÃO --- */
+        #toast {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: black;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 3000;
+            transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(0, 245, 193, 0.4);
+            white-space: nowrap;
         }
 
         .screen { display: none; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 0.4s; }
@@ -94,6 +112,8 @@
 </head>
 <body>
 
+    <div id="toast">Opção ativada com sucesso!</div>
+
     <div id="screen-login" class="screen active">
         <div class="card">
             <div class="logo-main"><img src="RYUKO_SENS.png" alt="Logo"></div>
@@ -115,63 +135,27 @@
 
             <div id="tab-mira">
                 <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="2"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"/></svg>
-                        Assistência de Mira Leve
-                    </span>
-                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
+                    <span class="func-name">Assistência de Mira Leve</span>
+                    <label class="switch"><input type="checkbox" data-name="Mira Leve" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M4,8 V5 H8 M16,5 H20 V8 M20,16 V19 H16 M8,19 H4 V16" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Assistência de Mira Precisa
-                    </span>
-                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
+                    <span class="func-name">Assistência de Mira Precisa</span>
+                    <label class="switch"><input type="checkbox" data-name="Mira Precisa" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,4 V20 M6,12 A6,6 0 0,0 18,12" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="4" r="2" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Estabilização de Mira
-                    </span>
-                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
-                </div>
-                <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,4 L12,14 M9,7 L12,4 L15,7 M12,20 L12,10 M9,17 L12,20 L15,17" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Controle de Recuo
-                    </span>
-                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
-                </div>
-                <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M4,17 A10,10 0 1,1 20,17" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="12" x2="16" y2="8" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
-                        Ajuste Fino de Precisão
-                    </span>
-                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
+                    <span class="func-name">Estabilização de Mira</span>
+                    <label class="switch"><input type="checkbox" data-name="Estabilização" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
             </div>
 
             <div id="tab-desempenho" style="display:none;">
                 <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M13,3 L13,10 L19,10 L11,21 L11,14 L5,14 L13,3 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Otimização de FPS
-                    </span>
-                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
+                    <span class="func-name">Otimização de FPS</span>
+                    <label class="switch"><input type="checkbox" data-name="Otimização FPS" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M10,8 C11,6 13,6 14,8 M17,11 A5,5 0 0,0 7,11 A5,5 0 0,0 17,11" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Redução de Delay
-                    </span>
-                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
-                </div>
-                <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,2 L4,5 V11 A8,8 0 0,0 12,19 A8,8 0 0,0 20,11 V5 L12,2 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Estabilidade Sistema
-                    </span>
-                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
+                    <span class="func-name">Redução de Delay</span>
+                    <label class="switch"><input type="checkbox" data-name="Redução Delay" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
             </div>
 
@@ -183,12 +167,19 @@
 
     <div id="modal-progress" class="modal-overlay">
         <div class="modal-box">
-            <h3 id="progress-text" style="font-size: 16px;">Configurando...</h3>
+            <h3 id="progress-text">Configurando...</h3>
             <div class="progress-container"><div id="bar" class="progress-bar"></div></div>
         </div>
     </div>
 
     <script>
+        function showToast(nome, status) {
+            const toast = document.getElementById('toast');
+            toast.innerText = `${nome} ${status ? 'ativada' : 'desativada'} com sucesso!`;
+            toast.style.top = '20px';
+            setTimeout(() => { toast.style.top = '-100px'; }, 2500);
+        }
+
         function tryLogin() {
             if(document.getElementById('pass').value === "117") {
                 document.getElementById('screen-login').classList.remove('active');
@@ -205,18 +196,24 @@
 
         function handleToggle(checkbox) {
             const isChecked = checkbox.checked;
+            const nomeOpcao = checkbox.getAttribute('data-name');
             checkbox.checked = !isChecked; 
+            
             const modal = document.getElementById('modal-progress');
             const bar = document.getElementById('bar');
             document.getElementById('progress-text').innerText = isChecked ? "Injetando..." : "Removendo...";
             modal.style.display = 'flex';
             bar.style.width = '0%';
+            
             let width = 0;
             const interval = setInterval(() => {
                 if (width >= 100) {
                     clearInterval(interval);
                     checkbox.checked = isChecked;
-                    setTimeout(() => modal.style.display = 'none', 300);
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                        showToast(nomeOpcao, isChecked);
+                    }, 300);
                 } else {
                     width += 10;
                     bar.style.width = width + '%';
@@ -227,26 +224,23 @@
         function startFF() {
             const modal = document.getElementById('modal-progress');
             const bar = document.getElementById('bar');
-            document.getElementById('progress-text').innerText = "Otimizando iOS...";
+            document.getElementById('progress-text').innerText = "Injetando no Game...";
             modal.style.display = 'flex';
             bar.style.width = '0%';
             let width = 0;
             const interval = setInterval(() => {
                 if (width >= 100) {
                     clearInterval(interval);
-                    
-                    // Lógica híbrida que funcionou para você
                     window.location.href = "freefire://";
                     setTimeout(() => {
                         window.location.href = "intent://#Intent;scheme=androidamigosff;package=com.dts.freefireth;end";
                     }, 600);
-
                     setTimeout(() => modal.style.display = 'none', 1000);
                 } else {
                     width += 2;
                     bar.style.width = width + '%';
                 }
-            }, 40);
+            }, 35);
         }
     </script>
 </body>
