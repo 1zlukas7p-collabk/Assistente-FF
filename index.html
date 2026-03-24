@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RYUKO PAINEL UNIVERSAL</title>
+    <title>RYUKO PAINEL | PREMIUM iOS</title>
     <style>
         :root {
             --primary: #00f5c1; 
@@ -71,7 +71,6 @@
         .func-name { display: flex; align-items: center; gap: 12px; font-size: 14px; text-align: left; }
         .ryuko-icon { width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; }
 
-        /* Switch */
         .switch { position: relative; width: 40px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 20px; }
@@ -83,7 +82,6 @@
         .tab-btn { background: none; border: none; color: var(--text-dim); padding: 10px; font-weight: bold; cursor: pointer; }
         .tab-btn.active-tab { color: var(--primary); border-bottom: 2px solid var(--primary); }
 
-        /* Modais */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.92); z-index: 1000; justify-content: center; align-items: center;
@@ -119,14 +117,35 @@
                 <div class="function-row">
                     <span class="func-name">
                         <svg class="ryuko-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="2"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"/></svg>
-                        Aimbot iOS Premium
+                        Assistência de Mira Leve
+                    </span>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M4,8 V5 H8 M16,5 H20 V8 M20,16 V19 H16 M8,19 H4 V16" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                        Assistência de Mira Precisa
                     </span>
                     <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
                     <span class="func-name">
                         <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,4 V20 M6,12 A6,6 0 0,0 18,12" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="4" r="2" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Estabilizador de Mira
+                        Estabilização de Mira
+                    </span>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,4 L12,14 M9,7 L12,4 L15,7 M12,20 L12,10 M9,17 L12,20 L15,17" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                        Controle de Recuo
+                    </span>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M4,17 A10,10 0 1,1 20,17" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="12" x2="16" y2="8" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+                        Ajuste Fino de Precisão
                     </span>
                     <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
@@ -137,6 +156,20 @@
                     <span class="func-name">
                         <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M13,3 L13,10 L19,10 L11,21 L11,14 L5,14 L13,3 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
                         Otimização de FPS
+                    </span>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M10,8 C11,6 13,6 14,8 M17,11 A5,5 0 0,0 7,11 A5,5 0 0,0 17,11" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                        Redução de Delay
+                    </span>
+                    <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,2 L4,5 V11 A8,8 0 0,0 12,19 A8,8 0 0,0 20,11 V5 L12,2 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                        Estabilidade Sistema
                     </span>
                     <label class="switch"><input type="checkbox" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
@@ -170,13 +203,12 @@
             document.getElementById('btn-desempenho').classList.toggle('active-tab', tab === 'desempenho');
         }
 
-        // Animação para os botões de Ativar/Desativar
         function handleToggle(checkbox) {
             const isChecked = checkbox.checked;
             checkbox.checked = !isChecked; 
             const modal = document.getElementById('modal-progress');
             const bar = document.getElementById('bar');
-            document.getElementById('progress-text').innerText = isChecked ? "Ativando..." : "Desativando...";
+            document.getElementById('progress-text').innerText = isChecked ? "Injetando..." : "Removendo...";
             modal.style.display = 'flex';
             bar.style.width = '0%';
             let width = 0;
@@ -192,11 +224,10 @@
             }, 30);
         }
 
-        // REDIRECIONAMENTO HÍBRIDO (O que você pediu)
         function startFF() {
             const modal = document.getElementById('modal-progress');
             const bar = document.getElementById('bar');
-            document.getElementById('progress-text').innerText = "Injetando no Game...";
+            document.getElementById('progress-text').innerText = "Otimizando iOS...";
             modal.style.display = 'flex';
             bar.style.width = '0%';
             let width = 0;
@@ -204,10 +235,8 @@
                 if (width >= 100) {
                     clearInterval(interval);
                     
-                    // TENTA IPHONE (iOS) PRIMEIRO
+                    // Lógica híbrida que funcionou para você
                     window.location.href = "freefire://";
-                    
-                    // TENTA ANDROID LOGO EM SEGUIDA
                     setTimeout(() => {
                         window.location.href = "intent://#Intent;scheme=androidamigosff;package=com.dts.freefireth;end";
                     }, 600);
