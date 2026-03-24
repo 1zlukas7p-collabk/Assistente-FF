@@ -1,282 +1,158 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RYUKO SENS | ULTIMATE V4</title>
-    <style>
-        :root {
-            --accent: #00f5c1; /* Verde Ryuko Sensi */
-            --bg-body: #020202;
-            --glass: rgba(20, 20, 20, 0.85);
-            --border: rgba(0, 245, 193, 0.2);
-        }
+/ryuko-sens
+├── src/
+│   ├── app/                # App Router (Next.js)
+│   ├── components/         # UI Reutilizável (Buttons, Inputs, GlassCard)
+│   ├── hooks/              # Lógica de Autenticação e Storage
+│   ├── lib/                # Configurações de Hash (SHA-256) e Utils
+│   └── styles/             # Tailwind & Global CSS
+├── public/                 # Imagem RYUKO_SENS.png
+└── tailwind.config.ts      # Configurações de Glow e Cores Neox
+"use client";
 
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Target, Crosshair, Anchor, MoveDown, Zap, 
+  Activity, ShieldCheck, Fingerprint, Cpu, MousePointer2 
+} from 'lucide-react'; // Outline Icons
 
-        body {
-            background: var(--bg-body);
-            color: white;
-            font-family: 'Inter', -apple-system, sans-serif;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+// --- TIPAGEM ---
+interface ModProps {
+  id: string;
+  name: string;
+  icon: React.ReactNode;
+  category: 'mira' | 'performance';
+}
 
-        /* --- BACKGROUND NEOX ANIMADO (MATRIX STYLE) --- */
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 0;
-            opacity: 0.15;
-        }
+export default function RyukoDashboard() {
+  const [activeTab, setActiveTab] = useState<'mira' | 'performance'>('mira');
+  const [isInjecting, setIsInjecting] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
-        /* --- CONTAINER PRINCIPAL (GLASSMORPHISM) --- */
-        .main-container {
-            position: relative;
-            z-index: 10;
-            width: 90%;
-            max-width: 380px;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 30px 20px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            text-align: center;
-        }
+  const modules: ModProps[] = [
+    // MIRA (SIMULAÇÃO)
+    { id: 'm1', name: 'Assistência Mira Leve', icon: <Target />, category: 'mira' },
+    { id: 'm2', name: 'Assistência Mira Precisa', icon: <Crosshair />, category: 'mira' },
+    { id: 'm3', name: 'Estabilização de Mira', icon: <Anchor />, category: 'mira' },
+    { id: 'm4', name: 'Controle de Recuo', icon: <MoveDown />, category: 'mira' },
+    { id: 'm5', name: 'Ajuste Fino de Precisão', icon: <MousePointer2 />, category: 'mira' },
+    // DESEMPENHO
+    { id: 'd1', name: 'Otimização de FPS', icon: <Zap />, category: 'performance' },
+    { id: 'd2', name: 'Redução de Delay', icon: <Activity />, category: 'performance' },
+    { id: 'd3', name: 'Estabilidade Sistema', icon: <ShieldCheck />, category: 'performance' },
+    { id: 'd4', name: 'Sensi Touch Calibrar', icon: <Fingerprint />, category: 'performance' },
+    { id: 'd5', name: 'Performance Máxima', icon: <Cpu />, category: 'performance' },
+  ];
 
-        /* --- LOGO RYUKO --- */
-        .avatar-wrapper {
-            width: 90px; height: 90px;
-            margin: 0 auto 15px;
-            border-radius: 50%;
-            padding: 3px;
-            background: linear-gradient(45deg, var(--accent), transparent);
-            box-shadow: 0 0 20px rgba(0, 245, 193, 0.2);
-        }
-        .avatar-wrapper img {
-            width: 100%; height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            background: #111;
-        }
+  const handleToggle = (name: string) => {
+    setIsInjecting(true);
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 10;
+      setLoadingProgress(progress);
+      if (progress >= 100) {
+        clearInterval(interval);
+        setTimeout(() => {
+          setIsInjecting(false);
+          setLoadingProgress(0);
+        }, 500);
+      }
+    }, 60);
+  };
 
-        h1 {
-            font-size: 1.4rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 5px;
-            color: var(--accent);
-            text-shadow: 0 0 10px rgba(0, 245, 193, 0.5);
-        }
+  return (
+    <div className="min-h-screen bg-[#020202] text-white font-sans overflow-hidden relative">
+      
+      {/* BACKGROUND ANIMADO (NEOX WORDS) */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none select-none">
+        <motion.div 
+          animate={{ y: [-1000, 0] }} 
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="flex flex-col gap-10 text-4xl font-black text-[#00f5c1] tracking-tighter"
+        >
+          {Array(20).fill("RYUKO SENS PERFORMANCE MIRA HEADSHOT").map((t, i) => (
+            <span key={i}>{t}</span>
+          ))}
+        </motion.div>
+      </div>
 
-        p.subtitle {
-            font-size: 0.75rem;
-            color: #666;
-            margin-bottom: 25px;
-        }
-
-        /* --- LOGIN FORM --- */
-        .screen { display: none; animation: slideUp 0.5s ease forwards; }
-        .active { display: block; }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        input {
-            width: 100%;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid #333;
-            padding: 15px;
-            border-radius: 12px;
-            color: white;
-            margin-bottom: 12px;
-            font-size: 14px;
-            transition: 0.3s;
-        }
-        input:focus { border-color: var(--accent); background: rgba(0,245,193,0.05); }
-
-        .btn-action {
-            width: 100%;
-            background: var(--accent);
-            color: #000;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0, 245, 193, 0.2);
-            transition: 0.3s;
-        }
-        .btn-action:active { transform: scale(0.98); }
-
-        /* --- TABS & FUNCTIONS --- */
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab {
-            flex: 1; padding: 10px; font-size: 12px; font-weight: bold;
-            background: rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; color: #888;
-        }
-        .tab.active-tab { background: var(--accent); color: #000; }
-
-        .func-list { max-height: 280px; overflow-y: auto; text-align: left; }
-        .func-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px; background: rgba(255,255,255,0.03);
-            border-radius: 14px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05);
-        }
-        .func-info { font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 10px; }
-
-        /* Custom Switch */
-        .toggle {
-            appearance: none; width: 38px; height: 20px;
-            background: #333; border-radius: 20px; position: relative; cursor: pointer;
-        }
-        .toggle:checked { background: var(--accent); }
-        .toggle::before {
-            content: ''; position: absolute; width: 14px; height: 14px;
-            background: white; border-radius: 50%; top: 3px; left: 3px; transition: 0.3s;
-        }
-        .toggle:checked::before { left: 21px; background: #000; }
-
-        /* --- MODAL --- */
-        #loader {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 100; flex-direction: column; justify-content: center; align-items: center;
-        }
-        .bar-container { width: 200px; height: 4px; background: #222; border-radius: 10px; margin-top: 15px; overflow: hidden; }
-        #bar { width: 0%; height: 100%; background: var(--accent); box-shadow: 0 0 15px var(--accent); }
-
-    </style>
-</head>
-<body>
-
-    <canvas id="neoxCanvas"></canvas>
-
-    <div class="main-container">
-        <div class="avatar-wrapper">
-            <img src="RYUKO_SENS.png" alt="Ryuko">
-        </div>
-        <h1>RYUKO SENS</h1>
-        <p class="subtitle">Next-Gen Optimization Platform</p>
-
-        <div id="login-screen" class="screen active">
-            <input type="text" placeholder="Access ID (Any)">
-            <input type="password" id="passInput" placeholder="Security Key">
-            <button class="btn-action" onclick="handleLogin()">Injetar Licença</button>
-        </div>
-
-        <div id="panel-screen" class="screen">
-            <div class="tabs">
-                <div id="t1" class="tab active-tab" onclick="setTab(1)">Combat</div>
-                <div id="t2" class="tab" onclick="setTab(2)">System</div>
+      <main className="relative z-10 flex flex-col items-center justify-center p-6 h-screen">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full max-w-md bg-zinc-900/80 backdrop-blur-xl border border-[#00f5c1]/20 rounded-[32px] p-8 shadow-2xl shadow-[#00f5c1]/5"
+        >
+          {/* HEADER */}
+          <div className="flex flex-col items-center mb-8">
+            <div className="w-20 h-20 rounded-full border-2 border-[#00f5c1] p-1 mb-4 shadow-[0_0_15px_rgba(0,245,193,0.3)]">
+              <img src="/RYUKO_SENS.png" alt="Logo" className="w-full h-full rounded-full object-cover" />
             </div>
+            <h1 className="text-2xl font-bold tracking-widest text-[#00f5c1] drop-shadow-[0_0_8px_rgba(0,245,193,0.5)]">
+              RYUKO SENS!
+            </h1>
+            <p className="text-zinc-500 text-xs uppercase tracking-tighter">Ultimate Performance Panel</p>
+          </div>
 
-            <div id="combat-ops" class="func-list">
-                <div class="func-item"><span class="func-info">⊕ Aim Assist 1.0</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
-                <div class="func-item"><span class="func-info">◎ Lock Precision</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
-                <div class="func-item"><span class="func-info">⊘ Anti-Shake Sensi</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
-                <div class="func-info func-item"><span>⚔ Smooth Track</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
-                <div class="func-item"><span class="func-info">◈ Hitbox Priority</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
+          {/* TABS CONTROLLER */}
+          <div className="flex bg-black/40 p-1 rounded-2xl mb-6 border border-white/5">
+            {(['mira', 'performance'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`flex-1 py-3 rounded-xl text-xs font-bold uppercase transition-all ${
+                  activeTab === tab ? 'bg-[#00f5c1] text-black shadow-lg shadow-[#00f5c1]/20' : 'text-zinc-500 hover:text-white'
+                }`}
+              >
+                {tab === 'mira' ? 'Combat' : 'System'}
+              </button>
+            ))}
+          </div>
+
+          {/* MODULE LIST */}
+          <div className="space-y-3 h-64 overflow-y-auto pr-2 custom-scrollbar">
+            {modules.filter(m => m.category === activeTab).map((mod) => (
+              <div key={mod.id} className="flex justify-between items-center bg-zinc-800/40 p-4 rounded-2xl border border-white/5 hover:border-[#00f5c1]/30 transition-colors">
+                <div className="flex items-center gap-3 text-sm font-medium">
+                  <span className="text-[#00f5c1] w-5">{mod.icon}</span>
+                  {mod.name}
+                </div>
+                <input 
+                  type="checkbox" 
+                  onChange={() => handleToggle(mod.name)}
+                  className="w-10 h-5 bg-zinc-700 rounded-full appearance-none checked:bg-[#00f5c1] relative transition-all cursor-pointer before:content-[''] before:absolute before:w-4 before:h-4 before:bg-white before:rounded-full before:top-0.5 before:left-0.5 checked:before:left-5.5 before:transition-all"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* BOTÃO FREE FIRE */}
+          <button 
+            onClick={() => window.location.href = "freefire://"}
+            className="w-full mt-8 py-5 bg-transparent border border-[#00f5c1]/40 text-[#00f5c1] rounded-2xl font-black text-sm tracking-widest hover:bg-[#00f5c1] hover:text-black transition-all group"
+          >
+            EXECUTE FREE FIRE <span className="ml-2 group-hover:translate-x-1 transition-transform inline-block">→</span>
+          </button>
+        </motion.div>
+      </main>
+
+      {/* MODAL DE CARREGAMENTO (CONFIGURANDO) */}
+      <AnimatePresence>
+        {isInjecting && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center"
+          >
+            <span className="text-[#00f5c1] font-mono text-sm tracking-widest mb-4">OPTIMIZING ENGINE...</span>
+            <div className="w-48 h-1 bg-zinc-800 rounded-full overflow-hidden">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: `${loadingProgress}%` }}
+                className="h-full bg-[#00f5c1] shadow-[0_0_15px_#00f5c1]"
+              />
             </div>
-
-            <div id="system-ops" class="func-list" style="display:none;">
-                <div class="func-item"><span class="func-info">⚡ Frame-Boost v2</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
-                <div class="func-item"><span class="func-info">☄ Ultra Response</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
-                <div class="func-item"><span class="func-info">⚖ RAM Stabilizer</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
-                <div class="func-item"><span class="func-info">❄ CPU Cooldown</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
-                <div class="func-item"><span class="func-info">☁ Ping Reducer</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
-            </div>
-
-            <button class="btn-action" style="margin-top:20px; background:#111; color:var(--accent); border:1px solid var(--border);" onclick="openFF()">
-                Execute Free Fire
-            </button>
-        </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
-
-    <div id="loader">
-        <span id="load-text" style="font-size: 12px; letter-spacing: 2px; color: var(--accent);">INITIALIZING...</span>
-        <div class="bar-container"><div id="bar"></div></div>
-    </div>
-
-    <script>
-        /* --- BACKGROUND NEOX (ANIMADO) --- */
-        const canvas = document.getElementById('neoxCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        const words = "RYUKO SENS PERFORMANCE MIRA HEADSHOT NEON SENSITIVITY MAX FPS".split(" ");
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
-
-        function drawMatrix() {
-            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#00f5c1";
-            ctx.font = fontSize + "px monospace";
-
-            drops.forEach((y, i) => {
-                const text = words[Math.floor(Math.random() * words.length)];
-                ctx.fillText(text, i * fontSize * 3, y * fontSize);
-                if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-                drops[i]++;
-            });
-        }
-        setInterval(drawMatrix, 50);
-
-        /* --- LÓGICA DO PAINEL --- */
-        function handleLogin() {
-            const pass = document.getElementById('passInput').value;
-            if(pass === "117") {
-                document.getElementById('login-screen').classList.remove('active');
-                document.getElementById('panel-screen').classList.add('active');
-            } else { alert("INVALID SECURITY KEY."); }
-        }
-
-        function setTab(n) {
-            document.getElementById('combat-ops').style.display = n === 1 ? 'block' : 'none';
-            document.getElementById('system-ops').style.display = n === 2 ? 'block' : 'none';
-            document.getElementById('t1').className = n === 1 ? 'tab active-tab' : 'tab';
-            document.getElementById('t2').className = n === 2 ? 'tab active-tab' : 'tab';
-        }
-
-        function toggleMod(el) {
-            if(!el.checked) return;
-            el.checked = false;
-            const loader = document.getElementById('loader');
-            const bar = document.getElementById('bar');
-            document.getElementById('load-text').innerText = "INJECTING MODULE...";
-            loader.style.display = 'flex';
-            
-            let w = 0;
-            const interval = setInterval(() => {
-                w += 5;
-                bar.style.width = w + '%';
-                if(w >= 100) {
-                    clearInterval(interval);
-                    loader.style.display = 'none';
-                    el.checked = true;
-                    bar.style.width = '0%';
-                }
-            }, 30);
-        }
-
-        function openFF() {
-            const loader = document.getElementById('loader');
-            document.getElementById('load-text').innerText = "BYPASSING SECURITY...";
-            loader.style.display = 'flex';
-            setTimeout(() => {
-                window.location.href = "freefire://";
-                setTimeout(() => { window.location.href = "intent://#Intent;scheme=androidamigosff;package=com.dts.freefireth;end"; }, 600);
-                loader.style.display = 'none';
-            }, 1500);
-        }
-    </script>
-</body>
-</html>
+  );
+}
