@@ -3,197 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RYUKO PAINEL | PREMIUM V3.1</title>
+    <title>RYUKO SENS | ULTIMATE V4</title>
     <style>
         :root {
-            --primary: #ff007f; 
-            --bg-dark: #050505;
-            --card-bg: #111;
-            --input-bg: #1a1a1a;
-            --text-dim: #777;
+            --accent: #00f5c1; /* Verde Ryuko Sensi */
+            --bg-body: #020202;
+            --glass: rgba(20, 20, 20, 0.85);
+            --border: rgba(0, 245, 193, 0.2);
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            background-color: var(--bg-dark);
+            background: var(--bg-body);
             color: white;
-            font-family: 'Segoe UI', sans-serif;
-            margin: 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             overflow: hidden;
-            background-image: radial-gradient(circle at center, rgba(80, 0, 40, 0.15) 0%, rgba(0, 0, 0, 1) 100%);
         }
 
-        #toast {
+        /* --- BACKGROUND NEOX ANIMADO (MATRIX STYLE) --- */
+        canvas {
             position: fixed;
-            top: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--primary);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 13px;
-            z-index: 3000;
-            transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 20px rgba(255, 0, 127, 0.5);
-            white-space: nowrap;
-            text-transform: uppercase;
+            top: 0;
+            left: 0;
+            z-index: 0;
+            opacity: 0.15;
         }
 
-        .screen { display: none; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 0.4s ease; }
+        /* --- CONTAINER PRINCIPAL (GLASSMORPHISM) --- */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 380px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 30px 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        /* --- LOGO RYUKO --- */
+        .avatar-wrapper {
+            width: 90px; height: 90px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(45deg, var(--accent), transparent);
+            box-shadow: 0 0 20px rgba(0, 245, 193, 0.2);
+        }
+        .avatar-wrapper img {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #111;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+            color: var(--accent);
+            text-shadow: 0 0 10px rgba(0, 245, 193, 0.5);
+        }
+
+        p.subtitle {
+            font-size: 0.75rem;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        /* --- LOGIN FORM --- */
+        .screen { display: none; animation: slideUp 0.5s ease forwards; }
         .active { display: block; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .card {
-            background: var(--card-bg);
-            border-radius: 30px;
-            padding: 35px 20px;
-            text-align: center;
-            border: 1px solid #222;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-
-        .logo-main {
-            width: 85px; height: 85px;
-            border-radius: 50%;
-            border: 2px solid var(--primary);
-            margin: 0 auto 20px;
-            overflow: hidden;
-            box-shadow: 0 0 20px rgba(255, 0, 127, 0.3);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .logo-main img { width: 100%; height: 100%; object-fit: cover; }
-
-        h1 { font-size: 20px; text-transform: lowercase; margin-bottom: 30px; letter-spacing: 2px; text-shadow: 0 0 10px var(--primary); }
-
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-field {
-            width: 100%; background: var(--input-bg); border: 1px solid #333;
-            border-radius: 15px; padding: 16px; color: white; font-size: 15px;
+        input {
+            width: 100%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 12px;
+            font-size: 14px;
             transition: 0.3s;
         }
+        input:focus { border-color: var(--accent); background: rgba(0,245,193,0.05); }
 
-        .btn-green {
-            background: var(--primary); color: white; border: none; width: 100%;
-            padding: 18px; border-radius: 15px; font-weight: 900; cursor: pointer;
-            text-transform: uppercase; margin-top: 10px; font-size: 14px;
+        .btn-action {
+            width: 100%;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 245, 193, 0.2);
+            transition: 0.3s;
         }
+        .btn-action:active { transform: scale(0.98); }
 
-        .tab-menu { display: flex; justify-content: space-around; margin-bottom: 25px; border-bottom: 1px solid #222; }
-        .tab-btn { background: none; border: none; color: var(--text-dim); padding: 12px; font-weight: bold; cursor: pointer; font-size: 14px; }
-        .tab-btn.active-tab { color: var(--primary); border-bottom: 3px solid var(--primary); }
+        /* --- TABS & FUNCTIONS --- */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab {
+            flex: 1; padding: 10px; font-size: 12px; font-weight: bold;
+            background: rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; color: #888;
+        }
+        .tab.active-tab { background: var(--accent); color: #000; }
 
-        .function-row {
+        .func-list { max-height: 280px; overflow-y: auto; text-align: left; }
+        .func-item {
             display: flex; justify-content: space-between; align-items: center;
-            background: #181818; padding: 16px; border-radius: 18px; margin-bottom: 12px;
-            border: 1px solid #222;
+            padding: 14px; background: rgba(255,255,255,0.03);
+            border-radius: 14px; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.05);
         }
+        .func-info { font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 10px; }
 
-        .func-name { display: flex; align-items: center; gap: 12px; font-size: 13.5px; font-weight: 600; color: #eee; }
-        .ryuko-icon { width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; }
+        /* Custom Switch */
+        .toggle {
+            appearance: none; width: 38px; height: 20px;
+            background: #333; border-radius: 20px; position: relative; cursor: pointer;
+        }
+        .toggle:checked { background: var(--accent); }
+        .toggle::before {
+            content: ''; position: absolute; width: 14px; height: 14px;
+            background: white; border-radius: 50%; top: 3px; left: 3px; transition: 0.3s;
+        }
+        .toggle:checked::before { left: 21px; background: #000; }
 
-        .switch { position: relative; width: 42px; height: 22px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 20px; }
-        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        .modal-overlay {
+        /* --- MODAL --- */
+        #loader {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.9); z-index: 100; flex-direction: column; justify-content: center; align-items: center;
         }
-        .modal-box { background: #151515; padding: 35px; border-radius: 25px; width: 85%; max-width: 320px; text-align: center; border: 1px solid #333; }
-        .progress-container { width: 100%; background: #333; height: 6px; border-radius: 10px; margin: 25px 0; overflow: hidden; }
-        .progress-bar { width: 0%; height: 100%; background: var(--primary); transition: width 0.1s linear; }
+        .bar-container { width: 200px; height: 4px; background: #222; border-radius: 10px; margin-top: 15px; overflow: hidden; }
+        #bar { width: 0%; height: 100%; background: var(--accent); box-shadow: 0 0 15px var(--accent); }
+
     </style>
 </head>
 <body>
 
-    <div id="toast">Sucesso!</div>
+    <canvas id="neoxCanvas"></canvas>
 
-    <div id="screen-login" class="screen active">
-        <div class="card">
-            <div class="logo-main"><img src="RYUKO_SENS.png" alt="Logo"></div>
-            <h1>ryuko login</h1>
-            <div class="input-group"><input type="text" id="user" class="input-field" placeholder="Usuário"></div>
-            <div class="input-group"><input type="password" id="pass" class="input-field" placeholder="Senha"></div>
-            <button class="btn-green" onclick="tryLogin()">Acessar Painel</button>
+    <div class="main-container">
+        <div class="avatar-wrapper">
+            <img src="RYUKO_SENS.png" alt="Ryuko">
+        </div>
+        <h1>RYUKO SENS</h1>
+        <p class="subtitle">Next-Gen Optimization Platform</p>
+
+        <div id="login-screen" class="screen active">
+            <input type="text" placeholder="Access ID (Any)">
+            <input type="password" id="passInput" placeholder="Security Key">
+            <button class="btn-action" onclick="handleLogin()">Injetar Licença</button>
+        </div>
+
+        <div id="panel-screen" class="screen">
+            <div class="tabs">
+                <div id="t1" class="tab active-tab" onclick="setTab(1)">Combat</div>
+                <div id="t2" class="tab" onclick="setTab(2)">System</div>
+            </div>
+
+            <div id="combat-ops" class="func-list">
+                <div class="func-item"><span class="func-info">⊕ Aim Assist 1.0</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
+                <div class="func-item"><span class="func-info">◎ Lock Precision</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
+                <div class="func-item"><span class="func-info">⊘ Anti-Shake Sensi</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
+                <div class="func-info func-item"><span>⚔ Smooth Track</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
+                <div class="func-item"><span class="func-info">◈ Hitbox Priority</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
+            </div>
+
+            <div id="system-ops" class="func-list" style="display:none;">
+                <div class="func-item"><span class="func-info">⚡ Frame-Boost v2</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
+                <div class="func-item"><span class="func-info">☄ Ultra Response</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
+                <div class="func-item"><span class="func-info">⚖ RAM Stabilizer</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
+                <div class="func-item"><span class="func-info">❄ CPU Cooldown</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
+                <div class="func-item"><span class="func-info">☁ Ping Reducer</span><input type="checkbox" class="toggle" onclick="toggleMod(this)"></div>
+            </div>
+
+            <button class="btn-action" style="margin-top:20px; background:#111; color:var(--accent); border:1px solid var(--border);" onclick="openFF()">
+                Execute Free Fire
+            </button>
         </div>
     </div>
 
-    <div id="screen-main" class="screen">
-        <div class="card">
-            <div class="logo-main"><img src="RYUKO_SENS.png" alt="Logo"></div>
-            <h1>ryuko painel</h1>
-            
-            <div class="tab-menu">
-                <button id="btn-mira" class="tab-btn active-tab" onclick="switchTab('mira')">Mira</button>
-                <button id="btn-desempenho" class="tab-btn" onclick="switchTab('desempenho')">Sistema</button>
-            </div>
-
-            <div id="tab-mira">
-                <div class="function-row"><span class="func-name"><svg class="ryuko-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="2"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"/></svg>Assistência de Mira Leve</span><label class="switch"><input type="checkbox" data-name="Mira Leve" onclick="handleToggle(this)"><span class="slider"></span></label></div>
-                <div class="function-row"><span class="func-name"><svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M4,8 V5 H8 M16,5 H20 V8 M20,16 V19 H16 M8,19 H4 V16" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="2" fill="none"/></svg>Assistência de Mira Precisa</span><label class="switch"><input type="checkbox" data-name="Mira Precisa" onclick="handleToggle(this)"><span class="slider"></span></label></div>
-                <div class="function-row"><span class="func-name"><svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,4 V20 M6,12 A6,6 0 0,0 18,12" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="4" r="2" stroke="currentColor" stroke-width="2" fill="none"/></svg>Estabilização de Mira</span><label class="switch"><input type="checkbox" data-name="Estabilização" onclick="handleToggle(this)"><span class="slider"></span></label></div>
-                <div class="function-row"><span class="func-name"><svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,4 L12,14 M9,7 L12,4 L15,7 M12,20 L12,10 M9,17 L12,20 L15,17" stroke="currentColor" stroke-width="2" fill="none"/></svg>Controle de Recuo</span><label class="switch"><input type="checkbox" data-name="Recoil" onclick="handleToggle(this)"><span class="slider"></span></label></div>
-                <div class="function-row"><span class="func-name"><svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M4,17 A10,10 0 1,1 20,17" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="12" x2="16" y2="8" stroke="currentColor" stroke-width="2"/></svg>Ajuste Fino de Precisão</span><label class="switch"><input type="checkbox" data-name="Ajuste Fino" onclick="handleToggle(this)"><span class="slider"></span></label></div>
-            </div>
-
-            <div id="tab-desempenho" style="display:none;">
-                <div class="function-row"><span class="func-name"><svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M13,3 L13,10 L19,10 L11,21 L11,14 L5,14 L13,3 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>Otimização de FPS</span><label class="switch"><input type="checkbox" data-name="Boost FPS" onclick="handleToggle(this)"><span class="slider"></span></label></div>
-                <div class="function-row"><span class="func-name"><svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M10,8 C11,6 13,6 14,8 M17,11 A5,5 0 0,0 7,11 A5,5 0 0,0 17,11" stroke="currentColor" stroke-width="2" fill="none"/></svg>Reduzir Delay</span><label class="switch"><input type="checkbox" data-name="Anti-Delay" onclick="handleToggle(this)"><span class="slider"></span></label></div>
-                <div class="function-row"><span class="func-name"><svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,2 L4,5 V11 A8,8 0 0,0 12,19 A8,8 0 0,0 20,11 V5 L12,2 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>Estabilidade OS</span><label class="switch"><input type="checkbox" data-name="Estabilidade" onclick="handleToggle(this)"><span class="slider"></span></label></div>
-                <div class="function-row"><span class="func-name"><svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M8,4 L16,12 L12,12 L14,18 L11,19 L9,13 L8,13 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>Sensibilidade Touch</span><label class="switch"><input type="checkbox" data-name="Sensi Touch" onclick="handleToggle(this)"><span class="slider"></span></label></div>
-                <div class="function-row"><span class="func-name"><svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M17,5 A10,10 0 0,0 7,15 M10,10 A5,5 0 0,1 15,15" stroke="currentColor" stroke-width="2" fill="none"/></svg>Desempenho Máximo</span><label class="switch"><input type="checkbox" data-name="Max Perf" onclick="handleToggle(this)"><span class="slider"></span></label></div>
-            </div>
-
-            <button class="btn-green" style="background: #1a1a1a; color: white; border: 1px solid #333; margin-top: 15px;" onclick="startFF()">🎮 Entrar no Free Fire</button>
-        </div>
-    </div>
-
-    <div id="modal-progress" class="modal-overlay">
-        <div class="modal-box"><h3 id="progress-text">CONFIGURANDO...</h3><div class="progress-container"><div id="bar" class="progress-bar"></div></div></div>
+    <div id="loader">
+        <span id="load-text" style="font-size: 12px; letter-spacing: 2px; color: var(--accent);">INITIALIZING...</span>
+        <div class="bar-container"><div id="bar"></div></div>
     </div>
 
     <script>
-        function showToast(n, s) { 
-            const t = document.getElementById('toast'); 
-            t.innerText = `${n}: ${s ? 'ON' : 'OFF'}`; 
-            t.style.top = '25px'; 
-            setTimeout(() => t.style.top = '-100px', 2000); 
+        /* --- BACKGROUND NEOX (ANIMADO) --- */
+        const canvas = document.getElementById('neoxCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const words = "RYUKO SENS PERFORMANCE MIRA HEADSHOT NEON SENSITIVITY MAX FPS".split(" ");
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#00f5c1";
+            ctx.font = fontSize + "px monospace";
+
+            drops.forEach((y, i) => {
+                const text = words[Math.floor(Math.random() * words.length)];
+                ctx.fillText(text, i * fontSize * 3, y * fontSize);
+                if (y * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            });
         }
-        function tryLogin() { 
-            if(document.getElementById('pass').value === "117") { 
-                document.getElementById('screen-login').classList.remove('active'); 
-                document.getElementById('screen-main').classList.add('active'); 
-            } else alert("Senha 117!"); 
+        setInterval(drawMatrix, 50);
+
+        /* --- LÓGICA DO PAINEL --- */
+        function handleLogin() {
+            const pass = document.getElementById('passInput').value;
+            if(pass === "117") {
+                document.getElementById('login-screen').classList.remove('active');
+                document.getElementById('panel-screen').classList.add('active');
+            } else { alert("INVALID SECURITY KEY."); }
         }
-        function switchTab(t) {
-            document.getElementById('tab-mira').style.display = t === 'mira' ? 'block' : 'none';
-            document.getElementById('tab-desempenho').style.display = t === 'desempenho' ? 'block' : 'none';
-            document.getElementById('btn-mira').classList.toggle('active-tab', t === 'mira');
-            document.getElementById('btn-desempenho').classList.toggle('active-tab', t === 'desempenho');
+
+        function setTab(n) {
+            document.getElementById('combat-ops').style.display = n === 1 ? 'block' : 'none';
+            document.getElementById('system-ops').style.display = n === 2 ? 'block' : 'none';
+            document.getElementById('t1').className = n === 1 ? 'tab active-tab' : 'tab';
+            document.getElementById('t2').className = n === 2 ? 'tab active-tab' : 'tab';
         }
-        function handleToggle(c) {
-            const isChecked = c.checked; const n = c.getAttribute('data-name'); c.checked = !isChecked;
-            const m = document.getElementById('modal-progress'); const b = document.getElementById('bar');
-            document.getElementById('progress-text').innerText = "Configurando.."; m.style.display = 'flex'; b.style.width = '0%';
-            let w = 0; const i = setInterval(() => {
-                if (w >= 100) { clearInterval(i); c.checked = isChecked; setTimeout(() => { m.style.display = 'none'; showToast(n, isChecked); }, 300); }
-                else { w += 10; b.style.width = w + '%'; }
-            }, 50);
+
+        function toggleMod(el) {
+            if(!el.checked) return;
+            el.checked = false;
+            const loader = document.getElementById('loader');
+            const bar = document.getElementById('bar');
+            document.getElementById('load-text').innerText = "INJECTING MODULE...";
+            loader.style.display = 'flex';
+            
+            let w = 0;
+            const interval = setInterval(() => {
+                w += 5;
+                bar.style.width = w + '%';
+                if(w >= 100) {
+                    clearInterval(interval);
+                    loader.style.display = 'none';
+                    el.checked = true;
+                    bar.style.width = '0%';
+                }
+            }, 30);
         }
-        function startFF() { 
-            window.location.href = "freefire://"; 
-            setTimeout(() => { window.location.href = "intent://#Intent;scheme=androidamigosff;package=com.dts.freefireth;end"; }, 600);
+
+        function openFF() {
+            const loader = document.getElementById('loader');
+            document.getElementById('load-text').innerText = "BYPASSING SECURITY...";
+            loader.style.display = 'flex';
+            setTimeout(() => {
+                window.location.href = "freefire://";
+                setTimeout(() => { window.location.href = "intent://#Intent;scheme=androidamigosff;package=com.dts.freefireth;end"; }, 600);
+                loader.style.display = 'none';
+            }, 1500);
         }
     </script>
 </body>
