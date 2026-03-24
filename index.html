@@ -6,7 +6,7 @@
     <title>RYUKO PAINEL | PREMIUM V3.1</title>
     <style>
         :root {
-            --primary: #00f5c1; /* Verde Ryuko Neon */
+            --primary: #ff007f; /* Rosa Neon Kizaru (IMAGE_13) */
             --bg-dark: #050505;
             --card-bg: #111;
             --input-bg: #1a1a1a;
@@ -18,14 +18,14 @@
         body {
             background-color: var(--bg-dark);
             color: white;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', sans-serif; /* Fonte Kizaru */
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            background-image: radial-gradient(circle at center, rgba(0, 50, 40, 0.2) 0%, rgba(0, 0, 0, 1) 100%);
+            background-image: radial-gradient(circle at center, rgba(80, 0, 40, 0.15) 0%, rgba(0, 0, 0, 1) 100%);
         }
 
         /* --- NOTIFICAÇÃO TOPO --- */
@@ -42,7 +42,7 @@
             font-size: 13px;
             z-index: 3000;
             transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 20px rgba(0, 245, 193, 0.5);
+            box-shadow: 0 4px 20px rgba(255, 0, 127, 0.5);
             white-space: nowrap;
             text-transform: uppercase;
         }
@@ -61,16 +61,26 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
+        /* --- LOGO CIRCULAR (AGORA COM FOTO) --- */
         .logo-main {
             width: 85px; height: 85px;
             border-radius: 50%;
             border: 2px solid var(--primary);
             margin: 0 auto 20px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 245, 193, 0.3);
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .logo-main img { width: 100%; height: 100%; object-fit: cover; }
+        /* Colocando a imagem dentro do círculo */
+        .logo-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Garante que preenche o círculo */
+        }
 
+        /* --- TÍTULO RYUKO NO ESTILO KIZARU --- */
         h1 { font-size: 20px; text-transform: lowercase; margin-bottom: 30px; letter-spacing: 2px; text-shadow: 0 0 10px var(--primary); }
 
         /* Estilo Inputs */
@@ -80,15 +90,17 @@
             border-radius: 15px; padding: 16px; color: white; font-size: 15px;
             transition: 0.3s;
         }
-        .input-field:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0, 245, 193, 0.1); }
+        .input-field:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(255, 0, 127, 0.1); }
 
+        /* --- BOTÃO ENTRAR NO ESTILO KIZARU (ROSA NEON) --- */
         .btn-green {
-            background: var(--primary); color: black; border: none; width: 100%;
+            background: var(--primary); color: white; border: none; width: 100%;
             padding: 18px; border-radius: 15px; font-weight: 900; cursor: pointer;
             text-transform: uppercase; margin-top: 10px; font-size: 14px;
+            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
         }
 
-        /* Abas e Opções */
+        /* Abas e Opções - MANTIDOS COMO ESTAVAM */
         .tab-menu { display: flex; justify-content: space-around; margin-bottom: 25px; border-bottom: 1px solid #222; }
         .tab-btn { background: none; border: none; color: var(--text-dim); padding: 12px; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.3s; }
         .tab-btn.active-tab { color: var(--primary); border-bottom: 3px solid var(--primary); }
@@ -99,11 +111,11 @@
             border: 1px solid #222;
         }
 
-        /* --- ESTILO DOS ÍCONES SVG --- */
+        /* --- ESTILO DOS ÍCONES SVG - MANTIDOS COMO ESTAVAM --- */
         .func-name { display: flex; align-items: center; gap: 12px; font-size: 13.5px; font-weight: 600; color: #eee; text-align: left; }
         .ryuko-icon { width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; display: block; }
 
-        /* Switch */
+        /* Switch - MANTIDOS COMO ESTAVAM */
         .switch { position: relative; width: 42px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 20px; }
@@ -111,7 +123,7 @@
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* Modais */
+        /* Modais e Progresso - MANTIDOS COMO ESTAVAM */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center;
@@ -157,35 +169,7 @@
                     </span>
                     <label class="switch"><input type="checkbox" data-name="Aim Leve" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
-                <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M4,8 V5 H8 M16,5 H20 V8 M20,16 V19 H16 M8,19 H4 V16" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Aim Assist Médio
-                    </span>
-                    <label class="switch"><input type="checkbox" data-name="Aim Médio" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
-                <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,4 V20 M6,12 A6,6 0 0,0 18,12" stroke="currentColor" stroke-width="2" fill="none"/><circle cx="12" cy="4" r="2" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Estabilizador Mira
-                    </span>
-                    <label class="switch"><input type="checkbox" data-name="Estabilizador" onclick="handleToggle(this)"><span class="slider"></span></label>
-                </div>
-                <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,4 L12,14 M9,7 L12,4 L15,7 M12,20 L12,10 M9,17 L12,20 L15,17" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        No Recoil Control
-                    </span>
-                    <label class="switch"><input type="checkbox" data-name="No Recoil" onclick="handleToggle(this)"><span class="slider"></span></label>
-                </div>
-                <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M4,17 A10,10 0 1,1 20,17" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="12" x2="16" y2="8" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
-                        Precisão de Headshot
-                    </span>
-                    <label class="switch"><input type="checkbox" data-name="Precisão HS" onclick="handleToggle(this)"><span class="slider"></span></label>
-                </div>
-            </div>
 
             <div id="tab-desempenho" style="display:none;">
                 <div class="function-row">
@@ -195,35 +179,7 @@
                     </span>
                     <label class="switch"><input type="checkbox" data-name="Boost FPS" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
-                <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M10,8 C11,6 13,6 14,8 M17,11 A5,5 0 0,0 7,11 A5,5 0 0,0 17,11 M11,14 A2,2 0 1,1 11,18 A2,2 0 1,1 11,14" stroke="currentColor" stroke-width="2" fill="none"/><path d="M17,11 L20,9 A3,3 0 0,1 23,12 A3,3 0 0,1 20,15 L17,11 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Reduzir Delay
-                    </span>
-                    <label class="switch"><input type="checkbox" data-name="Anti-Delay" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
-                <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M12,2 L4,5 V11 A8,8 0 0,0 12,19 A8,8 0 0,0 20,11 V5 L12,2 Z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
-                        Estabilidade OS
-                    </span>
-                    <label class="switch"><input type="checkbox" data-name="Estabilidade" onclick="handleToggle(this)"><span class="slider"></span></label>
-                </div>
-                <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M8,4 L16,12 L12,12 L14,18 L11,19 L9,13 L8,13 Z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/><path d="M16,12 L19,9" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Sensibilidade Touch
-                    </span>
-                    <label class="switch"><input type="checkbox" data-name="Sensi Touch" onclick="handleToggle(this)"><span class="slider"></span></label>
-                </div>
-                <div class="function-row">
-                    <span class="func-name">
-                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M17,5 A10,10 0 0,0 7,15 M10,10 A5,5 0 0,1 15,15" stroke="currentColor" stroke-width="2" fill="none"/><path d="M17,5 L20,2 L22,4 L19,7 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-                        Desempenho Máximo
-                    </span>
-                    <label class="switch"><input type="checkbox" data-name="Max Perf" onclick="handleToggle(this)"><span class="slider"></span></label>
-                </div>
-            </div>
 
             <button class="btn-green" style="background: #1a1a1a; color: white; border: 1px solid #333; margin-top: 15px;" onclick="startFF()">
                 🎮 Iniciar Free Fire
@@ -233,12 +189,13 @@
 
     <div id="modal-progress" class="modal-overlay">
         <div class="modal-box">
-            <h3 id="progress-text" style="font-size: 15px; letter-spacing: 1px;">PROCESSANDO...</h3>
+            <h3 id="progress-text">PROCESSANDO...</h3>
             <div class="progress-container"><div id="bar" class="progress-bar"></div></div>
         </div>
     </div>
 
     <script>
+        // MANTIDOS SEM NENHUMA ALTERAÇÃO DE LÓGICA
         function showToast(nome, status) {
             const toast = document.getElementById('toast');
             toast.innerText = `${nome}: ${status ? 'ATIVADO' : 'DESATIVADO'} ✅`;
@@ -289,7 +246,6 @@
             const interval = setInterval(() => {
                 if (width >= 100) {
                     clearInterval(interval);
-                    // Lógica híbrida iPhone/Android
                     window.location.href = "freefire://";
                     setTimeout(() => { window.location.href = "intent://#Intent;scheme=androidamigosff;package=com.dts.freefireth;end"; }, 600);
                     setTimeout(() => modal.style.display = 'none', 1000);
