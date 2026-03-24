@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RYUKO PAINEL | PREMIUM iOS</title>
+    <title>RYUKO PAINEL | PREMIUM V3</title>
     <style>
         :root {
             --primary: #00f5c1; 
@@ -13,7 +13,7 @@
             --text-dim: #777;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
         body {
             background-color: var(--bg-dark);
@@ -37,89 +37,102 @@
             color: black;
             padding: 12px 25px;
             border-radius: 50px;
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 800;
+            font-size: 13px;
             z-index: 3000;
             transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 15px rgba(0, 245, 193, 0.4);
+            box-shadow: 0 4px 20px rgba(0, 245, 193, 0.5);
             white-space: nowrap;
+            text-transform: uppercase;
         }
 
-        .screen { display: none; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 0.4s; }
+        .screen { display: none; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 0.4s ease; }
         .active { display: block; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .card {
             background: var(--card-bg);
-            border-radius: 25px;
-            padding: 30px 20px;
+            border-radius: 30px;
+            padding: 35px 20px;
             text-align: center;
             border: 1px solid #222;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .logo-main {
             width: 85px; height: 85px;
             border-radius: 50%;
             border: 2px solid var(--primary);
-            margin: 0 auto 15px;
+            margin: 0 auto 20px;
             overflow: hidden;
-            box-shadow: 0 0 15px var(--primary);
+            box-shadow: 0 0 20px rgba(0, 245, 193, 0.3);
         }
         .logo-main img { width: 100%; height: 100%; object-fit: cover; }
 
-        h1 { font-size: 22px; text-transform: lowercase; margin-bottom: 25px; text-shadow: 0 0 10px var(--primary); }
+        h1 { font-size: 20px; text-transform: lowercase; margin-bottom: 30px; letter-spacing: 2px; text-shadow: 0 0 10px var(--primary); }
 
+        /* Estilo dos Inputs */
+        .input-group { margin-bottom: 15px; text-align: left; }
         .input-field {
             width: 100%; background: var(--input-bg); border: 1px solid #333;
-            border-radius: 12px; padding: 15px; color: white; outline: none; margin-bottom: 15px; font-size: 16px;
+            border-radius: 15px; padding: 16px; color: white; font-size: 15px;
+            transition: 0.3s;
         }
+        .input-field:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(0, 245, 193, 0.1); }
 
         .btn-green {
             background: var(--primary); color: black; border: none; width: 100%;
-            padding: 16px; border-radius: 14px; font-weight: 900; cursor: pointer;
-            text-transform: uppercase;
+            padding: 18px; border-radius: 15px; font-weight: 900; cursor: pointer;
+            text-transform: uppercase; margin-top: 10px; font-size: 14px;
         }
+
+        /* Opções e Abas */
+        .tab-menu { display: flex; justify-content: space-around; margin-bottom: 25px; border-bottom: 1px solid #222; }
+        .tab-btn { background: none; border: none; color: var(--text-dim); padding: 12px; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.3s; }
+        .tab-btn.active-tab { color: var(--primary); border-bottom: 3px solid var(--primary); }
 
         .function-row {
             display: flex; justify-content: space-between; align-items: center;
-            background: #181818; padding: 15px; border-radius: 15px; margin-bottom: 10px;
+            background: #181818; padding: 16px; border-radius: 18px; margin-bottom: 12px;
+            border: 1px solid #222;
         }
+        .func-name { font-size: 13.5px; font-weight: 600; color: #eee; }
 
-        .func-name { display: flex; align-items: center; gap: 12px; font-size: 14px; text-align: left; }
-        .ryuko-icon { width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; }
-
-        .switch { position: relative; width: 40px; height: 20px; }
+        /* Switch */
+        .switch { position: relative; width: 42px; height: 22px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 20px; }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        .tab-menu { display: flex; justify-content: space-around; margin-bottom: 20px; border-bottom: 1px solid #222; }
-        .tab-btn { background: none; border: none; color: var(--text-dim); padding: 10px; font-weight: bold; cursor: pointer; }
-        .tab-btn.active-tab { color: var(--primary); border-bottom: 2px solid var(--primary); }
-
+        /* Modais */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.92); z-index: 1000; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center;
         }
-        .modal-box { background: #151515; padding: 30px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; border: 1px solid #333; }
-        
-        .progress-container { width: 100%; background: #333; height: 8px; border-radius: 10px; margin: 20px 0; overflow: hidden; }
-        .progress-bar { width: 0%; height: 100%; background: #888; transition: width 0.1s linear; }
+        .modal-box { background: #151515; padding: 35px; border-radius: 25px; width: 85%; max-width: 320px; text-align: center; border: 1px solid #333; }
+        .progress-container { width: 100%; background: #333; height: 6px; border-radius: 10px; margin: 25px 0; overflow: hidden; }
+        .progress-bar { width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 10px var(--primary); transition: width 0.1s linear; }
     </style>
 </head>
 <body>
 
-    <div id="toast">Opção ativada com sucesso!</div>
+    <div id="toast">Sucesso!</div>
 
     <div id="screen-login" class="screen active">
         <div class="card">
             <div class="logo-main"><img src="RYUKO_SENS.png" alt="Logo"></div>
-            <h1>ryuko painel</h1>
-            <input type="password" id="pass" class="input-field" placeholder="Digite a Senha">
-            <button class="btn-green" onclick="tryLogin()">Entrar</button>
+            <h1>ryuko login</h1>
+            <div class="input-group">
+                <input type="text" id="user" class="input-field" placeholder="Usuário">
+            </div>
+            <div class="input-group">
+                <input type="password" id="pass" class="input-field" placeholder="Senha">
+            </div>
+            <button class="btn-green" onclick="tryLogin()">Acessar Painel</button>
+            <p style="color: #444; font-size: 10px; margin-top: 20px;">DISPOSITIVO RECONHECIDO VIA ID</p>
         </div>
     </div>
 
@@ -130,44 +143,64 @@
             
             <div class="tab-menu">
                 <button id="btn-mira" class="tab-btn active-tab" onclick="switchTab('mira')">Mira</button>
-                <button id="btn-desempenho" class="tab-btn" onclick="switchTab('desempenho')">Desempenho</button>
+                <button id="btn-desempenho" class="tab-btn" onclick="switchTab('desempenho')">Sistema</button>
             </div>
 
             <div id="tab-mira">
                 <div class="function-row">
-                    <span class="func-name">Assistência de Mira Leve</span>
-                    <label class="switch"><input type="checkbox" data-name="Mira Leve" onclick="handleToggle(this)"><span class="slider"></span></label>
+                    <span class="func-name">🎯 Aim Assist Leve</span>
+                    <label class="switch"><input type="checkbox" data-name="Aim Leve" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
-                    <span class="func-name">Assistência de Mira Precisa</span>
-                    <label class="switch"><input type="checkbox" data-name="Mira Precisa" onclick="handleToggle(this)"><span class="slider"></span></label>
+                    <span class="func-name">🔍 Aim Assist Médio</span>
+                    <label class="switch"><input type="checkbox" data-name="Aim Médio" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
-                    <span class="func-name">Estabilização de Mira</span>
-                    <label class="switch"><input type="checkbox" data-name="Estabilização" onclick="handleToggle(this)"><span class="slider"></span></label>
+                    <span class="func-name">💠 Estabilizador Mira</span>
+                    <label class="switch"><input type="checkbox" data-name="Estabilizador" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">🕹️ No Recoil Control</span>
+                    <label class="switch"><input type="checkbox" data-name="No Recoil" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">📍 Precisão de Headshot</span>
+                    <label class="switch"><input type="checkbox" data-name="Precisão HS" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
             </div>
 
             <div id="tab-desempenho" style="display:none;">
                 <div class="function-row">
-                    <span class="func-name">Otimização de FPS</span>
-                    <label class="switch"><input type="checkbox" data-name="Otimização FPS" onclick="handleToggle(this)"><span class="slider"></span></label>
+                    <span class="func-name">⚡ Otimização de FPS</span>
+                    <label class="switch"><input type="checkbox" data-name="Boost FPS" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
                 <div class="function-row">
-                    <span class="func-name">Redução de Delay</span>
-                    <label class="switch"><input type="checkbox" data-name="Redução Delay" onclick="handleToggle(this)"><span class="slider"></span></label>
+                    <span class="func-name">📉 Reduzir Delay</span>
+                    <label class="switch"><input type="checkbox" data-name="Anti-Delay" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">🛡️ Estabilidade OS</span>
+                    <label class="switch"><input type="checkbox" data-name="Estabilidade" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">📱 Sensibilidade Touch</span>
+                    <label class="switch"><input type="checkbox" data-name="Sensi Touch" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+                <div class="function-row">
+                    <span class="func-name">🔥 Desempenho Máximo</span>
+                    <label class="switch"><input type="checkbox" data-name="Max Perf" onclick="handleToggle(this)"><span class="slider"></span></label>
                 </div>
             </div>
 
-            <button class="btn-green" style="background: #1a1a1a; color: white; border: 1px solid #333; margin-top: 20px;" onclick="startFF()">
-                🎮 Entrar no Free Fire
+            <button class="btn-green" style="background: #1a1a1a; color: white; border: 1px solid #333; margin-top: 15px;" onclick="startFF()">
+                🎮 Iniciar Free Fire
             </button>
         </div>
     </div>
 
     <div id="modal-progress" class="modal-overlay">
         <div class="modal-box">
-            <h3 id="progress-text">Configurando...</h3>
+            <h3 id="progress-text" style="font-size: 15px; letter-spacing: 1px;">PROCESSANDO...</h3>
             <div class="progress-container"><div id="bar" class="progress-bar"></div></div>
         </div>
     </div>
@@ -175,16 +208,19 @@
     <script>
         function showToast(nome, status) {
             const toast = document.getElementById('toast');
-            toast.innerText = `${nome} ${status ? 'ativada' : 'desativada'} com sucesso!`;
-            toast.style.top = '20px';
-            setTimeout(() => { toast.style.top = '-100px'; }, 2500);
+            toast.innerText = `${nome}: ${status ? 'ATIVADO' : 'DESATIVADO'} ✅`;
+            toast.style.top = '25px';
+            setTimeout(() => { toast.style.top = '-100px'; }, 2200);
         }
 
         function tryLogin() {
-            if(document.getElementById('pass').value === "117") {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            // Definido como admin / 117 para facilitar, mas você pode mudar
+            if(u === "admin" && p === "117") {
                 document.getElementById('screen-login').classList.remove('active');
                 document.getElementById('screen-main').classList.add('active');
-            } else { alert("Senha incorreta!"); }
+            } else { alert("Usuário ou Senha incorretos!"); }
         }
 
         function switchTab(tab) {
@@ -201,7 +237,8 @@
             
             const modal = document.getElementById('modal-progress');
             const bar = document.getElementById('bar');
-            document.getElementById('progress-text').innerText = isChecked ? "Injetando..." : "Removendo...";
+            document.getElementById('progress-text').innerText = isChecked ? "INJETANDO DADOS..." : "LIMPANDO REGISTROS...";
+            
             modal.style.display = 'flex';
             bar.style.width = '0%';
             
@@ -215,32 +252,34 @@
                         showToast(nomeOpcao, isChecked);
                     }, 300);
                 } else {
-                    width += 10;
+                    width += 15; // Velocidade da barra
                     bar.style.width = width + '%';
                 }
-            }, 30);
+            }, 40);
         }
 
         function startFF() {
             const modal = document.getElementById('modal-progress');
             const bar = document.getElementById('bar');
-            document.getElementById('progress-text').innerText = "Injetando no Game...";
+            document.getElementById('progress-text').innerText = "ABRINDO GARENA FF...";
             modal.style.display = 'flex';
             bar.style.width = '0%';
             let width = 0;
             const interval = setInterval(() => {
                 if (width >= 100) {
                     clearInterval(interval);
+                    // Lógica para iPhone
                     window.location.href = "freefire://";
+                    // Lógica para Android (backup)
                     setTimeout(() => {
                         window.location.href = "intent://#Intent;scheme=androidamigosff;package=com.dts.freefireth;end";
                     }, 600);
                     setTimeout(() => modal.style.display = 'none', 1000);
                 } else {
-                    width += 2;
+                    width += 5;
                     bar.style.width = width + '%';
                 }
-            }, 35);
+            }, 50);
         }
     </script>
 </body>
