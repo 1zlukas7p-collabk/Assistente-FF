@@ -1,176 +1,257 @@
-"use client";
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RYUKO PAINEL | PREMIUM V3.1</title>
+    <style>
+        :root {
+            --primary: #ff007f; /* Rosa Neon Kizaru (IMAGE_13) */
+            --bg-dark: #050505;
+            --card-bg: #111;
+            --input-bg: #1a1a1a;
+            --text-dim: #777;
+        }
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import SHA256 from "crypto-js/sha256";
-import { motion } from "framer-motion";
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
 
-/* ================== AUTH ================== */
-const FIXED_PASSWORD_HASH = SHA256("117").toString();
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Segoe UI', sans-serif; /* Fonte Kizaru */
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            background-image: radial-gradient(circle at center, rgba(80, 0, 40, 0.15) 0%, rgba(0, 0, 0, 1) 100%);
+        }
 
-function validateLogin(user: string, pass: string) {
-  return user.length > 0 && SHA256(pass).toString() === FIXED_PASSWORD_HASH;
-}
+        /* --- NOTIFICAÇÃO TOPO --- */
+        #toast {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: black;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 13px;
+            z-index: 3000;
+            transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 20px rgba(255, 0, 127, 0.5);
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
 
-/* ================== UI ================== */
-function Input({ type, placeholder, value, onChange }: any) {
-  return (
-    <input
-      type={type}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-      className="w-full p-3 bg-black/40 border border-purple-500 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-    />
-  );
-}
+        .screen { display: none; width: 100%; max-width: 400px; padding: 20px; animation: fadeIn 0.4s ease; }
+        .active { display: block; }
 
-function Button({ children, onClick }: any) {
-  return (
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      className="px-6 py-3 rounded-xl bg-purple-600 text-white shadow-lg hover:shadow-purple-500/50 transition"
-      onClick={onClick}
-    >
-      {children}
-    </motion.button>
-  );
-}
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ================== BACKGROUND ================== */
-function BackgroundParticles() {
-  return (
-    <div className="fixed inset-0 -z-10 overflow-hidden">
-      {[...Array(30)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-1 h-1 bg-purple-500 rounded-full"
-          initial={{ opacity: 0 }}
-          animate={{ y: ["0%", "100%"], opacity: [0, 1, 0] }}
-          transition={{ duration: 5 + i, repeat: Infinity }}
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
+        .card {
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 35px 20px;
+            text-align: center;
+            border: 1px solid #222;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
 
-/* ================== SIDEBAR ================== */
-function Sidebar() {
-  return (
-    <div className="w-64 h-screen bg-black/80 border-r border-purple-500 p-4">
-      <h2 className="text-white text-xl mb-6">Ryuko Sens</h2>
-      <ul className="space-y-4 text-gray-300">
-        <li>🎯 Mira</li>
-        <li>⚡ Desempenho</li>
-        <li>⚙️ Configurações</li>
-      </ul>
-    </div>
-  );
-}
+        /* --- LOGO CIRCULAR (AGORA COM FOTO) --- */
+        .logo-main {
+            width: 85px; height: 85px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            margin: 0 auto 20px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Colocando a imagem dentro do círculo */
+        .logo-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Garante que preenche o círculo */
+        }
 
-/* ================== MAIN ================== */
-export default function Page() {
-  const router = useRouter();
+        /* --- TÍTULO RYUKO NO ESTILO KIZARU --- */
+        h1 { font-size: 20px; text-transform: lowercase; margin-bottom: 30px; letter-spacing: 2px; text-shadow: 0 0 10px var(--primary); }
 
-  const [logged, setLogged] = useState(false);
-  const [user, setUser] = useState("");
-  const [pass, setPass] = useState("");
-  const [error, setError] = useState("");
+        /* Estilo Inputs */
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-field {
+            width: 100%; background: var(--input-bg); border: 1px solid #333;
+            border-radius: 15px; padding: 16px; color: white; font-size: 15px;
+            transition: 0.3s;
+        }
+        .input-field:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(255, 0, 127, 0.1); }
 
-  useEffect(() => {
-    if (localStorage.getItem("auth") === "true") {
-      setLogged(true);
-    }
-  }, []);
+        /* --- BOTÃO ENTRAR NO ESTILO KIZARU (ROSA NEON) --- */
+        .btn-green {
+            background: var(--primary); color: white; border: none; width: 100%;
+            padding: 18px; border-radius: 15px; font-weight: 900; cursor: pointer;
+            text-transform: uppercase; margin-top: 10px; font-size: 14px;
+            box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);
+        }
 
-  function handleLogin() {
-    if (validateLogin(user, pass)) {
-      localStorage.setItem("auth", "true");
-      setLogged(true);
-    } else {
-      setError("Credenciais inválidas");
-    }
-  }
+        /* Abas e Opções - MANTIDOS COMO ESTAVAM */
+        .tab-menu { display: flex; justify-content: space-around; margin-bottom: 25px; border-bottom: 1px solid #222; }
+        .tab-btn { background: none; border: none; color: var(--text-dim); padding: 12px; font-weight: bold; cursor: pointer; font-size: 14px; transition: 0.3s; }
+        .tab-btn.active-tab { color: var(--primary); border-bottom: 3px solid var(--primary); }
 
-  /* ================== LOGIN ================== */
-  if (!logged) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-black text-white">
-        <BackgroundParticles />
+        .function-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #181818; padding: 16px; border-radius: 18px; margin-bottom: 12px;
+            border: 1px solid #222;
+        }
 
-        <div className="p-8 bg-black/60 backdrop-blur-xl rounded-2xl w-80 border border-purple-500">
-          <h1 className="text-2xl mb-6 text-center">Ryuko Sens</h1>
+        /* --- ESTILO DOS ÍCONES SVG - MANTIDOS COMO ESTAVAM --- */
+        .func-name { display: flex; align-items: center; gap: 12px; font-size: 13.5px; font-weight: 600; color: #eee; text-align: left; }
+        .ryuko-icon { width: 22px; height: 22px; color: var(--primary); flex-shrink: 0; display: block; }
 
-          <Input
-            type="text"
-            placeholder="Usuário"
-            value={user}
-            onChange={(e: any) => setUser(e.target.value)}
-          />
+        /* Switch - MANTIDOS COMO ESTAVAM */
+        .switch { position: relative; width: 42px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #333; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
 
-          <div className="mt-4">
-            <Input
-              type="password"
-              placeholder="Senha"
-              value={pass}
-              onChange={(e: any) => setPass(e.target.value)}
-            />
-          </div>
+        /* Modais e Progresso - MANTIDOS COMO ESTAVAM */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-box { background: #151515; padding: 35px; border-radius: 25px; width: 85%; max-width: 320px; text-align: center; border: 1px solid #333; }
+        .progress-container { width: 100%; background: #333; height: 6px; border-radius: 10px; margin: 25px 0; overflow: hidden; }
+        .progress-bar { width: 0%; height: 100%; background: var(--primary); box-shadow: 0 0 10px var(--primary); transition: width 0.1s linear; }
+    </style>
+</head>
+<body>
 
-          {error && <p className="text-red-500 mt-3">{error}</p>}
+    <div id="toast">Sucesso!</div>
 
-          <div className="mt-6">
-            <Button onClick={handleLogin}>Entrar</Button>
-          </div>
+    <div id="screen-login" class="screen active">
+        <div class="card">
+            <div class="logo-main"><img src="RYUKO_SENS.png" alt="Logo"></div>
+            <h1>ryuko login</h1>
+            <div class="input-group">
+                <input type="text" id="user" class="input-field" placeholder="Usuário">
+            </div>
+            <div class="input-group">
+                <input type="password" id="pass" class="input-field" placeholder="Senha">
+            </div>
+            <button class="btn-green" onclick="tryLogin()">Acessar Painel</button>
         </div>
-      </div>
-    );
-  }
-
-  /* ================== DASHBOARD ================== */
-  return (
-    <div className="flex bg-black text-white min-h-screen">
-      <Sidebar />
-
-      <div className="flex-1 p-8">
-        <h1 className="text-3xl mb-6">Dashboard</h1>
-
-        <div className="grid grid-cols-2 gap-6">
-          {/* MIRA */}
-          <div className="p-6 bg-black/60 rounded-xl border border-purple-500">
-            <h2 className="text-xl mb-4">🎯 Mira</h2>
-            <ul className="space-y-2">
-              <li>Assistência Leve</li>
-              <li>Assistência Precisa</li>
-              <li>Estabilização</li>
-              <li>Controle de Recuo</li>
-              <li>Ajuste Fino</li>
-            </ul>
-          </div>
-
-          {/* DESEMPENHO */}
-          <div className="p-6 bg-black/60 rounded-xl border border-purple-500">
-            <h2 className="text-xl mb-4">⚡ Desempenho</h2>
-            <ul className="space-y-2">
-              <li>FPS</li>
-              <li>Delay</li>
-              <li>Estabilidade</li>
-              <li>Sensibilidade Touch</li>
-              <li>Modo Máximo</li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="mt-10">
-          <Button onClick={() => (window.location.href = "freefire://")}>
-            Abrir Free Fire
-          </Button>
-        </div>
-      </div>
     </div>
-  );
-}
+
+    <div id="screen-main" class="screen">
+        <div class="card">
+            <div class="logo-main"><img src="RYUKO_SENS.png" alt="Logo"></div>
+            <h1>ryuko painel</h1>
+            
+            <div class="tab-menu">
+                <button id="btn-mira" class="tab-btn active-tab" onclick="switchTab('mira')">Mira</button>
+                <button id="btn-desempenho" class="tab-btn" onclick="switchTab('desempenho')">Sistema</button>
+            </div>
+
+            <div id="tab-mira">
+                <div class="function-row">
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><line x1="12" y1="3" x2="12" y2="21" stroke="currentColor" stroke-width="2"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2"/></svg>
+                        Aim Assist Leve
+                    </span>
+                    <label class="switch"><input type="checkbox" data-name="Aim Leve" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+                </div>
+
+            <div id="tab-desempenho" style="display:none;">
+                <div class="function-row">
+                    <span class="func-name">
+                        <svg class="ryuko-icon" viewBox="0 0 24 24"><path d="M13,3 L13,10 L19,10 L11,21 L11,14 L5,14 L13,3 Z" stroke="currentColor" stroke-width="2" fill="none" stroke-linejoin="round"/></svg>
+                        Otimização de FPS
+                    </span>
+                    <label class="switch"><input type="checkbox" data-name="Boost FPS" onclick="handleToggle(this)"><span class="slider"></span></label>
+                </div>
+                </div>
+
+            <button class="btn-green" style="background: #1a1a1a; color: white; border: 1px solid #333; margin-top: 15px;" onclick="startFF()">
+                🎮 Iniciar Free Fire
+            </button>
+        </div>
+    </div>
+
+    <div id="modal-progress" class="modal-overlay">
+        <div class="modal-box">
+            <h3 id="progress-text">PROCESSANDO...</h3>
+            <div class="progress-container"><div id="bar" class="progress-bar"></div></div>
+        </div>
+    </div>
+
+    <script>
+        // MANTIDOS SEM NENHUMA ALTERAÇÃO DE LÓGICA
+        function showToast(nome, status) {
+            const toast = document.getElementById('toast');
+            toast.innerText = `${nome}: ${status ? 'ATIVADO' : 'DESATIVADO'} ✅`;
+            toast.style.top = '25px';
+            setTimeout(() => { toast.style.top = '-100px'; }, 2200);
+        }
+
+        function tryLogin() {
+            const p = document.getElementById('pass').value;
+            if(p === "117") {
+                document.getElementById('screen-login').classList.remove('active');
+                document.getElementById('screen-main').classList.add('active');
+            } else { alert("Senha incorreta!"); }
+        }
+
+        function switchTab(tab) {
+            document.getElementById('tab-mira').style.display = tab === 'mira' ? 'block' : 'none';
+            document.getElementById('tab-desempenho').style.display = tab === 'desempenho' ? 'block' : 'none';
+            document.getElementById('btn-mira').classList.toggle('active-tab', tab === 'mira');
+            document.getElementById('btn-desempenho').classList.toggle('active-tab', tab === 'desempenho');
+        }
+
+        function handleToggle(checkbox) {
+            const isChecked = checkbox.checked;
+            const nomeOpcao = checkbox.getAttribute('data-name');
+            checkbox.checked = !isChecked; 
+            
+            const modal = document.getElementById('modal-progress');
+            const bar = document.getElementById('bar');
+            document.getElementById('progress-text').innerText = isChecked ? "INJETANDO DADOS..." : "LIMPANDO REGISTROS...";
+            modal.style.display = 'flex'; bar.style.width = '0%';
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    checkbox.checked = isChecked;
+                    setTimeout(() => { modal.style.display = 'none'; showToast(nomeOpcao, isChecked); }, 300);
+                } else { width += 15; bar.style.width = width + '%'; }
+            }, 40);
+        }
+
+        function startFF() {
+            const modal = document.getElementById('modal-progress');
+            const bar = document.getElementById('bar');
+            document.getElementById('progress-text').innerText = "ABRINDO GARENA FF...";
+            modal.style.display = 'flex'; bar.style.width = '0%';
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    window.location.href = "freefire://";
+                    setTimeout(() => { window.location.href = "intent://#Intent;scheme=androidamigosff;package=com.dts.freefireth;end"; }, 600);
+                    setTimeout(() => modal.style.display = 'none', 1000);
+                } else { width += 5; bar.style.width = width + '%'; }
+            }, 50);
+        }
+    </script>
+</body>
+</html>
