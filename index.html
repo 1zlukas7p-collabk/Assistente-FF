@@ -2,689 +2,330 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Headtrick Ryuzn</title>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #05050d;
-    --bg2: #080814;
-    --cyan: #00f5ff;
-    --cyan2: #00c8d4;
-    --purple: #a855f7;
-    --purple2: #7c3aed;
-    --pink: #f72585;
-    --green: #00ff88;
-    --yellow: #ffd60a;
-    --card: rgba(255,255,255,0.03);
-    --card-border: rgba(0,245,255,0.12);
-    --text: #e2e8f0;
-    --muted: #64748b;
-    --sidebar-w: 240px;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Sora', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  /* ===== CANVAS BG ===== */
-  #bg-canvas {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  .floating-words {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
-
-  .fw {
-    position: absolute;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: clamp(10px, 1.5vw, 14px);
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: var(--cyan);
-    opacity: 0;
-    animation: floatWord linear infinite;
-  }
-
-  @keyframes floatWord {
-    0%   { opacity: 0; transform: translateY(0) scale(0.8); }
-    10%  { opacity: 0.06; }
-    50%  { opacity: 0.04; }
-    90%  { opacity: 0.06; }
-    100% { opacity: 0; transform: translateY(-120vh) scale(1.1); }
-  }
-
-  /* ===== SCREENS ===== */
-  .screen { position: fixed; inset: 0; z-index: 10; transition: opacity 0.6s, visibility 0.6s; }
-  .screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-
-  /* ===== LOGIN ===== */
-  #login-screen {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(ellipse at 50% 60%, rgba(0,245,255,0.06) 0%, transparent 70%),
-                radial-gradient(ellipse at 80% 20%, rgba(168,85,247,0.08) 0%, transparent 60%),
-                var(--bg);
-  }
-
-  .login-card {
-    position: relative;
-    z-index: 2;
-    width: min(420px, 90vw);
-    padding: 48px 40px;
-    background: rgba(8,8,20,0.9);
-    border: 1px solid rgba(0,245,255,0.2);
-    border-radius: 24px;
-    box-shadow: 0 0 60px rgba(0,245,255,0.08), 0 0 120px rgba(168,85,247,0.06), inset 0 1px 0 rgba(255,255,255,0.05);
-    backdrop-filter: blur(20px);
-    animation: cardIn 0.8s cubic-bezier(0.16,1,0.3,1) both;
-  }
-
-  @keyframes cardIn {
-    from { opacity: 0; transform: translateY(30px) scale(0.96); filter: blur(8px); }
-    to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
-  }
-
-  .login-logo {
-    text-align: center;
-    margin-bottom: 36px;
-  }
-
-  .login-logo .brand {
-    font-size: 11px;
-    letter-spacing: 0.4em;
-    color: var(--cyan);
-    text-transform: uppercase;
-    opacity: 0.7;
-    margin-bottom: 8px;
-  }
-
-  .login-logo h1 {
-    font-size: 28px;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--cyan), var(--purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1;
-  }
-
-  .login-logo .tagline {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 6px;
-    letter-spacing: 0.05em;
-  }
-
-  .field {
-    margin-bottom: 18px;
-  }
-
-  .field label {
-    display: block;
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: var(--muted);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-
-  .field input {
-    width: 100%;
-    padding: 14px 16px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    color: var(--text);
-    font-family: 'Sora', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: all 0.3s;
-  }
-
-  .field input:focus {
-    border-color: rgba(0,245,255,0.4);
-    background: rgba(0,245,255,0.04);
-    box-shadow: 0 0 20px rgba(0,245,255,0.1);
-  }
-
-  .field input::placeholder { color: var(--muted); }
-
-  .btn-login {
-    width: 100%;
-    padding: 15px;
-    margin-top: 8px;
-    background: linear-gradient(135deg, var(--cyan2), var(--purple2));
-    border: none;
-    border-radius: 12px;
-    color: #fff;
-    font-family: 'Sora', sans-serif;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s;
-  }
-
-  .btn-login::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .btn-login:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(0,245,255,0.4), 0 0 60px rgba(168,85,247,0.2); }
-  .btn-login:hover::before { opacity: 1; }
-  .btn-login:active { transform: translateY(0); }
-
-  .login-error {
-    margin-top: 14px;
-    padding: 10px 14px;
-    background: rgba(247,37,133,0.12);
-    border: 1px solid rgba(247,37,133,0.3);
-    border-radius: 8px;
-    color: var(--pink);
-    font-size: 12px;
-    text-align: center;
-    display: none;
-  }
-
-  .login-error.show { display: block; animation: shake 0.4s; }
-
-  @keyframes shake {
-    0%,100% { transform: translateX(0); }
-    20%      { transform: translateX(-8px); }
-    40%      { transform: translateX(8px); }
-    60%      { transform: translateX(-5px); }
-    80%      { transform: translateX(5px); }
-  }
-
-  .spinner {
-    display: inline-block;
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-    margin-right: 8px;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ===== APP (DASHBOARD) ===== */
-  #app-screen {
-    display: flex;
-    background: var(--bg);
-  }
-
-  /* SIDEBAR */
-  .sidebar {
-    width: var(--sidebar-w);
-    height: 100vh;
-    position: fixed;
-    left: 0; top: 0;
-    background: rgba(8,8,20,0.95);
-    border-right: 1px solid rgba(0,245,255,0.08);
-    display: flex;
-    flex-direction: column;
-    z-index: 100;
-    transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
-    backdrop-filter: blur(20px);
-  }
-
-  .sidebar-logo {
-    padding: 28px 24px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
-
-  .sidebar-logo .brand-sm {
-    font-size: 9px;
-    letter-spacing: 0.35em;
-    color: var(--cyan);
-    opacity: 0.5;
-    text-transform: uppercase;
-  }
-
-  .sidebar-logo h2 {
-    font-size: 17px;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--cyan), var(--purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-top: 2px;
-  }
-
-  .nav-items {
-    flex: 1;
-    padding: 16px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .nav-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 11px 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--muted);
-    border: 1px solid transparent;
-    position: relative;
-  }
-
-  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
-
-  .nav-item:hover { background: rgba(0,245,255,0.05); color: var(--text); }
-
-  .nav-item.active {
-    background: rgba(0,245,255,0.08);
-    color: var(--cyan);
-    border-color: rgba(0,245,255,0.15);
-    box-shadow: 0 0 20px rgba(0,245,255,0.05);
-  }
-
-  .nav-item.active::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 50%;
-    transform: translateY(-50%);
-    width: 3px; height: 60%;
-    background: var(--cyan);
-    border-radius: 0 2px 2px 0;
-    box-shadow: 0 0 8px var(--cyan);
-  }
-
-  .sidebar-footer {
-    padding: 16px 12px;
-    border-top: 1px solid rgba(255,255,255,0.04);
-  }
-
-  .nav-item.danger:hover { background: rgba(247,37,133,0.08); color: var(--pink); }
-
-  /* HAMBURGER */
-  .hamburger {
-    display: none;
-    position: fixed;
-    top: 16px; left: 16px;
-    z-index: 200;
-    background: rgba(8,8,20,0.9);
-    border: 1px solid rgba(0,245,255,0.2);
-    border-radius: 10px;
-    padding: 10px;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
-  }
-
-  .hamburger svg { width: 20px; height: 20px; color: var(--cyan); }
-
-  .sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.6);
-    z-index: 99;
-    backdrop-filter: blur(4px);
-  }
-
-  /* MAIN CONTENT */
-  .main {
-    margin-left: var(--sidebar-w);
-    flex: 1;
-    min-height: 100vh;
-    padding: 32px;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* PAGES */
-  .page { display: none; animation: pageIn 0.4s cubic-bezier(0.16,1,0.3,1); }
-  .page.active { display: block; }
-
-  @keyframes pageIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .page-header { margin-bottom: 28px; }
-  .page-header h2 {
-    font-size: 24px;
-    font-weight: 800;
-    background: linear-gradient(135deg, #fff 60%, var(--cyan));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .page-header p { font-size: 13px; color: var(--muted); margin-top: 4px; }
-
-  /* CARDS */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--card-border);
-    border-radius: 18px;
-    padding: 24px;
-    margin-bottom: 20px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0,245,255,0.3), transparent);
-  }
-
-  .card-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-
-  .card-icon {
-    width: 36px; height: 36px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .card-icon.cyan { background: rgba(0,245,255,0.1); color: var(--cyan); }
-  .card-icon.purple { background: rgba(168,85,247,0.1); color: var(--purple); }
-
-  .card-icon svg { width: 18px; height: 18px; }
-
-  .card-title { font-size: 15px; font-weight: 700; }
-  .card-sub { font-size: 11px; color: var(--muted); margin-top: 1px; }
-
-  /* TOGGLE ROWS */
-  .toggle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-    cursor: pointer;
-    transition: all 0.2s;
-    border-radius: 8px;
-    padding-left: 10px;
-    padding-right: 10px;
-    margin: 0 -10px;
-  }
-
-  .toggle-row:last-child { border-bottom: none; }
-  .toggle-row:hover { background: rgba(255,255,255,0.02); }
-
-  .toggle-info { flex: 1; }
-  .toggle-name { font-size: 13px; font-weight: 600; }
-  .toggle-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
-
-  /* TOGGLE SWITCH */
-  .toggle-switch {
-    width: 44px; height: 24px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 12px;
-    position: relative;
-    flex-shrink: 0;
-    transition: all 0.3s;
-    border: 1px solid rgba(255,255,255,0.1);
-  }
-
-  .toggle-switch::after {
-    content: '';
-    position: absolute;
-    width: 18px; height: 18px;
-    background: #fff;
-    border-radius: 50%;
-    top: 2px; left: 2px;
-    transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  }
-
-  .toggle-switch.on { background: linear-gradient(135deg, var(--cyan2), var(--purple2)); border-color: transparent; box-shadow: 0 0 15px rgba(0,245,255,0.3); }
-  .toggle-switch.on::after { left: calc(100% - 20px); background: #fff; }
-
-  /* OPEN FF BUTTON */
-  .btn-ff {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, rgba(0,245,255,0.15), rgba(168,85,247,0.15));
-    border: 1px solid rgba(0,245,255,0.3);
-    border-radius: 16px;
-    color: var(--cyan);
-    font-family: 'Sora', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s;
-    animation: btnPulse 2.5s ease-in-out infinite;
-    margin-top: 20px;
-  }
-
-  @keyframes btnPulse {
-    0%,100% { box-shadow: 0 0 20px rgba(0,245,255,0.15); }
-    50%      { box-shadow: 0 0 40px rgba(0,245,255,0.35), 0 0 80px rgba(168,85,247,0.15); }
-  }
-
-  .btn-ff:hover { transform: translateY(-2px); background: linear-gradient(135deg, rgba(0,245,255,0.25), rgba(168,85,247,0.25)); }
-  .btn-ff svg { width: 20px; height: 20px; }
-
-  /* DASHBOARD OVERVIEW */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 14px;
-    margin-bottom: 20px;
-  }
-
-  .stat-card {
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.06);
-    border-radius: 14px;
-    padding: 18px;
-    text-align: center;
-  }
-
-  .stat-val {
-    font-size: 28px;
-    font-weight: 800;
-    font-family: 'JetBrains Mono', monospace;
-    background: linear-gradient(135deg, var(--cyan), var(--purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .stat-label { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: 0.05em; }
-
-  /* ===== ANIMATIONS OVERLAY ===== */
-  #anim-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 50;
-    pointer-events: none;
-    overflow: hidden;
-  }
-
-  /* CROSSHAIR */
-  .anim-crosshair {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80px; height: 80px;
-  }
-
-  .ch-line {
-    position: absolute;
-    background: var(--cyan);
-    box-shadow: 0 0 8px var(--cyan);
-    border-radius: 2px;
-  }
-
-  .ch-top    { width: 2px; height: 20px; top: 0;      left: 50%; transform: translateX(-50%); }
-  .ch-bottom { width: 2px; height: 20px; bottom: 0;   left: 50%; transform: translateX(-50%); }
-  .ch-left   { width: 20px; height: 2px; left: 0;     top: 50%;  transform: translateY(-50%); }
-  .ch-right  { width: 20px; height: 2px; right: 0;    top: 50%;  transform: translateY(-50%); }
-  .ch-dot    { width: 6px; height: 6px; background: var(--cyan); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); box-shadow: 0 0 10px var(--cyan); }
-
-  @keyframes crosshairPulse { 0%,100% { opacity:1; transform:translate(-50%,-50%) scale(1); } 50% { opacity:0.6; transform:translate(-50%,-50%) scale(1.08); } }
-  @keyframes crosshairClose { from { opacity:0; transform:translate(-50%,-50%) scale(1.6); } to { opacity:1; transform:translate(-50%,-50%) scale(1); } }
-  @keyframes radarWave { from { transform:translate(-50%,-50%) scale(0); opacity:0.6; } to { transform:translate(-50%,-50%) scale(3); opacity:0; } }
-  @keyframes arrowPulse { 0%,100% { opacity:1; transform:translate(-50%,-50%) translateY(0); } 50% { opacity:0.7; transform:translate(-50%,-50%) translateY(8px); } }
-  @keyframes fpsCount { from { opacity:0; transform:translate(-50%,-50%) scale(0.5); } to { opacity:1; transform:translate(-50%,-50%) scale(1); } }
-  @keyframes wifiPulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
-  @keyframes progressFill { from { width:0%; } to { width:100%; } }
-  @keyframes touchTrail { 0% { opacity:0; transform:translateX(-60px); } 50% { opacity:1; } 100% { opacity:0; transform:translateX(60px); } }
-  @keyframes boostFlash { 0%,100% { opacity:0; } 10%,90% { opacity:1; } }
-  @keyframes stabilize { 0% { transform:translate(-50%,-50%) rotate(-3deg); } 25% { transform:translate(-50%,-50%) rotate(3deg); } 50% { transform:translate(-50%,-50%) rotate(-1deg); } 75% { transform:translate(-50%,-50%) rotate(1deg); } 100% { transform:translate(-50%,-50%) rotate(0deg); } }
-
-  /* SETTINGS PAGE */
-  .settings-section { margin-bottom: 28px; }
-  .settings-label { font-size: 11px; letter-spacing: 0.2em; color: var(--cyan); text-transform: uppercase; margin-bottom: 12px; }
-  .settings-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 13px; }
-  .settings-item:last-child { border-bottom: none; }
-  .settings-item .key { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); }
-  .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; letter-spacing: 0.1em; }
-  .badge.cyan { background: rgba(0,245,255,0.15); color: var(--cyan); border: 1px solid rgba(0,245,255,0.2); }
-  .badge.purple { background: rgba(168,85,247,0.15); color: var(--purple); border: 1px solid rgba(168,85,247,0.2); }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    .hamburger { display: flex; }
-    .sidebar { transform: translateX(-100%); }
-    .sidebar.open { transform: translateX(0); }
-    .sidebar-overlay { display: block; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
-    .sidebar-overlay.open { opacity: 1; pointer-events: all; }
-    .main { margin-left: 0; padding: 20px 16px; padding-top: 64px; }
-  }
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --bg: #0a0a0f;
+  --purple: #b44dff;
+  --purple2: #7c1fa8;
+  --purple-dim: rgba(180,77,255,0.15);
+  --purple-border: rgba(180,77,255,0.35);
+  --card-bg: rgba(40,10,60,0.55);
+  --text: #f0e8ff;
+  --muted: #8b7a9e;
+  --green: #00ff88;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font: 'Sora', sans-serif;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#bg-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+.screen { position:fixed; inset:0; z-index:10; transition:opacity .5s, visibility .5s; overflow-y:auto; }
+.screen.hidden { opacity:0; visibility:hidden; pointer-events:none; }
+
+/* ══ LOGIN ══ */
+#login-screen {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:32px 20px;
+  background: radial-gradient(ellipse at 50% 30%, rgba(120,30,180,0.35) 0%, transparent 65%),
+              radial-gradient(ellipse at 80% 80%, rgba(80,0,140,0.2) 0%, transparent 50%),
+              var(--bg);
+}
+
+.login-title {
+  font-size: clamp(26px,7vw,40px);
+  font-weight:800; letter-spacing:0.04em; text-align:center;
+  color: var(--purple); font-style:italic;
+  text-shadow: 0 0 30px rgba(180,77,255,0.8), 0 0 60px rgba(180,77,255,0.4);
+  margin-bottom:6px;
+  animation: glitchTitle 4s infinite;
+}
+@keyframes glitchTitle {
+  0%,95%,100%{text-shadow:0 0 30px rgba(180,77,255,0.8),0 0 60px rgba(180,77,255,0.4);transform:none}
+  96%{text-shadow:-2px 0 #ff00ff,2px 0 #00ffff;transform:translateX(-2px)}
+  97%{text-shadow:2px 0 #ff00ff,-2px 0 #00ffff;transform:translateX(2px)}
+  98%{text-shadow:none;transform:none}
+}
+
+.login-sub {
+  font-size:11px; letter-spacing:0.35em; color:var(--muted);
+  text-align:center; text-transform:uppercase; margin-bottom:32px;
+}
+
+.login-card {
+  width:min(400px,92vw);
+  background: linear-gradient(145deg, rgba(80,20,120,0.7), rgba(40,5,70,0.8));
+  border:1px solid var(--purple-border); border-radius:24px; padding:32px 28px;
+  box-shadow: 0 0 60px rgba(140,40,220,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
+  backdrop-filter:blur(16px);
+  animation: cardIn .7s cubic-bezier(.16,1,.3,1);
+}
+@keyframes cardIn {
+  from{opacity:0;transform:translateY(24px) scale(.97);filter:blur(6px)}
+  to{opacity:1;transform:none;filter:none}
+}
+
+.field-label { font-size:10px; letter-spacing:0.25em; color:var(--muted); text-transform:uppercase; margin-bottom:8px; margin-top:20px; }
+.field-label:first-child { margin-top:0; }
+
+.field-input {
+  width:100%; display:flex; align-items:center; gap:10px;
+  background:rgba(0,0,0,0.35); border:1px solid rgba(180,77,255,0.25);
+  border-radius:12px; padding:13px 16px; transition:all .3s;
+}
+.field-input:focus-within { border-color:var(--purple); box-shadow:0 0 20px rgba(180,77,255,0.2); }
+.field-input svg { width:16px;height:16px;color:var(--muted);flex-shrink:0; }
+.field-input input { flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--font);font-size:15px; }
+.field-input input::placeholder { color:rgba(139,122,158,0.5); }
+
+.btn-login {
+  width:100%; margin-top:24px; padding:15px;
+  background:linear-gradient(135deg,var(--purple2),var(--purple));
+  border:none; border-radius:14px; color:#fff;
+  font-family:var(--font); font-size:13px; font-weight:700;
+  letter-spacing:0.2em; text-transform:uppercase; cursor:pointer;
+  transition:all .3s; box-shadow:0 4px 24px rgba(140,40,220,0.4);
+}
+.btn-login:hover{transform:translateY(-1px);box-shadow:0 6px 30px rgba(180,77,255,0.5);}
+.btn-login:disabled{opacity:.6;cursor:default;transform:none;}
+
+.login-error {
+  margin-top:14px; padding:10px 14px;
+  background:rgba(255,50,100,0.1); border:1px solid rgba(255,50,100,0.3);
+  border-radius:10px; color:#ff6688; font-size:12px; text-align:center; display:none;
+}
+.login-error.show{display:block;animation:shake .4s;}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+.login-footer { margin-top:20px; display:flex; justify-content:space-between; font-size:10px; color:rgba(139,122,158,0.5); letter-spacing:0.08em; }
+
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:8px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ══ APP ══ */
+#app-screen { display:flex; flex-direction:column; height:100vh; }
+
+.topnav {
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; padding:14px 20px;
+  background:rgba(10,10,15,0.92); backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(180,77,255,0.1); gap:12px;
+}
+.topnav-brand { flex:1; font-size:16px; font-weight:800; font-style:italic; color:var(--purple); text-shadow:0 0 16px rgba(180,77,255,0.6); letter-spacing:0.04em; }
+.topnav-badge { font-size:9px; letter-spacing:0.2em; color:var(--muted); text-transform:uppercase; }
+
+.tabbar {
+  display:flex; background:rgba(10,10,15,0.95);
+  border-top:1px solid rgba(180,77,255,0.1);
+  flex-shrink:0;
+}
+.tab {
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  gap:4px; padding:10px 4px 12px; cursor:pointer; transition:all .2s;
+  color:var(--muted); font-size:10px; font-weight:600; letter-spacing:0.05em;
+  border-top:2px solid transparent;
+}
+.tab svg{width:20px;height:20px;}
+.tab.active{color:var(--purple);border-top-color:var(--purple);}
+
+.scroll-area { flex:1; overflow-y:auto; }
+
+.page{display:none;padding:20px 16px 24px;}
+.page.active{display:block;animation:pageIn .3s ease;}
+@keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.page-title {
+  font-size:13px; font-weight:700; letter-spacing:0.2em;
+  text-transform:uppercase; color:var(--purple); margin-bottom:16px;
+  display:flex; align-items:center; gap:8px;
+}
+.page-title::before{content:'';display:inline-block;width:3px;height:16px;background:var(--purple);border-radius:2px;box-shadow:0 0 8px var(--purple);}
+
+/* FEATURE CARDS */
+.feature-card {
+  background:rgba(30,8,50,0.6); border:1px solid rgba(180,77,255,0.18);
+  border-radius:18px; padding:18px; margin-bottom:12px;
+  display:flex; align-items:center; gap:16px; cursor:pointer;
+  transition:all .25s; position:relative; overflow:hidden; user-select:none;
+}
+.feature-card:active{transform:scale(.98);}
+.feature-card.on {
+  border-color:rgba(180,77,255,0.5);
+  box-shadow:0 0 28px rgba(140,40,220,0.22);
+  background:rgba(50,10,80,0.65);
+  animation:cardGlow 2.5s ease-in-out infinite;
+}
+@keyframes cardGlow{0%,100%{box-shadow:0 0 20px rgba(140,40,220,0.18)}50%{box-shadow:0 0 36px rgba(140,40,220,0.4)}}
+
+.fc-icon {
+  width:48px;height:48px; border-radius:14px;
+  background:rgba(180,77,255,0.12); border:1px solid rgba(180,77,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0; font-size:22px; transition:all .3s;
+}
+.feature-card.on .fc-icon{background:rgba(180,77,255,0.22);box-shadow:0 0 16px rgba(180,77,255,0.3);}
+
+.fc-info{flex:1;min-width:0;}
+.fc-name{font-size:15px;font-weight:700;margin-bottom:4px;}
+.fc-desc{font-size:12px;color:var(--muted);line-height:1.4;}
+
+.fc-toggle{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
+.fc-status{font-size:9px;letter-spacing:0.15em;font-weight:700;color:var(--muted);text-transform:uppercase;}
+.feature-card.on .fc-status{color:var(--purple);}
+
+.toggle-sw{width:46px;height:26px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:13px;position:relative;transition:all .3s;}
+.toggle-sw::after{content:'';position:absolute;width:20px;height:20px;background:#6b6b7a;border-radius:50%;top:2px;left:2px;transition:all .3s cubic-bezier(.16,1,.3,1);box-shadow:0 2px 4px rgba(0,0,0,0.4);}
+.feature-card.on .toggle-sw{background:rgba(180,77,255,0.3);border-color:var(--purple);box-shadow:0 0 12px rgba(180,77,255,0.3);}
+.feature-card.on .toggle-sw::after{left:calc(100% - 22px);background:var(--purple);box-shadow:0 0 8px var(--purple);}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.stat-box{background:rgba(30,8,50,0.6);border:1px solid rgba(180,77,255,0.18);border-radius:16px;padding:16px;text-align:center;}
+.stat-num{font-family:var(--font-mono);font-size:32px;font-weight:700;color:var(--purple);text-shadow:0 0 20px rgba(180,77,255,0.5);line-height:1;}
+.stat-lbl{font-size:10px;color:var(--muted);margin-top:6px;letter-spacing:0.1em;text-transform:uppercase;}
+
+.btn-ff{width:100%;margin-top:8px;padding:17px;background:linear-gradient(135deg,rgba(180,77,255,0.2),rgba(120,30,180,0.3));border:1px solid var(--purple-border);border-radius:16px;color:var(--purple);font-family:var(--font);font-size:14px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;animation:ffPulse 2.5s ease-in-out infinite;transition:all .3s;}
+.btn-ff:hover{background:rgba(180,77,255,0.25);}
+@keyframes ffPulse{0%,100%{box-shadow:0 0 20px rgba(180,77,255,0.15)}50%{box-shadow:0 0 40px rgba(180,77,255,0.4)}}
+.btn-ff svg{width:18px;height:18px;}
+
+.cfg-section{background:rgba(30,8,50,0.6);border:1px solid rgba(180,77,255,0.18);border-radius:18px;padding:16px 20px;margin-bottom:12px;}
+.cfg-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;}
+.cfg-row:last-child{border:none;}
+.cfg-val{font-size:11px;color:var(--purple);font-family:var(--font-mono);}
+.badge-sm{padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:0.1em;background:rgba(180,77,255,0.15);color:var(--purple);border:1px solid rgba(180,77,255,0.25);}
+
+.btn-logout{width:100%;margin-top:4px;padding:14px;background:rgba(255,50,100,0.1);border:1px solid rgba(255,50,100,0.3);border-radius:14px;color:#ff6688;font-family:var(--font);font-size:13px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s;}
+.btn-logout:hover{background:rgba(255,50,100,0.18);}
+.btn-logout svg{width:16px;height:16px;}
+
+/* ══ TERMINAL MODAL ══ */
+#terminal-modal {
+  position:fixed;inset:0;z-index:200;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.78); backdrop-filter:blur(8px);
+  opacity:0;visibility:hidden;transition:all .3s;padding:20px;
+}
+#terminal-modal.show{opacity:1;visibility:visible;}
+
+.terminal-box {
+  width:min(440px,95vw);
+  background:#0d0d14;
+  border:1px solid rgba(180,77,255,0.4);
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 0 60px rgba(140,40,220,0.35),0 0 120px rgba(140,40,220,0.15);
+  animation:termIn .35s cubic-bezier(.16,1,.3,1);
+}
+@keyframes termIn{from{opacity:0;transform:scale(.9) translateY(24px)}to{opacity:1;transform:none}}
+
+.term-topbar{display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(20,5,35,0.9);border-bottom:1px solid rgba(180,77,255,0.15);}
+.term-dots{display:flex;gap:6px;}
+.term-dot{width:10px;height:10px;border-radius:50%;}
+.term-dot:nth-child(1){background:#ff5f57;}
+.term-dot:nth-child(2){background:#febc2e;}
+.term-dot:nth-child(3){background:#28c840;}
+.term-title-bar{flex:1;text-align:center;font-family:var(--font-mono);font-size:11px;font-style:italic;color:var(--purple);letter-spacing:0.15em;line-height:1.4;}
+
+.term-body{padding:20px;font-family:var(--font-mono);font-size:13px;min-height:200px;}
+
+.term-line{display:flex;gap:8px;margin-bottom:10px;opacity:0;animation:lineIn .25s ease forwards;}
+@keyframes lineIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
+.term-prompt{color:var(--purple);font-weight:700;white-space:nowrap;flex-shrink:0;}
+.term-text{color:var(--text);line-height:1.5;word-break:break-word;}
+.term-done-text{color:var(--green);font-weight:700;}
+
+.term-processing{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--purple);letter-spacing:0.15em;margin-top:4px;}
+.term-spinner{width:14px;height:14px;border:2px solid rgba(180,77,255,0.3);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
+
+.term-cursor{display:inline-block;width:8px;height:15px;background:var(--purple);margin-left:4px;vertical-align:middle;animation:blink .8s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+.term-footer{display:flex;justify-content:space-between;padding:10px 20px;border-top:1px solid rgba(180,77,255,0.1);font-family:var(--font-mono);font-size:9px;color:rgba(139,122,158,0.45);letter-spacing:0.15em;}
+
+.info-card{background:rgba(30,8,50,0.6);border:1px solid rgba(180,77,255,0.18);border-radius:18px;padding:18px;margin-bottom:12px;display:flex;align-items:center;gap:16px;}
 </style>
 </head>
 <body>
 
 <canvas id="bg-canvas"></canvas>
-<div class="floating-words" id="fw-container"></div>
-<div id="anim-overlay"></div>
+
+<!-- TERMINAL MODAL -->
+<div id="terminal-modal">
+  <div class="terminal-box">
+    <div class="term-topbar">
+      <div class="term-dots">
+        <div class="term-dot"></div><div class="term-dot"></div><div class="term-dot"></div>
+      </div>
+      <div class="term-title-bar">HEADTRICK KERNEL<br>PROTOCOL</div>
+    </div>
+    <div class="term-body" id="term-body"></div>
+    <div class="term-footer">
+      <span>ENCRYPTION: AES-256</span><span>PORT: 0X7FFZ</span>
+    </div>
+  </div>
+</div>
 
 <!-- LOGIN -->
 <div class="screen" id="login-screen">
-  <div class="login-card">
-    <div class="login-logo">
-      <div class="brand">Sistema Externo</div>
-      <h1>HEADTRICK RYUZN</h1>
-      <div class="tagline">Painel de Suporte para Jogadores</div>
+  <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;">
+    <div class="login-title">HEADTRICK RYUZN</div>
+    <div class="login-sub">Performance Premium</div>
+    <div class="login-card">
+      <div class="field-label">User ID</div>
+      <div class="field-input">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+        <input type="text" id="inp-user" placeholder="Digite seu usuário" autocomplete="off">
+      </div>
+      <div class="field-label">Código de Acesso</div>
+      <div class="field-input">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+        <input type="password" id="inp-pass" placeholder="••••••••">
+      </div>
+      <button class="btn-login" id="btn-login" onclick="doLogin()">ENTRAR NO SISTEMA</button>
+      <div class="login-error" id="login-error">Credenciais inválidas. Tente novamente.</div>
+      <div class="login-footer">
+        <span>🔒 SERVIDORES ATIVOS</span><span>STATUS: ONLINE</span>
+      </div>
     </div>
-    <div class="field">
-      <label>Usuário</label>
-      <input type="text" id="inp-user" placeholder="Digite seu usuário" autocomplete="off">
-    </div>
-    <div class="field">
-      <label>Senha</label>
-      <input type="password" id="inp-pass" placeholder="••••••••" autocomplete="off">
-    </div>
-    <button class="btn-login" id="btn-login" onclick="doLogin()">ENTRAR NO SISTEMA</button>
-    <div class="login-error" id="login-error">⚠ Credenciais inválidas. Tente novamente.</div>
   </div>
 </div>
 
 <!-- APP -->
-<div class="screen hidden" id="app-screen">
+<div class="screen hidden" id="app-screen" style="display:flex;flex-direction:column;height:100vh;">
 
-  <button class="hamburger" onclick="toggleSidebar()">
-    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-      <path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/>
-    </svg>
-  </button>
+  <div class="topnav">
+    <div class="topnav-brand">HEADTRICK RYUZN</div>
+    <div class="topnav-badge">Premium</div>
+  </div>
 
-  <div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
-
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo">
-      <div class="brand-sm">Headtrick</div>
-      <h2>RYUZN</h2>
-    </div>
-    <nav class="nav-items">
-      <div class="nav-item active" onclick="goPage('dashboard',this)">
-        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
-        Dashboard
-      </div>
-      <div class="nav-item" onclick="goPage('mira',this)">
-        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/><line x1="3" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="21" y2="12"/></svg>
-        Mira
-      </div>
-      <div class="nav-item" onclick="goPage('desempenho',this)">
-        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
-        Desempenho
-      </div>
-      <div class="nav-item" onclick="goPage('config',this)">
-        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z"/><circle cx="12" cy="12" r="3"/></svg>
-        Configurações
-      </div>
-    </nav>
-    <div class="sidebar-footer">
-      <div class="nav-item danger" onclick="doLogout()">
-        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>
-        Sair
-      </div>
-    </div>
-  </aside>
-
-  <main class="main">
+  <div class="scroll-area">
 
     <!-- DASHBOARD -->
     <div class="page active" id="page-dashboard">
-      <div class="page-header">
-        <h2>Dashboard</h2>
-        <p>Bem-vindo ao Headtrick Ryuzn — seu painel de suporte</p>
+      <div class="page-title">Dashboard</div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-num" id="stat-mira">0</div><div class="stat-lbl">Mira Ativas</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-desemp">0</div><div class="stat-lbl">Desemp. Ativas</div></div>
       </div>
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-val" id="stat-mira">0</div><div class="stat-label">Mira Ativas</div></div>
-        <div class="stat-card"><div class="stat-val" id="stat-desemp">0</div><div class="stat-label">Desemp. Ativas</div></div>
-        <div class="stat-card"><div class="stat-val">FF</div><div class="stat-label">Free Fire</div></div>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon cyan"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg></div>
-          <div><div class="card-title">Status do Sistema</div><div class="card-sub">Tudo operando normalmente</div></div>
+      <div class="info-card">
+        <div class="fc-icon">🛡️</div>
+        <div class="fc-info">
+          <div class="fc-name">Sistema Online</div>
+          <div class="fc-desc" id="dash-user-label">Bem-vindo ao painel de suporte</div>
         </div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;">
-          <span class="badge cyan">Sistema Online</span>
-          <span class="badge purple">v2.4.1</span>
-          <span class="badge cyan">Free Fire BR</span>
-        </div>
+        <span class="badge-sm">v2.4</span>
       </div>
       <button class="btn-ff" onclick="openFF()">
         <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"/></svg>
@@ -694,541 +335,271 @@
 
     <!-- MIRA -->
     <div class="page" id="page-mira">
-      <div class="page-header">
-        <h2>🎯 Mira</h2>
-        <p>Ative as assistências e veja a animação em tempo real</p>
+      <div class="page-title">Mira</div>
+      <div class="feature-card" id="fc-mira-leve" onclick="toggleFeature('mira-leve')">
+        <div class="fc-icon">🎯</div>
+        <div class="fc-info"><div class="fc-name">Assistência de Mira Leve</div><div class="fc-desc">Suaviza movimentos bruscos da mira.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-mira-leve">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon cyan"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div>
-          <div><div class="card-title">Assistências de Mira</div><div class="card-sub">Toque para ativar/desativar</div></div>
-        </div>
-
-        <div class="toggle-row" onclick="toggleFeature('mira-leve', this)">
-          <div class="toggle-info">
-            <div class="toggle-name">Assistência de Mira Leve</div>
-            <div class="toggle-desc">Mira circular pulsando em ciano</div>
-          </div>
-          <div class="toggle-switch" id="sw-mira-leve"></div>
-        </div>
-
-        <div class="toggle-row" onclick="toggleFeature('mira-precisa', this)">
-          <div class="toggle-info">
-            <div class="toggle-name">Assistência de Mira Precisa</div>
-            <div class="toggle-desc">Crosshair fechando no centro</div>
-          </div>
-          <div class="toggle-switch" id="sw-mira-precisa"></div>
-        </div>
-
-        <div class="toggle-row" onclick="toggleFeature('estabilizacao', this)">
-          <div class="toggle-info">
-            <div class="toggle-name">Estabilização de Mira</div>
-            <div class="toggle-desc">Tremor → travamento animado</div>
-          </div>
-          <div class="toggle-switch" id="sw-estabilizacao"></div>
-        </div>
-
-        <div class="toggle-row" onclick="toggleFeature('recuo', this)">
-          <div class="toggle-info">
-            <div class="toggle-name">Controle de Recuo</div>
-            <div class="toggle-desc">Seta de compensação pulsando</div>
-          </div>
-          <div class="toggle-switch" id="sw-recuo"></div>
-        </div>
-
-        <div class="toggle-row" onclick="toggleFeature('precisao', this)">
-          <div class="toggle-info">
-            <div class="toggle-name">Ajuste Fino de Precisão</div>
-            <div class="toggle-desc">Ondas de radar se expandindo</div>
-          </div>
-          <div class="toggle-switch" id="sw-precisao"></div>
-        </div>
+      <div class="feature-card" id="fc-mira-precisa" onclick="toggleFeature('mira-precisa')">
+        <div class="fc-icon">🔬</div>
+        <div class="fc-info"><div class="fc-name">Assistência de Mira Precisa</div><div class="fc-desc">Foco aumentado em alvos em movimento.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-mira-precisa">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-estabilizacao" onclick="toggleFeature('estabilizacao')">
+        <div class="fc-icon">⭕</div>
+        <div class="fc-info"><div class="fc-name">Remover Tremedeira</div><div class="fc-desc">Reduz micro oscilações da mira.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-estabilizacao">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-recuo" onclick="toggleFeature('recuo')">
+        <div class="fc-icon">⚡</div>
+        <div class="fc-info"><div class="fc-name">Estabilizar Mira</div><div class="fc-desc">Ajusta suavização de tracking.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-recuo">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-precisao" onclick="toggleFeature('precisao')">
+        <div class="fc-icon">🚀</div>
+        <div class="fc-info"><div class="fc-name">Sensi Sem Congelamento</div><div class="fc-desc">Remove travamentos durante flick.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-precisao">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
     </div>
 
     <!-- DESEMPENHO -->
     <div class="page" id="page-desempenho">
-      <div class="page-header">
-        <h2>⚡ Desempenho</h2>
-        <p>Otimize seu dispositivo com um toque</p>
+      <div class="page-title">Desempenho</div>
+      <div class="feature-card" id="fc-fps" onclick="toggleFeature('fps')">
+        <div class="fc-icon">📈</div>
+        <div class="fc-info"><div class="fc-name">Otimização de FPS</div><div class="fc-desc">Maximiza quadros por segundo.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-fps">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-icon purple"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg></div>
-          <div><div class="card-title">Otimizações de Desempenho</div><div class="card-sub">Toque para ativar/desativar</div></div>
-        </div>
-
-        <div class="toggle-row" onclick="toggleFeature('fps', this)">
-          <div class="toggle-info">
-            <div class="toggle-name">Otimização de FPS</div>
-            <div class="toggle-desc">Contador 0→60 com partículas</div>
-          </div>
-          <div class="toggle-switch" id="sw-fps"></div>
-        </div>
-
-        <div class="toggle-row" onclick="toggleFeature('delay', this)">
-          <div class="toggle-info">
-            <div class="toggle-name">Redução de Delay</div>
-            <div class="toggle-desc">Ondas de sinal pulsando em verde</div>
-          </div>
-          <div class="toggle-switch" id="sw-delay"></div>
-        </div>
-
-        <div class="toggle-row" onclick="toggleFeature('estabilidade', this)">
-          <div class="toggle-info">
-            <div class="toggle-name">Estabilidade de Sistema</div>
-            <div class="toggle-desc">Barra de progresso neon 0→100%</div>
-          </div>
-          <div class="toggle-switch" id="sw-estabilidade"></div>
-        </div>
-
-        <div class="toggle-row" onclick="toggleFeature('touch', this)">
-          <div class="toggle-info">
-            <div class="toggle-name">Ajuste de Sensibilidade Touch</div>
-            <div class="toggle-desc">Rastro de toque deslizando</div>
-          </div>
-          <div class="toggle-switch" id="sw-touch"></div>
-        </div>
-
-        <div class="toggle-row" onclick="toggleFeature('boost', this)">
-          <div class="toggle-info">
-            <div class="toggle-name">Modo Desempenho Máximo</div>
-            <div class="toggle-desc">Flash neon + BOOST ATIVADO</div>
-          </div>
-          <div class="toggle-switch" id="sw-boost"></div>
-        </div>
+      <div class="feature-card" id="fc-delay" onclick="toggleFeature('delay')">
+        <div class="fc-icon">📡</div>
+        <div class="fc-info"><div class="fc-name">Redução de Delay</div><div class="fc-desc">Otimiza latência de rede.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-delay">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-estabilidade" onclick="toggleFeature('estabilidade')">
+        <div class="fc-icon">🔋</div>
+        <div class="fc-info"><div class="fc-name">Estabilidade de Sistema</div><div class="fc-desc">Mantém desempenho constante.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-estabilidade">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-touch" onclick="toggleFeature('touch')">
+        <div class="fc-icon">👆</div>
+        <div class="fc-info"><div class="fc-name">Ajuste de Sensibilidade Touch</div><div class="fc-desc">Calibra resposta ao toque.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-touch">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-boost" onclick="toggleFeature('boost')">
+        <div class="fc-icon">🏆</div>
+        <div class="fc-info"><div class="fc-name">Modo Desempenho Máximo</div><div class="fc-desc">Ativa todos os boosters do sistema.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-boost">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
     </div>
 
     <!-- CONFIG -->
     <div class="page" id="page-config">
-      <div class="page-header">
-        <h2>⚙️ Configurações</h2>
-        <p>Informações do sistema</p>
+      <div class="page-title">Configurações</div>
+      <div class="cfg-section">
+        <div class="cfg-row"><span>Versão</span><span class="cfg-val">2.4.1</span></div>
+        <div class="cfg-row"><span>Usuário</span><span class="cfg-val" id="cfg-user">—</span></div>
+        <div class="cfg-row"><span>Plataforma</span><span class="badge-sm">Android</span></div>
+        <div class="cfg-row"><span>Autenticação</span><span class="badge-sm">SHA-256</span></div>
+        <div class="cfg-row"><span>Sessão</span><span class="badge-sm">Ativa</span></div>
       </div>
-      <div class="card">
-        <div class="settings-section">
-          <div class="settings-label">Sistema</div>
-          <div class="settings-item"><span>Versão</span><span class="badge cyan">2.4.1</span></div>
-          <div class="settings-item"><span>Usuário logado</span><span class="key" id="cfg-user">—</span></div>
-          <div class="settings-item"><span>Plataforma</span><span class="badge purple">Web / Android</span></div>
-        </div>
-        <div class="settings-section">
-          <div class="settings-label">Segurança</div>
-          <div class="settings-item"><span>Autenticação</span><span class="badge cyan">SHA-256</span></div>
-          <div class="settings-item"><span>Sessão</span><span class="badge cyan">localStorage</span></div>
-        </div>
-        <div class="settings-section">
-          <div class="settings-label">Sobre</div>
-          <div class="settings-item"><span>Headtrick Ryuzn</span><span style="font-size:11px;color:var(--muted)">Painel Externo Free Fire</span></div>
-        </div>
-        <button class="btn-ff" onclick="doLogout()" style="margin-top:12px;color:var(--pink);border-color:rgba(247,37,133,0.3);background:rgba(247,37,133,0.08);animation:none;">
-          <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>
-          SAIR DO SISTEMA
-        </button>
-      </div>
+      <button class="btn-logout" onclick="doLogout()">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>
+        SAIR DO SISTEMA
+      </button>
     </div>
 
-  </main>
+  </div><!-- scroll-area -->
+
+  <div class="tabbar">
+    <div class="tab active" id="tab-dashboard" onclick="goPage('dashboard',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/></svg>
+      Dashboard
+    </div>
+    <div class="tab" id="tab-mira" onclick="goPage('mira',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="21"/><line x1="3" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="21" y2="12"/></svg>
+      Mira
+    </div>
+    <div class="tab" id="tab-desempenho" onclick="goPage('desempenho',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+      Desempenho
+    </div>
+    <div class="tab" id="tab-config" onclick="goPage('config',this)">
+      <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z"/><circle cx="12" cy="12" r="3"/></svg>
+      Config
+    </div>
+  </div>
+
 </div>
 
 <script>
-// ===== PARTICLES =====
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-let particles = [];
+// ── PARTICLES ──
+const canvas=document.getElementById('bg-canvas');
+const ctx=canvas.getContext('2d');
+function rsz(){canvas.width=innerWidth;canvas.height=innerHeight;}
+rsz();addEventListener('resize',rsz);
+const pts=Array.from({length:50},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.2+.3,a:Math.random()*.3+.05,c:Math.random()>.5?'140,40,220':'100,20,160'}));
+function drawBg(){ctx.clearRect(0,0,canvas.width,canvas.height);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(${p.c},${p.a})`;ctx.fill();});requestAnimationFrame(drawBg);}
+drawBg();
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
+// ── AUTH ──
+const HASH='2ac878b0e2180616993b4b6aa71e61166fdc86c28d47e359d0ee537eb11d46d3';
+async function sha256(s){const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');}
 
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-for (let i = 0; i < 60; i++) {
-  particles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    r: Math.random() * 1.5 + 0.3,
-    vx: (Math.random() - 0.5) * 0.3,
-    vy: (Math.random() - 0.5) * 0.3,
-    alpha: Math.random() * 0.4 + 0.1,
-    color: Math.random() > 0.5 ? '0,245,255' : '168,85,247'
-  });
-}
-
-function animParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particles.forEach(p => {
-    p.x += p.vx; p.y += p.vy;
-    if (p.x < 0) p.x = canvas.width;
-    if (p.x > canvas.width) p.x = 0;
-    if (p.y < 0) p.y = canvas.height;
-    if (p.y > canvas.height) p.y = 0;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
-    ctx.fill();
-  });
-  requestAnimationFrame(animParticles);
-}
-animParticles();
-
-// ===== FLOATING WORDS =====
-const words = ['HEADSHOT','RANK','BOOST','CLUTCH','SNIPER','SCOPE','GRENADE','GLOO','RUSH','AWM','M1887','KALAHARI','BERMUDA','PURGATORY'];
-const fwc = document.getElementById('fw-container');
-
-words.forEach((w, i) => {
-  const el = document.createElement('div');
-  el.className = 'fw';
-  el.textContent = w;
-  el.style.left = (Math.random() * 90 + 5) + '%';
-  el.style.top = (Math.random() * 100 + 100) + '%';
-  el.style.animationDuration = (20 + Math.random() * 20) + 's';
-  el.style.animationDelay = (Math.random() * 15) + 's';
-  fwc.appendChild(el);
-});
-
-// ===== AUTH =====
-const const USER = 'player171';
-const PASS_HASH = 'e6d2f0d6b9e6b0c7d8a0e7f7e4d5f9c2e3b4a1d6f7c8e9a0b1c2d3e4f5a6b7c8'; // SHA-256 de "ip171"
-
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-}
-
-async function doLogin() {
-  const user = document.getElementById('inp-user').value.trim();
-  const pass = document.getElementById('inp-pass').value;
-  const btn = document.getElementById('btn-login');
-  const err = document.getElementById('login-error');
-
-  if (!user || !pass) { showErr('Preencha todos os campos.'); return; }
-
-  btn.innerHTML = '<span class="spinner"></span>VERIFICANDO...';
-  btn.disabled = true;
-  err.classList.remove('show');
-
-  const hash = await sha256(pass);
-  await new Promise(r => setTimeout(r, 900));
-
-  if (user === USER && hash === PASS_HASH) {
-    localStorage.setItem('htr_token', btoa(user + ':' + Date.now()));
-    localStorage.setItem('htr_user', user);
-    document.getElementById('cfg-user').textContent = user;
+async function doLogin(){
+  const user=document.getElementById('inp-user').value.trim();
+  const pass=document.getElementById('inp-pass').value;
+  const btn=document.getElementById('btn-login');
+  const err=document.getElementById('login-error');
+  if(!user||!pass){showErr('Preencha todos os campos.');return;}
+  btn.innerHTML='<span class="spinner"></span>AUTENTICANDO...';
+  btn.disabled=true;err.classList.remove('show');
+  const h=await sha256(pass);
+  await new Promise(r=>setTimeout(r,900));
+  if(h===HASH){
+    localStorage.setItem('htr_tok',btoa(user+':'+Date.now()));
+    localStorage.setItem('htr_usr',user);
+    setUser(user);
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('app-screen').classList.remove('hidden');
-    loadToggles();
-    updateStats();
+    loadToggles();updateStats();
   } else {
-    btn.innerHTML = 'ENTRAR NO SISTEMA';
-    btn.disabled = false;
+    btn.innerHTML='ENTRAR NO SISTEMA';btn.disabled=false;
     showErr('Credenciais inválidas. Tente novamente.');
   }
 }
 
-function showErr(msg) {
-  const err = document.getElementById('login-error');
-  err.textContent = '⚠ ' + msg;
-  err.classList.remove('show');
-  void err.offsetWidth;
-  err.classList.add('show');
+function setUser(u){
+  document.getElementById('cfg-user').textContent=u;
+  document.getElementById('dash-user-label').textContent='Logado como: '+u;
 }
 
-document.getElementById('inp-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-document.getElementById('inp-user').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+function showErr(m){const e=document.getElementById('login-error');e.textContent=m;e.classList.remove('show');void e.offsetWidth;e.classList.add('show');}
 
-function doLogout() {
-  localStorage.removeItem('htr_token');
-  localStorage.removeItem('htr_user');
+document.getElementById('inp-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('inp-user').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+
+function doLogout(){
+  localStorage.removeItem('htr_tok');localStorage.removeItem('htr_usr');
   document.getElementById('app-screen').classList.add('hidden');
   document.getElementById('login-screen').classList.remove('hidden');
-  document.getElementById('inp-pass').value = '';
-  document.getElementById('btn-login').innerHTML = 'ENTRAR NO SISTEMA';
-  document.getElementById('btn-login').disabled = false;
-  clearAllAnims();
+  document.getElementById('inp-pass').value='';
+  document.getElementById('btn-login').innerHTML='ENTRAR NO SISTEMA';
+  document.getElementById('btn-login').disabled=false;
 }
 
-// Check session
-(function() {
-  const tok = localStorage.getItem('htr_token');
-  const user = localStorage.getItem('htr_user');
-  if (tok && user) {
-    document.getElementById('cfg-user').textContent = user;
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('app-screen').classList.remove('hidden');
-    loadToggles();
-    updateStats();
-  }
+(()=>{
+  const tok=localStorage.getItem('htr_tok');
+  const usr=localStorage.getItem('htr_usr');
+  if(tok&&usr){setUser(usr);document.getElementById('login-screen').classList.add('hidden');document.getElementById('app-screen').classList.remove('hidden');loadToggles();updateStats();}
 })();
 
-// ===== NAVIGATION =====
-function goPage(id, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
+// ── NAV ──
+function goPage(id,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
   el.classList.add('active');
-  closeSidebar();
+  document.querySelector('.scroll-area').scrollTop=0;
+}
+function openFF(){window.open('https://ff.garena.com','_blank');}
+
+// ── TOGGLES ──
+const state={};
+function loadToggles(){
+  const saved=JSON.parse(localStorage.getItem('htr_toggles')||'{}');
+  Object.keys(saved).forEach(k=>{if(saved[k])applyOn(k);});
+}
+function save(){localStorage.setItem('htr_toggles',JSON.stringify(state));}
+function applyOn(id){
+  state[id]=true;
+  document.getElementById('fc-'+id)?.classList.add('on');
+  const s=document.getElementById('st-'+id);if(s)s.textContent='ATIVADO';
+}
+function applyOff(id){
+  state[id]=false;
+  document.getElementById('fc-'+id)?.classList.remove('on');
+  const s=document.getElementById('st-'+id);if(s)s.textContent='DESATIVADO';
+}
+function toggleFeature(id){
+  if(state[id]){applyOff(id);save();updateStats();}
+  else{showTerminal(id);}
+}
+function updateStats(){
+  document.getElementById('stat-mira').textContent=['mira-leve','mira-precisa','estabilizacao','recuo','precisao'].filter(k=>state[k]).length;
+  document.getElementById('stat-desemp').textContent=['fps','delay','estabilidade','touch','boost'].filter(k=>state[k]).length;
 }
 
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('sb-overlay').classList.toggle('open');
-}
+// ── TERMINAL ──
+const LINES={
+  'mira-leve':    ['Conectando ao módulo...','Carregando parâmetros de mira...','Aplicando suavização leve...','Módulo de mira leve ativo.'],
+  'mira-precisa': ['Conectando ao módulo...','Injetando parâmetros de precisão...','Calibrando sensores de alvo...','Mira precisa sincronizada.'],
+  'estabilizacao':['Conectando ao módulo...','Analisando micro oscilações...','Injetando filtro de estabilidade...','Tremedeira removida com sucesso.'],
+  'recuo':        ['Conectando ao módulo...','Carregando perfil de tracking...','Ajustando suavização de mira...','Estabilização de mira ativa.'],
+  'precisao':     ['Conectando ao módulo...','Detectando padrão de flick...','Removendo travas de sensibilidade...','Sensi sem congelamento pronto.'],
+  'fps':          ['Conectando ao módulo...','Analisando carga do processador...','Otimizando pipeline de renderização...','Performance máxima ativada.'],
+  'delay':        ['Conectando ao módulo...','Escaneando servidores de rede...','Reduzindo latência do sistema...','Delay minimizado com sucesso.'],
+  'estabilidade': ['Conectando ao módulo...','Verificando memória do sistema...','Aplicando perfil de estabilidade...','Sistema estabilizado e pronto.'],
+  'touch':        ['Conectando ao módulo...','Lendo dados de toque do display...','Calibrando sensibilidade touch...','Ajuste de sensibilidade aplicado.'],
+  'boost':        ['Conectando ao módulo...','Injetando parâmetros...','Sincronizando sistema...','Aplicando otimização...','Sistema pronto.'],
+};
 
-function closeSidebar() {
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sb-overlay').classList.remove('open');
-}
+let termTarget=null;
 
-function openFF() {
-  window.open('https://ff.garena.com', '_blank');
-}
+function showTerminal(id){
+  termTarget=id;
+  const modal=document.getElementById('terminal-modal');
+  const body=document.getElementById('term-body');
+  body.innerHTML='';
+  modal.classList.add('show');
 
-// ===== TOGGLES =====
-const toggleState = {};
-const animIntervals = {};
+  const lines=LINES[id]||['Conectando ao módulo...','Aplicando configurações...','Sistema pronto.'];
+  let i=0;
 
-function loadToggles() {
-  const saved = JSON.parse(localStorage.getItem('htr_toggles') || '{}');
-  Object.keys(saved).forEach(k => {
-    if (saved[k]) {
-      toggleState[k] = true;
-      const sw = document.getElementById('sw-' + k);
-      if (sw) sw.classList.add('on');
-      startAnim(k);
+  // processing row
+  const proc=document.createElement('div');
+  proc.className='term-processing';
+  proc.innerHTML='<div class="term-spinner"></div><span>PROCESSANDO...</span>';
+  body.appendChild(proc);
+
+  // cursor row
+  const curRow=document.createElement('div');
+  curRow.style.marginTop='8px';
+  curRow.innerHTML='<span class="term-cursor"></span>';
+  body.appendChild(curRow);
+
+  function next(){
+    if(i>=lines.length){
+      proc.remove();curRow.remove();
+      const done=document.createElement('div');
+      done.className='term-line';
+      done.innerHTML=`<span class="term-prompt">root@headtrick:~#</span><span class="term-text term-done-text"> ✓ Módulo ativado com sucesso.</span>`;
+      body.appendChild(done);
+      const nc=document.createElement('div');
+      nc.style.marginTop='8px';
+      nc.innerHTML='<span class="term-cursor"></span>';
+      body.appendChild(nc);
+      setTimeout(()=>{
+        modal.classList.remove('show');
+        applyOn(termTarget);save();updateStats();
+        termTarget=null;
+      },1100);
+      return;
     }
-  });
-  updateStats();
-}
-
-function saveToggles() {
-  localStorage.setItem('htr_toggles', JSON.stringify(toggleState));
-}
-
-function toggleFeature(id, row) {
-  toggleState[id] = !toggleState[id];
-  const sw = document.getElementById('sw-' + id);
-  if (toggleState[id]) {
-    sw.classList.add('on');
-    startAnim(id);
-  } else {
-    sw.classList.remove('on');
-    stopAnim(id);
-  }
-  saveToggles();
-  updateStats();
-}
-
-function updateStats() {
-  const miraKeys = ['mira-leve','mira-precisa','estabilizacao','recuo','precisao'];
-  const desempKeys = ['fps','delay','estabilidade','touch','boost'];
-  document.getElementById('stat-mira').textContent = miraKeys.filter(k => toggleState[k]).length;
-  document.getElementById('stat-desemp').textContent = desempKeys.filter(k => toggleState[k]).length;
-}
-
-// ===== ANIMATIONS =====
-const overlay = document.getElementById('anim-overlay');
-
-function clearAllAnims() {
-  Object.keys(animIntervals).forEach(k => stopAnim(k));
-  overlay.innerHTML = '';
-}
-
-function stopAnim(id) {
-  if (animIntervals[id]) { clearInterval(animIntervals[id]); delete animIntervals[id]; }
-  const el = document.getElementById('anim-' + id);
-  if (el) el.remove();
-}
-
-function startAnim(id) {
-  stopAnim(id);
-  switch(id) {
-    case 'mira-leve':    animMiraLeve(); break;
-    case 'mira-precisa': animMiraPrecisa(); break;
-    case 'estabilizacao': animEstabilizacao(); break;
-    case 'recuo':        animRecuo(); break;
-    case 'precisao':     animPrecisao(); break;
-    case 'fps':          animFPS(); break;
-    case 'delay':        animDelay(); break;
-    case 'estabilidade': animEstabilidade(); break;
-    case 'touch':        animTouch(); break;
-    case 'boost':        animBoost(); break;
-  }
-}
-
-function makeEl(id, html, style='') {
-  const d = document.createElement('div');
-  d.id = 'anim-' + id;
-  d.style.cssText = `position:fixed;pointer-events:none;z-index:60;${style}`;
-  d.innerHTML = html;
-  overlay.appendChild(d);
-  return d;
-}
-
-// MIRA LEVE — Circular crosshair pulsing
-function animMiraLeve() {
-  const el = makeEl('mira-leve', `
-    <svg width="100" height="100" viewBox="0 0 100 100">
-      <circle cx="50" cy="50" r="40" fill="none" stroke="#00f5ff" stroke-width="1.5" opacity="0.6"/>
-      <circle cx="50" cy="50" r="25" fill="none" stroke="#00f5ff" stroke-width="1" opacity="0.4"/>
-      <circle cx="50" cy="50" r="5" fill="#00f5ff" opacity="0.8"/>
-      <line x1="50" y1="10" x2="50" y2="30" stroke="#00f5ff" stroke-width="1.5" opacity="0.6"/>
-      <line x1="50" y1="70" x2="50" y2="90" stroke="#00f5ff" stroke-width="1.5" opacity="0.6"/>
-      <line x1="10" y1="50" x2="30" y2="50" stroke="#00f5ff" stroke-width="1.5" opacity="0.6"/>
-      <line x1="70" y1="50" x2="90" y2="50" stroke="#00f5ff" stroke-width="1.5" opacity="0.6"/>
-    </svg>
-  `, 'bottom:24px;right:24px;animation:crosshairPulse 1.5s ease-in-out infinite;filter:drop-shadow(0 0 12px #00f5ff);');
-  overlay.appendChild(el);
-}
-
-// MIRA PRECISA — Crosshair closing
-function animMiraPrecisa() {
-  const el = makeEl('mira-precisa', `
-    <div style="position:relative;width:80px;height:80px;">
-      <div style="position:absolute;top:0;left:50%;transform:translateX(-50%);width:2px;height:25px;background:#00f5ff;box-shadow:0 0 8px #00f5ff;animation:slideInTop 0.8s ease-out infinite alternate;"></div>
-      <div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:2px;height:25px;background:#00f5ff;box-shadow:0 0 8px #00f5ff;animation:slideInBot 0.8s ease-out infinite alternate;"></div>
-      <div style="position:absolute;left:0;top:50%;transform:translateY(-50%);height:2px;width:25px;background:#00f5ff;box-shadow:0 0 8px #00f5ff;animation:slideInLeft 0.8s ease-out infinite alternate;"></div>
-      <div style="position:absolute;right:0;top:50%;transform:translateY(-50%);height:2px;width:25px;background:#00f5ff;box-shadow:0 0 8px #00f5ff;animation:slideInRight 0.8s ease-out infinite alternate;"></div>
-      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#00f5ff;border-radius:50%;box-shadow:0 0 12px #00f5ff;"></div>
-    </div>
-    <style>
-      @keyframes slideInTop { from{transform:translateX(-50%) translateY(-8px)} to{transform:translateX(-50%) translateY(0)} }
-      @keyframes slideInBot { from{transform:translateX(-50%) translateY(8px)} to{transform:translateX(-50%) translateY(0)} }
-      @keyframes slideInLeft { from{transform:translateY(-50%) translateX(-8px)} to{transform:translateY(-50%) translateX(0)} }
-      @keyframes slideInRight { from{transform:translateY(-50%) translateX(8px)} to{transform:translateY(-50%) translateX(0)} }
-    </style>
-  `, 'bottom:24px;right:24px;filter:drop-shadow(0 0 10px #00f5ff);');
-}
-
-// ESTABILIZACAO — shake then lock
-function animEstabilizacao() {
-  const el = makeEl('estabilizacao', `
-    <svg width="80" height="80" viewBox="0 0 80 80">
-      <circle cx="40" cy="40" r="32" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.6"/>
-      <circle cx="40" cy="40" r="5" fill="#a855f7"/>
-      <line x1="40" y1="8" x2="40" y2="22" stroke="#a855f7" stroke-width="2"/>
-      <line x1="40" y1="58" x2="40" y2="72" stroke="#a855f7" stroke-width="2"/>
-      <line x1="8" y1="40" x2="22" y2="40" stroke="#a855f7" stroke-width="2"/>
-      <line x1="58" y1="40" x2="72" y2="40" stroke="#a855f7" stroke-width="2"/>
-    </svg>
-  `, 'bottom:24px;right:24px;animation:stabilize 1.2s ease-out forwards;filter:drop-shadow(0 0 10px #a855f7);');
-  animIntervals['estabilizacao'] = setInterval(() => {
-    el.style.animation = 'none';
-    void el.offsetWidth;
-    el.style.animation = 'stabilize 1.2s ease-out forwards';
-  }, 2000);
-}
-
-// RECUO — Arrow pulsing down
-function animRecuo() {
-  const el = makeEl('recuo', `
-    <svg width="60" height="80" viewBox="0 0 60 80">
-      <defs><marker id="ah" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#ffd60a"/></marker></defs>
-      <line x1="30" y1="5" x2="30" y2="65" stroke="#ffd60a" stroke-width="2.5" marker-end="url(#ah)" opacity="0.9"/>
-      <circle cx="30" cy="5" r="4" fill="#ffd60a" opacity="0.7"/>
-    </svg>
-  `, 'bottom:24px;right:24px;animation:arrowPulse 1s ease-in-out infinite;filter:drop-shadow(0 0 10px #ffd60a);');
-}
-
-// PRECISAO — Radar waves
-function animPrecisao() {
-  const el = makeEl('precisao', `<div id="radar-inner" style="position:relative;width:80px;height:80px;"></div>`, 'bottom:24px;right:24px;');
-  const inner = el.querySelector('#radar-inner');
-
-  function spawnWave() {
-    if (!document.getElementById('anim-precisao')) return;
-    const w = document.createElement('div');
-    w.style.cssText = `position:absolute;top:50%;left:50%;border:2px solid #00f5ff;border-radius:50%;width:80px;height:80px;transform:translate(-50%,-50%) scale(0);animation:radarWave 1.4s ease-out forwards;box-shadow:0 0 8px #00f5ff;`;
-    inner.appendChild(w);
-    setTimeout(() => w.remove(), 1400);
+    const ln=document.createElement('div');
+    ln.className='term-line';
+    ln.innerHTML=`<span class="term-prompt">root@headtrick:~#</span><span class="term-text"> ${lines[i]}</span>`;
+    body.insertBefore(ln,proc);
+    i++;
+    setTimeout(next,560);
   }
 
-  spawnWave();
-  animIntervals['precisao'] = setInterval(spawnWave, 700);
+  setTimeout(next,350);
 }
 
-// FPS — Counter animation
-function animFPS() {
-  const el = makeEl('fps', `<div id="fps-num" style="font-family:'JetBrains Mono',monospace;font-size:36px;font-weight:700;color:#00f5ff;text-shadow:0 0 20px #00f5ff;line-height:1;">0</div><div style="font-size:10px;color:#00c8d4;letter-spacing:0.2em;margin-top:2px;">FPS</div>`, 'bottom:24px;right:24px;text-align:center;');
-  let val = 0;
-  const num = el.querySelector('#fps-num');
-  const iv = setInterval(() => {
-    val = Math.min(val + 3, 60);
-    num.textContent = val;
-    if (val >= 60) { clearInterval(iv); spawnParticles(el); }
-  }, 30);
-  animIntervals['fps'] = iv;
-}
-
-function spawnParticles(parent) {
-  for (let i = 0; i < 10; i++) {
-    const p = document.createElement('div');
-    const angle = Math.random() * 360;
-    const dist = 30 + Math.random() * 50;
-    p.style.cssText = `position:absolute;width:4px;height:4px;background:#00f5ff;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);transition:all 0.6s ease-out;box-shadow:0 0 6px #00f5ff;`;
-    parent.appendChild(p);
-    setTimeout(() => {
-      p.style.transform = `translate(calc(-50% + ${Math.cos(angle)*dist}px), calc(-50% + ${Math.sin(angle)*dist}px))`;
-      p.style.opacity = '0';
-    }, 50);
-    setTimeout(() => p.remove(), 700);
-  }
-}
-
-// DELAY — WiFi waves
-function animDelay() {
-  makeEl('delay', `
-    <svg width="70" height="60" viewBox="0 0 70 60">
-      <path d="M35 50 L32 47 L38 47 Z" fill="#00ff88"/>
-      <path d="M22 38 Q35 28 48 38" fill="none" stroke="#00ff88" stroke-width="2" stroke-linecap="round" style="animation:wifiPulse 1s ease-in-out infinite"/>
-      <path d="M12 28 Q35 14 58 28" fill="none" stroke="#00ff88" stroke-width="2" stroke-linecap="round" style="animation:wifiPulse 1s ease-in-out infinite 0.2s"/>
-      <path d="M2 18 Q35 0 68 18" fill="none" stroke="#00ff88" stroke-width="2" stroke-linecap="round" style="animation:wifiPulse 1s ease-in-out infinite 0.4s"/>
-    </svg>
-  `, 'bottom:24px;right:24px;filter:drop-shadow(0 0 10px #00ff88);');
-}
-
-// ESTABILIDADE — Progress bar
-function animEstabilidade() {
-  const el = makeEl('estabilidade', `
-    <div style="font-size:10px;color:#00f5ff;letter-spacing:0.2em;margin-bottom:8px;text-align:center;">SISTEMA</div>
-    <div style="width:120px;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;">
-      <div id="prog-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#00f5ff,#a855f7);border-radius:3px;box-shadow:0 0 10px #00f5ff;animation:progressFill 1.5s ease-out forwards;"></div>
-    </div>
-    <div style="font-size:10px;color:#00ff88;letter-spacing:0.1em;margin-top:6px;text-align:center;" id="prog-pct">0%</div>
-  `, 'bottom:24px;right:24px;');
-  let pct = 0;
-  const iv = setInterval(() => {
-    pct = Math.min(pct + 2, 100);
-    const pctEl = el.querySelector('#prog-pct');
-    if (pctEl) pctEl.textContent = pct + '%';
-    if (pct >= 100) clearInterval(iv);
-  }, 30);
-  animIntervals['estabilidade'] = iv;
-}
-
-// TOUCH — Touch trail
-function animTouch() {
-  makeEl('touch', `
-    <div style="position:relative;width:120px;height:40px;">
-      <div style="position:absolute;top:50%;left:50%;width:16px;height:16px;border-radius:50%;background:rgba(168,85,247,0.4);border:2px solid #a855f7;transform:translate(-50%,-50%);animation:touchTrail 1.2s ease-in-out infinite;box-shadow:0 0 12px #a855f7;"></div>
-      <div style="position:absolute;top:50%;left:50%;height:2px;width:80px;background:linear-gradient(90deg,transparent,#a855f7,transparent);transform:translate(-50%,-50%);border-radius:1px;opacity:0.5;animation:touchTrail 1.2s ease-in-out infinite 0.1s;"></div>
-    </div>
-  `, 'bottom:24px;right:24px;filter:drop-shadow(0 0 10px #a855f7);');
-}
-
-// BOOST — Full screen flash
-function animBoost() {
-  const el = makeEl('boost', `
-    <div style="position:fixed;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,245,255,0.12),rgba(168,85,247,0.08),transparent 70%);animation:boostFlash 2s ease-in-out infinite;pointer-events:none;"></div>
-    <div style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:clamp(16px,4vw,28px);font-weight:700;letter-spacing:0.3em;color:#00f5ff;text-shadow:0 0 30px #00f5ff,0 0 60px #00f5ff;animation:boostFlash 1s ease-in-out infinite;">BOOST</div>
-      <div style="font-size:clamp(10px,2vw,14px);letter-spacing:0.5em;color:#a855f7;margin-top:4px;animation:boostFlash 1s ease-in-out infinite 0.5s;">ATIVADO</div>
-    </div>
-  `, 'inset:0;');
-}
+document.getElementById('terminal-modal').addEventListener('click',function(e){
+  if(e.target===this){this.classList.remove('show');termTarget=null;}
+});
 </script>
 </body>
 </html>
