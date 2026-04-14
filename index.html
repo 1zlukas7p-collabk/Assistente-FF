@@ -510,19 +510,36 @@ function goPage(id,el){
   document.querySelector('.scroll-area').scrollTop=0;
 }
 function openFF(){
-  var deepLink = 'freefire://';
-  var fallback = 'intent:///#Intent;scheme=freefire;package=com.dts.freefireth;end';
-  var start = Date.now();
-  var iframe = document.createElement('iframe');
-  iframe.style.display = 'none';
-  iframe.src = deepLink;
-  document.body.appendChild(iframe);
-  setTimeout(function(){
-    document.body.removeChild(iframe);
-    if(Date.now() - start < 2000){
-      window.location = fallback;
-    }
-  }, 1500);
+  var ua = navigator.userAgent || navigator.vendor || window.opera;
+  var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
+
+  if(isIOS){
+    // iOS: tenta deep link, se falhar manda pra App Store
+    var appStore = 'https://apps.apple.com/app/garena-free-fire/id1300146617';
+    var deepLink = 'freefire://';
+    var start = Date.now();
+    window.location = deepLink;
+    setTimeout(function(){
+      if(Date.now() - start < 2000){
+        window.location = appStore;
+      }
+    }, 1200);
+  } else {
+    // Android: usa intent com fallback para Play Store
+    var deepLink = 'freefire://';
+    var fallback = 'intent:///#Intent;scheme=freefire;package=com.dts.freefireth;end';
+    var start = Date.now();
+    var iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = deepLink;
+    document.body.appendChild(iframe);
+    setTimeout(function(){
+      document.body.removeChild(iframe);
+      if(Date.now() - start < 2000){
+        window.location = fallback;
+      }
+    }, 1500);
+  }
 }
 
 // ── TOGGLES ──
