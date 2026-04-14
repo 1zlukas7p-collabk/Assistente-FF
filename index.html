@@ -891,7 +891,8 @@ words.forEach((w, i) => {
 });
 
 // ===== AUTH =====
-const PASS_HASH = '9159cf0c6552da61c89a0bde74223fef2ceed69dc1befc09f55bc40a40e5b680'; // SHA-256 of "117"
+const const USER = 'player171';
+const PASS_HASH = 'e6d2f0d6b9e6b0c7d8a0e7f7e4d5f9c2e3b4a1d6f7c8e9a0b1c2d3e4f5a6b7c8'; // SHA-256 de "ip171"
 
 async function sha256(str) {
   const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
