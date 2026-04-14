@@ -914,7 +914,7 @@ async function doLogin() {
   const hash = await sha256(pass);
   await new Promise(r => setTimeout(r, 900));
 
-  if (hash === PASS_HASH) {
+  if (user === USER && hash === PASS_HASH) {
     localStorage.setItem('htr_token', btoa(user + ':' + Date.now()));
     localStorage.setItem('htr_user', user);
     document.getElementById('cfg-user').textContent = user;
