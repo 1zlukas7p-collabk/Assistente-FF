@@ -503,19 +503,17 @@ function goPage(id,el){
   document.querySelector('.scroll-area').scrollTop=0;
 }
 function openFF(){
-  // Android deep link
-  const android = 'intent://ff.garena.com/#Intent;scheme=https;package=com.dts.freefireth;end';
-  // iOS deep link
-  const ios = 'garena://';
+  const ua = navigator.userAgent.toLowerCase();
 
-  const ua = navigator.userAgent || navigator.vendor;
-
-  if (/android/i.test(ua)) {
-    window.location.href = android;
-  } else if (/iPad|iPhone|iPod/.test(ua)) {
-    window.location.href = ios;
+  if (ua.includes("android")) {
+    window.location.href = "intent://freefiremobile#Intent;scheme=ff;package=com.dts.freefireth;end";
+  } else if (ua.includes("iphone") || ua.includes("ipad")) {
+    window.location.href = "ff://";
+    setTimeout(() => {
+      window.location.href = "https://apps.apple.com/app/id1300146617";
+    }, 1500);
   } else {
-    window.open('https://ff.garena.com','_blank');
+    window.open("https://ff.garena.com", "_blank");
   }
 }
 
