@@ -33,8 +33,8 @@ overflow-x: hidden;
 
 #bg-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
 
-.screen { position:fixed; inset:0; z-index:10; transition:opacity .5s, visibility .5s; overflow-y:auto; }
-.screen.hidden { opacity:0; visibility:hidden; pointer-events:none; }
+.screen { position:fixed; inset:0; z-index:10; transition:opacity .5s, visibility .5s; overflow-y:auto; display:flex; background:var(–bg); }
+.screen.hidden { opacity:0; visibility:hidden; pointer-events:none; display:none; }
 
 /* ══ LOGIN ══ */
 #login-screen {
@@ -310,7 +310,7 @@ animation:termIn .35s cubic-bezier(.16,1,.3,1);
 
 <!-- APP -->
 
-<div class="screen hidden" id="app-screen" style="display:flex;flex-direction:column;height:100vh;">
+<div class="screen hidden" id="app-screen" style="flex-direction:column;height:100vh;background:var(--bg);">
 
   <div class="topnav">
     <div class="topnav-brand">HEADTRICK RYUZN</div>
@@ -469,8 +469,11 @@ async function doLogin(){
     localStorage.setItem('htr_tok',btoa(user+':'+Date.now()));
     localStorage.setItem('htr_usr',user);
     setUser(user);
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('app-screen').classList.remove('hidden');
+    const ls=document.getElementById('login-screen');
+    const as=document.getElementById('app-screen');
+    ls.classList.add('hidden');
+    as.classList.remove('hidden');
+    as.style.display='flex';
     loadToggles();updateStats();
   } else {
     btn.innerHTML='ENTRAR NO SISTEMA';btn.disabled=false;
@@ -490,8 +493,10 @@ document.getElementById('inp-user').addEventListener('keydown',e=>{if(e.key==='E
 
 function doLogout(){
   localStorage.removeItem('htr_tok');localStorage.removeItem('htr_usr');
-  document.getElementById('app-screen').classList.add('hidden');
-  document.getElementById('login-screen').classList.remove('hidden');
+  const as=document.getElementById('app-screen');
+  const ls=document.getElementById('login-screen');
+  as.classList.add('hidden');as.style.display='none';
+  ls.classList.remove('hidden');ls.style.display='flex';
   document.getElementById('inp-pass').value='';
   document.getElementById('btn-login').innerHTML='ENTRAR NO SISTEMA';
   document.getElementById('btn-login').disabled=false;
@@ -500,7 +505,15 @@ function doLogout(){
 (()=>{
   const tok=localStorage.getItem('htr_tok');
   const usr=localStorage.getItem('htr_usr');
-  if(tok&&usr){setUser(usr);document.getElementById('login-screen').classList.add('hidden');document.getElementById('app-screen').classList.remove('hidden');loadToggles();updateStats();}
+  if(tok&&usr){
+    setUser(usr);
+    const ls=document.getElementById('login-screen');
+    const as=document.getElementById('app-screen');
+    ls.classList.add('hidden');
+    as.classList.remove('hidden');
+    as.style.display='flex';
+    loadToggles();updateStats();
+  }
 })();
 
 // ── NAV ──
