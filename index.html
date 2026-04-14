@@ -4,16 +4,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#0a0a0f">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Headtrick Ryuzn</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
 :root {
-color-scheme: dark;
 –bg: #0a0a0f;
 –purple: #b44dff;
 –purple2: #7c1fa8;
@@ -29,12 +25,10 @@ color-scheme: dark;
 
 body {
 font-family: var(–font);
-background: var(–bg) !important;
-background-color: #0a0a0f !important;
+background: var(–bg);
 color: var(–text);
 min-height: 100vh;
 overflow-x: hidden;
--webkit-text-size-adjust: 100%;
 }
 
 #bg-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
@@ -411,7 +405,7 @@ animation:termIn .35s cubic-bezier(.16,1,.3,1);
   <div class="cfg-section">
     <div class="cfg-row"><span>Versão</span><span class="cfg-val">2.4.1</span></div>
     <div class="cfg-row"><span>Usuário</span><span class="cfg-val" id="cfg-user">—</span></div>
-    <div class="cfg-row"><span>Plataforma</span><span class="badge-sm">Android</span></div>
+    <div class="cfg-row"><span>Plataforma</span><span class="badge-sm" id="cfg-platform">—</span></div>
     <div class="cfg-row"><span>Autenticação</span><span class="badge-sm">SHA-256</span></div>
     <div class="cfg-row"><span>Sessão</span><span class="badge-sm">Ativa</span></div>
   </div>
@@ -446,6 +440,16 @@ animation:termIn .35s cubic-bezier(.16,1,.3,1);
 </div>
 
 <script>
+// ── PLATFORM DETECTION ──
+(function(){
+  var ua=navigator.userAgent||navigator.vendor||window.opera;
+  var el=document.getElementById('cfg-platform');
+  if(!el)return;
+  if(/android/i.test(ua)){el.textContent='Android';}
+  else if(/iPad|iPhone|iPod/.test(ua)&&!window.MSStream){el.textContent='iOS';}
+  else{el.textContent='Desktop';}
+})();
+
 // ── PARTICLES ──
 const canvas=document.getElementById('bg-canvas');
 const ctx=canvas.getContext('2d');
@@ -516,35 +520,18 @@ function goPage(id,el){
   document.querySelector('.scroll-area').scrollTop=0;
 }
 function openFF(){
-  var ua = navigator.userAgent || navigator.vendor || window.opera;
-  var isIOS = /iPad|iPhone|iPod/.test(ua) && !window.MSStream;
-
-  if(isIOS){
-    // iOS: tenta deep link, se falhar manda pra App Store
-    var appStore = 'https://apps.apple.com/app/garena-free-fire/id1300146617';
-    var deepLink = 'freefire://';
-    var start = Date.now();
-    window.location = deepLink;
-    setTimeout(function(){
-      if(Date.now() - start < 2000){
-        window.location = appStore;
-      }
-    }, 1200);
+  var ua=navigator.userAgent||navigator.vendor||window.opera;
+  if(/android/i.test(ua)){
+    // Android: intent para abrir o Free Fire direto no app
+    var intent='intent://com.dts.freefireth/#Intent;scheme=freefire;package=com.dts.freefireth;end';
+    var link=document.createElement('a');
+    link.href=intent;link.click();
+  } else if(/iPad|iPhone|iPod/.test(ua)&&!window.MSStream){
+    // iOS: URL scheme do Free Fire
+    window.location.href='freefiremax://';
+    setTimeout(function(){window.location.href='https://apps.apple.com/app/garena-free-fire/id1300146617';},1500);
   } else {
-    // Android: usa intent com fallback para Play Store
-    var deepLink = 'freefire://';
-    var fallback = 'intent:///#Intent;scheme=freefire;package=com.dts.freefireth;end';
-    var start = Date.now();
-    var iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    iframe.src = deepLink;
-    document.body.appendChild(iframe);
-    setTimeout(function(){
-      document.body.removeChild(iframe);
-      if(Date.now() - start < 2000){
-        window.location = fallback;
-      }
-    }, 1500);
+    window.open('https://ff.garena.com','_blank');
   }
 }
 
