@@ -255,6 +255,18 @@ body {
 .term-footer{display:flex;justify-content:space-between;padding:10px 20px;border-top:1px solid rgba(180,77,255,0.1);font-family:var(--font-mono);font-size:9px;color:rgba(139,122,158,0.45);letter-spacing:0.15em;}
 
 .info-card{background:rgba(30,8,50,0.6);border:1px solid rgba(180,77,255,0.18);border-radius:18px;padding:18px;margin-bottom:12px;display:flex;align-items:center;gap:16px;}
+
+.fc-icon svg {
+  width:22px;
+  height:22px;
+  stroke: var(--purple);
+  transition: transform .3s ease, filter .3s ease;
+}
+.feature-card.on .fc-icon svg {
+  transform: scale(1.15) rotate(3deg);
+  filter: drop-shadow(0 0 10px rgba(180,77,255,0.9));
+}
+
 </style>
 </head>
 <body>
@@ -296,7 +308,7 @@ body {
       <button class="btn-login" id="btn-login" onclick="doLogin()">ENTRAR NO SISTEMA</button>
       <div class="login-error" id="login-error">Credenciais inválidas. Tente novamente.</div>
       <div class="login-footer">
-        <span>🔒 SERVIDORES ATIVOS</span><span>STATUS: ONLINE</span>
+        <span><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg> SERVIDORES ATIVOS</span><span>STATUS: ONLINE</span>
       </div>
     </div>
   </div>
@@ -320,7 +332,7 @@ body {
         <div class="stat-box"><div class="stat-num" id="stat-desemp">0</div><div class="stat-lbl">Desemp. Ativas</div></div>
       </div>
       <div class="info-card">
-        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></div>
+        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 3l7 4v5c0 5-3.5 7.5-7 9-3.5-1.5-7-4-7-9V7l7-4z"/></svg></div>
         <div class="fc-info">
           <div class="fc-name">Sistema Online</div>
           <div class="fc-desc" id="dash-user-label">Bem-vindo ao painel de suporte</div>
@@ -337,27 +349,27 @@ body {
     <div class="page" id="page-mira">
       <div class="page-title">Mira</div>
       <div class="feature-card" id="fc-mira-leve" onclick="toggleFeature('mira-leve')">
-        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2"/></svg></div>
         <div class="fc-info"><div class="fc-name">Assistência de Mira Leve</div><div class="fc-desc">Suaviza movimentos bruscos da mira.</div></div>
         <div class="fc-toggle"><div class="fc-status" id="st-mira-leve">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
       <div class="feature-card" id="fc-mira-precisa" onclick="toggleFeature('mira-precisa')">
-        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><line x1="20" y1="20" x2="16.5" y2="16.5"/></svg></div>
         <div class="fc-info"><div class="fc-name">Assistência de Mira Precisa</div><div class="fc-desc">Foco aumentado em alvos em movimento.</div></div>
         <div class="fc-toggle"><div class="fc-status" id="st-mira-precisa">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
       <div class="feature-card" id="fc-estabilizacao" onclick="toggleFeature('estabilizacao')">
-        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></div>
+        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div>
         <div class="fc-info"><div class="fc-name">Remover Tremedeira</div><div class="fc-desc">Reduz micro oscilações da mira.</div></div>
         <div class="fc-toggle"><div class="fc-status" id="st-estabilizacao">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
       <div class="feature-card" id="fc-recuo" onclick="toggleFeature('recuo')">
-        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></div>
+        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg></div>
         <div class="fc-info"><div class="fc-name">Estabilizar Mira</div><div class="fc-desc">Ajusta suavização de tracking.</div></div>
         <div class="fc-toggle"><div class="fc-status" id="st-recuo">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
       <div class="feature-card" id="fc-precisao" onclick="toggleFeature('precisao')">
-        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 13l6 6 10-10-6-6-10 10z"/></svg></div>
+        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5 19c0-5 4-9 9-9h2l3-3v2c0 5-4 9-9 9H5z"/></svg></div>
         <div class="fc-info"><div class="fc-name">Sensi Sem Congelamento</div><div class="fc-desc">Remove travamentos durante flick.</div></div>
         <div class="fc-toggle"><div class="fc-status" id="st-precisao">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
@@ -367,27 +379,27 @@ body {
     <div class="page" id="page-desempenho">
       <div class="page-title">Desempenho</div>
       <div class="feature-card" id="fc-fps" onclick="toggleFeature('fps')">
-        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></div>
+        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><polyline points="4,14 9,9 13,13 20,6"/></svg></div>
         <div class="fc-info"><div class="fc-name">Otimização de FPS</div><div class="fc-desc">Maximiza quadros por segundo.</div></div>
         <div class="fc-toggle"><div class="fc-status" id="st-fps">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
       <div class="feature-card" id="fc-delay" onclick="toggleFeature('delay')">
-        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M2 8c5-5 15-5 20 0"/></svg></div>
         <div class="fc-info"><div class="fc-name">Redução de Delay</div><div class="fc-desc">Otimiza latência de rede.</div></div>
         <div class="fc-toggle"><div class="fc-status" id="st-delay">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
       <div class="feature-card" id="fc-estabilidade" onclick="toggleFeature('estabilidade')">
-        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></div>
+        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="2"/></svg></div>
         <div class="fc-info"><div class="fc-name">Estabilidade de Sistema</div><div class="fc-desc">Mantém desempenho constante.</div></div>
         <div class="fc-toggle"><div class="fc-status" id="st-estabilidade">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
       <div class="feature-card" id="fc-touch" onclick="toggleFeature('touch')">
-        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/></svg></div>
         <div class="fc-info"><div class="fc-name">Ajuste de Sensibilidade Touch</div><div class="fc-desc">Calibra resposta ao toque.</div></div>
         <div class="fc-toggle"><div class="fc-status" id="st-touch">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
       <div class="feature-card" id="fc-boost" onclick="toggleFeature('boost')">
-        <div class="fc-icon"><svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M4 13l6 6 10-10-6-6-10 10z"/></svg></div>
+        <div class="fc-icon">🏆</div>
         <div class="fc-info"><div class="fc-name">Modo Desempenho Máximo</div><div class="fc-desc">Ativa todos os boosters do sistema.</div></div>
         <div class="fc-toggle"><div class="fc-status" id="st-boost">DESATIVADO</div><div class="toggle-sw"></div></div>
       </div>
@@ -502,20 +514,7 @@ function goPage(id,el){
   el.classList.add('active');
   document.querySelector('.scroll-area').scrollTop=0;
 }
-function openFF(){
-  const ua = navigator.userAgent.toLowerCase();
-
-  if (ua.includes("android")) {
-    window.location.href = "intent://freefiremobile#Intent;scheme=ff;package=com.dts.freefireth;end";
-  } else if (ua.includes("iphone") || ua.includes("ipad")) {
-    window.location.href = "ff://";
-    setTimeout(() => {
-      window.location.href = "https://apps.apple.com/app/id1300146617";
-    }, 1500);
-  } else {
-    window.open("https://ff.garena.com", "_blank");
-  }
-}
+function openFF(){window.open('https://ff.garena.com','_blank');}
 
 // ── TOGGLES ──
 const state={};
