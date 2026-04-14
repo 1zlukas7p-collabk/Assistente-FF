@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -10,25 +9,25 @@
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
 :root {
-–bg: #0a0a0f;
-–purple: #b44dff;
-–purple2: #7c1fa8;
-–purple-dim: rgba(180,77,255,0.15);
-–purple-border: rgba(180,77,255,0.35);
-–card-bg: rgba(40,10,60,0.55);
-–text: #f0e8ff;
-–muted: #8b7a9e;
-–green: #00ff88;
-–font-mono: ‘JetBrains Mono’, monospace;
-–font: ‘Sora’, sans-serif;
+  --bg: #0a0a0f;
+  --purple: #b44dff;
+  --purple2: #7c1fa8;
+  --purple-dim: rgba(180,77,255,0.15);
+  --purple-border: rgba(180,77,255,0.35);
+  --card-bg: rgba(40,10,60,0.55);
+  --text: #f0e8ff;
+  --muted: #8b7a9e;
+  --green: #00ff88;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font: 'Sora', sans-serif;
 }
 
 body {
-font-family: var(–font);
-background: var(–bg);
-color: var(–text);
-min-height: 100vh;
-overflow-x: hidden;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 #bg-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
@@ -38,74 +37,74 @@ overflow-x: hidden;
 
 /* ══ LOGIN ══ */
 #login-screen {
-display:flex; flex-direction:column; align-items:center; justify-content:center;
-padding:32px 20px;
-background: radial-gradient(ellipse at 50% 30%, rgba(120,30,180,0.35) 0%, transparent 65%),
-radial-gradient(ellipse at 80% 80%, rgba(80,0,140,0.2) 0%, transparent 50%),
-var(–bg);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:32px 20px;
+  background: radial-gradient(ellipse at 50% 30%, rgba(120,30,180,0.35) 0%, transparent 65%),
+              radial-gradient(ellipse at 80% 80%, rgba(80,0,140,0.2) 0%, transparent 50%),
+              var(--bg);
 }
 
 .login-title {
-font-size: clamp(26px,7vw,40px);
-font-weight:800; letter-spacing:0.04em; text-align:center;
-color: var(–purple); font-style:italic;
-text-shadow: 0 0 30px rgba(180,77,255,0.8), 0 0 60px rgba(180,77,255,0.4);
-margin-bottom:6px;
-animation: glitchTitle 4s infinite;
+  font-size: clamp(26px,7vw,40px);
+  font-weight:800; letter-spacing:0.04em; text-align:center;
+  color: var(--purple); font-style:italic;
+  text-shadow: 0 0 30px rgba(180,77,255,0.8), 0 0 60px rgba(180,77,255,0.4);
+  margin-bottom:6px;
+  animation: glitchTitle 4s infinite;
 }
 @keyframes glitchTitle {
-0%,95%,100%{text-shadow:0 0 30px rgba(180,77,255,0.8),0 0 60px rgba(180,77,255,0.4);transform:none}
-96%{text-shadow:-2px 0 #ff00ff,2px 0 #00ffff;transform:translateX(-2px)}
-97%{text-shadow:2px 0 #ff00ff,-2px 0 #00ffff;transform:translateX(2px)}
-98%{text-shadow:none;transform:none}
+  0%,95%,100%{text-shadow:0 0 30px rgba(180,77,255,0.8),0 0 60px rgba(180,77,255,0.4);transform:none}
+  96%{text-shadow:-2px 0 #ff00ff,2px 0 #00ffff;transform:translateX(-2px)}
+  97%{text-shadow:2px 0 #ff00ff,-2px 0 #00ffff;transform:translateX(2px)}
+  98%{text-shadow:none;transform:none}
 }
 
 .login-sub {
-font-size:11px; letter-spacing:0.35em; color:var(–muted);
-text-align:center; text-transform:uppercase; margin-bottom:32px;
+  font-size:11px; letter-spacing:0.35em; color:var(--muted);
+  text-align:center; text-transform:uppercase; margin-bottom:32px;
 }
 
 .login-card {
-width:min(400px,92vw);
-background: linear-gradient(145deg, rgba(80,20,120,0.7), rgba(40,5,70,0.8));
-border:1px solid var(–purple-border); border-radius:24px; padding:32px 28px;
-box-shadow: 0 0 60px rgba(140,40,220,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
-backdrop-filter:blur(16px);
-animation: cardIn .7s cubic-bezier(.16,1,.3,1);
+  width:min(400px,92vw);
+  background: linear-gradient(145deg, rgba(80,20,120,0.7), rgba(40,5,70,0.8));
+  border:1px solid var(--purple-border); border-radius:24px; padding:32px 28px;
+  box-shadow: 0 0 60px rgba(140,40,220,0.25), inset 0 1px 0 rgba(255,255,255,0.06);
+  backdrop-filter:blur(16px);
+  animation: cardIn .7s cubic-bezier(.16,1,.3,1);
 }
 @keyframes cardIn {
-from{opacity:0;transform:translateY(24px) scale(.97);filter:blur(6px)}
-to{opacity:1;transform:none;filter:none}
+  from{opacity:0;transform:translateY(24px) scale(.97);filter:blur(6px)}
+  to{opacity:1;transform:none;filter:none}
 }
 
-.field-label { font-size:10px; letter-spacing:0.25em; color:var(–muted); text-transform:uppercase; margin-bottom:8px; margin-top:20px; }
+.field-label { font-size:10px; letter-spacing:0.25em; color:var(--muted); text-transform:uppercase; margin-bottom:8px; margin-top:20px; }
 .field-label:first-child { margin-top:0; }
 
 .field-input {
-width:100%; display:flex; align-items:center; gap:10px;
-background:rgba(0,0,0,0.35); border:1px solid rgba(180,77,255,0.25);
-border-radius:12px; padding:13px 16px; transition:all .3s;
+  width:100%; display:flex; align-items:center; gap:10px;
+  background:rgba(0,0,0,0.35); border:1px solid rgba(180,77,255,0.25);
+  border-radius:12px; padding:13px 16px; transition:all .3s;
 }
-.field-input:focus-within { border-color:var(–purple); box-shadow:0 0 20px rgba(180,77,255,0.2); }
-.field-input svg { width:16px;height:16px;color:var(–muted);flex-shrink:0; }
-.field-input input { flex:1;background:none;border:none;outline:none;color:var(–text);font-family:var(–font);font-size:15px; }
+.field-input:focus-within { border-color:var(--purple); box-shadow:0 0 20px rgba(180,77,255,0.2); }
+.field-input svg { width:16px;height:16px;color:var(--muted);flex-shrink:0; }
+.field-input input { flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--font);font-size:15px; }
 .field-input input::placeholder { color:rgba(139,122,158,0.5); }
 
 .btn-login {
-width:100%; margin-top:24px; padding:15px;
-background:linear-gradient(135deg,var(–purple2),var(–purple));
-border:none; border-radius:14px; color:#fff;
-font-family:var(–font); font-size:13px; font-weight:700;
-letter-spacing:0.2em; text-transform:uppercase; cursor:pointer;
-transition:all .3s; box-shadow:0 4px 24px rgba(140,40,220,0.4);
+  width:100%; margin-top:24px; padding:15px;
+  background:linear-gradient(135deg,var(--purple2),var(--purple));
+  border:none; border-radius:14px; color:#fff;
+  font-family:var(--font); font-size:13px; font-weight:700;
+  letter-spacing:0.2em; text-transform:uppercase; cursor:pointer;
+  transition:all .3s; box-shadow:0 4px 24px rgba(140,40,220,0.4);
 }
 .btn-login:hover{transform:translateY(-1px);box-shadow:0 6px 30px rgba(180,77,255,0.5);}
 .btn-login:disabled{opacity:.6;cursor:default;transform:none;}
 
 .login-error {
-margin-top:14px; padding:10px 14px;
-background:rgba(255,50,100,0.1); border:1px solid rgba(255,50,100,0.3);
-border-radius:10px; color:#ff6688; font-size:12px; text-align:center; display:none;
+  margin-top:14px; padding:10px 14px;
+  background:rgba(255,50,100,0.1); border:1px solid rgba(255,50,100,0.3);
+  border-radius:10px; color:#ff6688; font-size:12px; text-align:center; display:none;
 }
 .login-error.show{display:block;animation:shake .4s;}
 @keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
@@ -119,27 +118,27 @@ border-radius:10px; color:#ff6688; font-size:12px; text-align:center; display:no
 #app-screen { display:flex; flex-direction:column; height:100vh; }
 
 .topnav {
-position:sticky; top:0; z-index:50;
-display:flex; align-items:center; padding:14px 20px;
-background:rgba(10,10,15,0.92); backdrop-filter:blur(12px);
-border-bottom:1px solid rgba(180,77,255,0.1); gap:12px;
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; padding:14px 20px;
+  background:rgba(10,10,15,0.92); backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(180,77,255,0.1); gap:12px;
 }
-.topnav-brand { flex:1; font-size:16px; font-weight:800; font-style:italic; color:var(–purple); text-shadow:0 0 16px rgba(180,77,255,0.6); letter-spacing:0.04em; }
-.topnav-badge { font-size:9px; letter-spacing:0.2em; color:var(–muted); text-transform:uppercase; }
+.topnav-brand { flex:1; font-size:16px; font-weight:800; font-style:italic; color:var(--purple); text-shadow:0 0 16px rgba(180,77,255,0.6); letter-spacing:0.04em; }
+.topnav-badge { font-size:9px; letter-spacing:0.2em; color:var(--muted); text-transform:uppercase; }
 
 .tabbar {
-display:flex; background:rgba(10,10,15,0.95);
-border-top:1px solid rgba(180,77,255,0.1);
-flex-shrink:0;
+  display:flex; background:rgba(10,10,15,0.95);
+  border-top:1px solid rgba(180,77,255,0.1);
+  flex-shrink:0;
 }
 .tab {
-flex:1; display:flex; flex-direction:column; align-items:center;
-gap:4px; padding:10px 4px 12px; cursor:pointer; transition:all .2s;
-color:var(–muted); font-size:10px; font-weight:600; letter-spacing:0.05em;
-border-top:2px solid transparent;
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  gap:4px; padding:10px 4px 12px; cursor:pointer; transition:all .2s;
+  color:var(--muted); font-size:10px; font-weight:600; letter-spacing:0.05em;
+  border-top:2px solid transparent;
 }
 .tab svg{width:20px;height:20px;}
-.tab.active{color:var(–purple);border-top-color:var(–purple);}
+.tab.active{color:var(--purple);border-top-color:var(--purple);}
 
 .scroll-area { flex:1; overflow-y:auto; }
 
@@ -148,56 +147,56 @@ border-top:2px solid transparent;
 @keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
 .page-title {
-font-size:13px; font-weight:700; letter-spacing:0.2em;
-text-transform:uppercase; color:var(–purple); margin-bottom:16px;
-display:flex; align-items:center; gap:8px;
+  font-size:13px; font-weight:700; letter-spacing:0.2em;
+  text-transform:uppercase; color:var(--purple); margin-bottom:16px;
+  display:flex; align-items:center; gap:8px;
 }
-.page-title::before{content:’’;display:inline-block;width:3px;height:16px;background:var(–purple);border-radius:2px;box-shadow:0 0 8px var(–purple);}
+.page-title::before{content:'';display:inline-block;width:3px;height:16px;background:var(--purple);border-radius:2px;box-shadow:0 0 8px var(--purple);}
 
 /* FEATURE CARDS */
 .feature-card {
-background:rgba(30,8,50,0.6); border:1px solid rgba(180,77,255,0.18);
-border-radius:18px; padding:18px; margin-bottom:12px;
-display:flex; align-items:center; gap:16px; cursor:pointer;
-transition:all .25s; position:relative; overflow:hidden; user-select:none;
+  background:rgba(30,8,50,0.6); border:1px solid rgba(180,77,255,0.18);
+  border-radius:18px; padding:18px; margin-bottom:12px;
+  display:flex; align-items:center; gap:16px; cursor:pointer;
+  transition:all .25s; position:relative; overflow:hidden; user-select:none;
 }
 .feature-card:active{transform:scale(.98);}
 .feature-card.on {
-border-color:rgba(180,77,255,0.5);
-box-shadow:0 0 28px rgba(140,40,220,0.22);
-background:rgba(50,10,80,0.65);
-animation:cardGlow 2.5s ease-in-out infinite;
+  border-color:rgba(180,77,255,0.5);
+  box-shadow:0 0 28px rgba(140,40,220,0.22);
+  background:rgba(50,10,80,0.65);
+  animation:cardGlow 2.5s ease-in-out infinite;
 }
 @keyframes cardGlow{0%,100%{box-shadow:0 0 20px rgba(140,40,220,0.18)}50%{box-shadow:0 0 36px rgba(140,40,220,0.4)}}
 
 .fc-icon {
-width:48px;height:48px; border-radius:14px;
-background:rgba(180,77,255,0.12); border:1px solid rgba(180,77,255,0.2);
-display:flex;align-items:center;justify-content:center;
-flex-shrink:0; font-size:22px; transition:all .3s;
+  width:48px;height:48px; border-radius:14px;
+  background:rgba(180,77,255,0.12); border:1px solid rgba(180,77,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0; font-size:22px; transition:all .3s;
 }
 .feature-card.on .fc-icon{background:rgba(180,77,255,0.22);box-shadow:0 0 16px rgba(180,77,255,0.3);}
 
 .fc-info{flex:1;min-width:0;}
 .fc-name{font-size:15px;font-weight:700;margin-bottom:4px;}
-.fc-desc{font-size:12px;color:var(–muted);line-height:1.4;}
+.fc-desc{font-size:12px;color:var(--muted);line-height:1.4;}
 
 .fc-toggle{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px;}
-.fc-status{font-size:9px;letter-spacing:0.15em;font-weight:700;color:var(–muted);text-transform:uppercase;}
-.feature-card.on .fc-status{color:var(–purple);}
+.fc-status{font-size:9px;letter-spacing:0.15em;font-weight:700;color:var(--muted);text-transform:uppercase;}
+.feature-card.on .fc-status{color:var(--purple);}
 
 .toggle-sw{width:46px;height:26px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:13px;position:relative;transition:all .3s;}
-.toggle-sw::after{content:’’;position:absolute;width:20px;height:20px;background:#6b6b7a;border-radius:50%;top:2px;left:2px;transition:all .3s cubic-bezier(.16,1,.3,1);box-shadow:0 2px 4px rgba(0,0,0,0.4);}
-.feature-card.on .toggle-sw{background:rgba(180,77,255,0.3);border-color:var(–purple);box-shadow:0 0 12px rgba(180,77,255,0.3);}
-.feature-card.on .toggle-sw::after{left:calc(100% - 22px);background:var(–purple);box-shadow:0 0 8px var(–purple);}
+.toggle-sw::after{content:'';position:absolute;width:20px;height:20px;background:#6b6b7a;border-radius:50%;top:2px;left:2px;transition:all .3s cubic-bezier(.16,1,.3,1);box-shadow:0 2px 4px rgba(0,0,0,0.4);}
+.feature-card.on .toggle-sw{background:rgba(180,77,255,0.3);border-color:var(--purple);box-shadow:0 0 12px rgba(180,77,255,0.3);}
+.feature-card.on .toggle-sw::after{left:calc(100% - 22px);background:var(--purple);box-shadow:0 0 8px var(--purple);}
 
 /* STATS */
 .stats-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
 .stat-box{background:rgba(30,8,50,0.6);border:1px solid rgba(180,77,255,0.18);border-radius:16px;padding:16px;text-align:center;}
-.stat-num{font-family:var(–font-mono);font-size:32px;font-weight:700;color:var(–purple);text-shadow:0 0 20px rgba(180,77,255,0.5);line-height:1;}
-.stat-lbl{font-size:10px;color:var(–muted);margin-top:6px;letter-spacing:0.1em;text-transform:uppercase;}
+.stat-num{font-family:var(--font-mono);font-size:32px;font-weight:700;color:var(--purple);text-shadow:0 0 20px rgba(180,77,255,0.5);line-height:1;}
+.stat-lbl{font-size:10px;color:var(--muted);margin-top:6px;letter-spacing:0.1em;text-transform:uppercase;}
 
-.btn-ff{width:100%;margin-top:8px;padding:17px;background:linear-gradient(135deg,rgba(180,77,255,0.2),rgba(120,30,180,0.3));border:1px solid var(–purple-border);border-radius:16px;color:var(–purple);font-family:var(–font);font-size:14px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;animation:ffPulse 2.5s ease-in-out infinite;transition:all .3s;}
+.btn-ff{width:100%;margin-top:8px;padding:17px;background:linear-gradient(135deg,rgba(180,77,255,0.2),rgba(120,30,180,0.3));border:1px solid var(--purple-border);border-radius:16px;color:var(--purple);font-family:var(--font);font-size:14px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;animation:ffPulse 2.5s ease-in-out infinite;transition:all .3s;}
 .btn-ff:hover{background:rgba(180,77,255,0.25);}
 @keyframes ffPulse{0%,100%{box-shadow:0 0 20px rgba(180,77,255,0.15)}50%{box-shadow:0 0 40px rgba(180,77,255,0.4)}}
 .btn-ff svg{width:18px;height:18px;}
@@ -205,29 +204,29 @@ flex-shrink:0; font-size:22px; transition:all .3s;
 .cfg-section{background:rgba(30,8,50,0.6);border:1px solid rgba(180,77,255,0.18);border-radius:18px;padding:16px 20px;margin-bottom:12px;}
 .cfg-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;}
 .cfg-row:last-child{border:none;}
-.cfg-val{font-size:11px;color:var(–purple);font-family:var(–font-mono);}
-.badge-sm{padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:0.1em;background:rgba(180,77,255,0.15);color:var(–purple);border:1px solid rgba(180,77,255,0.25);}
+.cfg-val{font-size:11px;color:var(--purple);font-family:var(--font-mono);}
+.badge-sm{padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:0.1em;background:rgba(180,77,255,0.15);color:var(--purple);border:1px solid rgba(180,77,255,0.25);}
 
-.btn-logout{width:100%;margin-top:4px;padding:14px;background:rgba(255,50,100,0.1);border:1px solid rgba(255,50,100,0.3);border-radius:14px;color:#ff6688;font-family:var(–font);font-size:13px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s;}
+.btn-logout{width:100%;margin-top:4px;padding:14px;background:rgba(255,50,100,0.1);border:1px solid rgba(255,50,100,0.3);border-radius:14px;color:#ff6688;font-family:var(--font);font-size:13px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .3s;}
 .btn-logout:hover{background:rgba(255,50,100,0.18);}
 .btn-logout svg{width:16px;height:16px;}
 
 /* ══ TERMINAL MODAL ══ */
 #terminal-modal {
-position:fixed;inset:0;z-index:200;
-display:flex;align-items:center;justify-content:center;
-background:rgba(0,0,0,0.78); backdrop-filter:blur(8px);
-opacity:0;visibility:hidden;transition:all .3s;padding:20px;
+  position:fixed;inset:0;z-index:200;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.78); backdrop-filter:blur(8px);
+  opacity:0;visibility:hidden;transition:all .3s;padding:20px;
 }
 #terminal-modal.show{opacity:1;visibility:visible;}
 
 .terminal-box {
-width:min(440px,95vw);
-background:#0d0d14;
-border:1px solid rgba(180,77,255,0.4);
-border-radius:20px;overflow:hidden;
-box-shadow:0 0 60px rgba(140,40,220,0.35),0 0 120px rgba(140,40,220,0.15);
-animation:termIn .35s cubic-bezier(.16,1,.3,1);
+  width:min(440px,95vw);
+  background:#0d0d14;
+  border:1px solid rgba(180,77,255,0.4);
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 0 60px rgba(140,40,220,0.35),0 0 120px rgba(140,40,220,0.15);
+  animation:termIn .35s cubic-bezier(.16,1,.3,1);
 }
 @keyframes termIn{from{opacity:0;transform:scale(.9) translateY(24px)}to{opacity:1;transform:none}}
 
@@ -237,34 +236,32 @@ animation:termIn .35s cubic-bezier(.16,1,.3,1);
 .term-dot:nth-child(1){background:#ff5f57;}
 .term-dot:nth-child(2){background:#febc2e;}
 .term-dot:nth-child(3){background:#28c840;}
-.term-title-bar{flex:1;text-align:center;font-family:var(–font-mono);font-size:11px;font-style:italic;color:var(–purple);letter-spacing:0.15em;line-height:1.4;}
+.term-title-bar{flex:1;text-align:center;font-family:var(--font-mono);font-size:11px;font-style:italic;color:var(--purple);letter-spacing:0.15em;line-height:1.4;}
 
-.term-body{padding:20px;font-family:var(–font-mono);font-size:13px;min-height:200px;}
+.term-body{padding:20px;font-family:var(--font-mono);font-size:13px;min-height:200px;}
 
 .term-line{display:flex;gap:8px;margin-bottom:10px;opacity:0;animation:lineIn .25s ease forwards;}
 @keyframes lineIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:none}}
-.term-prompt{color:var(–purple);font-weight:700;white-space:nowrap;flex-shrink:0;}
-.term-text{color:var(–text);line-height:1.5;word-break:break-word;}
-.term-done-text{color:var(–green);font-weight:700;}
+.term-prompt{color:var(--purple);font-weight:700;white-space:nowrap;flex-shrink:0;}
+.term-text{color:var(--text);line-height:1.5;word-break:break-word;}
+.term-done-text{color:var(--green);font-weight:700;}
 
-.term-processing{display:flex;align-items:center;gap:8px;font-size:11px;color:var(–purple);letter-spacing:0.15em;margin-top:4px;}
-.term-spinner{width:14px;height:14px;border:2px solid rgba(180,77,255,0.3);border-top-color:var(–purple);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
+.term-processing{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--purple);letter-spacing:0.15em;margin-top:4px;}
+.term-spinner{width:14px;height:14px;border:2px solid rgba(180,77,255,0.3);border-top-color:var(--purple);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0;}
 
-.term-cursor{display:inline-block;width:8px;height:15px;background:var(–purple);margin-left:4px;vertical-align:middle;animation:blink .8s step-end infinite;}
+.term-cursor{display:inline-block;width:8px;height:15px;background:var(--purple);margin-left:4px;vertical-align:middle;animation:blink .8s step-end infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-.term-footer{display:flex;justify-content:space-between;padding:10px 20px;border-top:1px solid rgba(180,77,255,0.1);font-family:var(–font-mono);font-size:9px;color:rgba(139,122,158,0.45);letter-spacing:0.15em;}
+.term-footer{display:flex;justify-content:space-between;padding:10px 20px;border-top:1px solid rgba(180,77,255,0.1);font-family:var(--font-mono);font-size:9px;color:rgba(139,122,158,0.45);letter-spacing:0.15em;}
 
 .info-card{background:rgba(30,8,50,0.6);border:1px solid rgba(180,77,255,0.18);border-radius:18px;padding:18px;margin-bottom:12px;display:flex;align-items:center;gap:16px;}
 </style>
-
 </head>
 <body>
 
 <canvas id="bg-canvas"></canvas>
 
 <!-- TERMINAL MODAL -->
-
 <div id="terminal-modal">
   <div class="terminal-box">
     <div class="term-topbar">
@@ -281,7 +278,6 @@ animation:termIn .35s cubic-bezier(.16,1,.3,1);
 </div>
 
 <!-- LOGIN -->
-
 <div class="screen" id="login-screen">
   <div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;">
     <div class="login-title">HEADTRICK RYUZN</div>
@@ -307,7 +303,6 @@ animation:termIn .35s cubic-bezier(.16,1,.3,1);
 </div>
 
 <!-- APP -->
-
 <div class="screen hidden" id="app-screen" style="display:flex;flex-direction:column;height:100vh;">
 
   <div class="topnav">
@@ -317,104 +312,102 @@ animation:termIn .35s cubic-bezier(.16,1,.3,1);
 
   <div class="scroll-area">
 
-```
-<!-- DASHBOARD -->
-<div class="page active" id="page-dashboard">
-  <div class="page-title">Dashboard</div>
-  <div class="stats-row">
-    <div class="stat-box"><div class="stat-num" id="stat-mira">0</div><div class="stat-lbl">Mira Ativas</div></div>
-    <div class="stat-box"><div class="stat-num" id="stat-desemp">0</div><div class="stat-lbl">Desemp. Ativas</div></div>
-  </div>
-  <div class="info-card">
-    <div class="fc-icon">🛡️</div>
-    <div class="fc-info">
-      <div class="fc-name">Sistema Online</div>
-      <div class="fc-desc" id="dash-user-label">Bem-vindo ao painel de suporte</div>
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-title">Dashboard</div>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-num" id="stat-mira">0</div><div class="stat-lbl">Mira Ativas</div></div>
+        <div class="stat-box"><div class="stat-num" id="stat-desemp">0</div><div class="stat-lbl">Desemp. Ativas</div></div>
+      </div>
+      <div class="info-card">
+        <div class="fc-icon">🛡️</div>
+        <div class="fc-info">
+          <div class="fc-name">Sistema Online</div>
+          <div class="fc-desc" id="dash-user-label">Bem-vindo ao painel de suporte</div>
+        </div>
+        <span class="badge-sm">v2.4</span>
+      </div>
+      <button class="btn-ff" onclick="openFF()">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"/></svg>
+        ABRIR FREE FIRE
+      </button>
     </div>
-    <span class="badge-sm">v2.4</span>
-  </div>
-  <button class="btn-ff" onclick="openFF()">
-    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"/></svg>
-    ABRIR FREE FIRE
-  </button>
-</div>
 
-<!-- MIRA -->
-<div class="page" id="page-mira">
-  <div class="page-title">Mira</div>
-  <div class="feature-card" id="fc-mira-leve" onclick="toggleFeature('mira-leve')">
-    <div class="fc-icon">🎯</div>
-    <div class="fc-info"><div class="fc-name">Assistência de Mira Leve</div><div class="fc-desc">Suaviza movimentos bruscos da mira.</div></div>
-    <div class="fc-toggle"><div class="fc-status" id="st-mira-leve">DESATIVADO</div><div class="toggle-sw"></div></div>
-  </div>
-  <div class="feature-card" id="fc-mira-precisa" onclick="toggleFeature('mira-precisa')">
-    <div class="fc-icon">🔬</div>
-    <div class="fc-info"><div class="fc-name">Assistência de Mira Precisa</div><div class="fc-desc">Foco aumentado em alvos em movimento.</div></div>
-    <div class="fc-toggle"><div class="fc-status" id="st-mira-precisa">DESATIVADO</div><div class="toggle-sw"></div></div>
-  </div>
-  <div class="feature-card" id="fc-estabilizacao" onclick="toggleFeature('estabilizacao')">
-    <div class="fc-icon">⭕</div>
-    <div class="fc-info"><div class="fc-name">Remover Tremedeira</div><div class="fc-desc">Reduz micro oscilações da mira.</div></div>
-    <div class="fc-toggle"><div class="fc-status" id="st-estabilizacao">DESATIVADO</div><div class="toggle-sw"></div></div>
-  </div>
-  <div class="feature-card" id="fc-recuo" onclick="toggleFeature('recuo')">
-    <div class="fc-icon">⚡</div>
-    <div class="fc-info"><div class="fc-name">Estabilizar Mira</div><div class="fc-desc">Ajusta suavização de tracking.</div></div>
-    <div class="fc-toggle"><div class="fc-status" id="st-recuo">DESATIVADO</div><div class="toggle-sw"></div></div>
-  </div>
-  <div class="feature-card" id="fc-precisao" onclick="toggleFeature('precisao')">
-    <div class="fc-icon">🚀</div>
-    <div class="fc-info"><div class="fc-name">Sensi Sem Congelamento</div><div class="fc-desc">Remove travamentos durante flick.</div></div>
-    <div class="fc-toggle"><div class="fc-status" id="st-precisao">DESATIVADO</div><div class="toggle-sw"></div></div>
-  </div>
-</div>
+    <!-- MIRA -->
+    <div class="page" id="page-mira">
+      <div class="page-title">Mira</div>
+      <div class="feature-card" id="fc-mira-leve" onclick="toggleFeature('mira-leve')">
+        <div class="fc-icon">🎯</div>
+        <div class="fc-info"><div class="fc-name">Assistência de Mira Leve</div><div class="fc-desc">Suaviza movimentos bruscos da mira.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-mira-leve">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-mira-precisa" onclick="toggleFeature('mira-precisa')">
+        <div class="fc-icon">🔬</div>
+        <div class="fc-info"><div class="fc-name">Assistência de Mira Precisa</div><div class="fc-desc">Foco aumentado em alvos em movimento.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-mira-precisa">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-estabilizacao" onclick="toggleFeature('estabilizacao')">
+        <div class="fc-icon">⭕</div>
+        <div class="fc-info"><div class="fc-name">Remover Tremedeira</div><div class="fc-desc">Reduz micro oscilações da mira.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-estabilizacao">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-recuo" onclick="toggleFeature('recuo')">
+        <div class="fc-icon">⚡</div>
+        <div class="fc-info"><div class="fc-name">Estabilizar Mira</div><div class="fc-desc">Ajusta suavização de tracking.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-recuo">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-precisao" onclick="toggleFeature('precisao')">
+        <div class="fc-icon">🚀</div>
+        <div class="fc-info"><div class="fc-name">Sensi Sem Congelamento</div><div class="fc-desc">Remove travamentos durante flick.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-precisao">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+    </div>
 
-<!-- DESEMPENHO -->
-<div class="page" id="page-desempenho">
-  <div class="page-title">Desempenho</div>
-  <div class="feature-card" id="fc-fps" onclick="toggleFeature('fps')">
-    <div class="fc-icon">📈</div>
-    <div class="fc-info"><div class="fc-name">Otimização de FPS</div><div class="fc-desc">Maximiza quadros por segundo.</div></div>
-    <div class="fc-toggle"><div class="fc-status" id="st-fps">DESATIVADO</div><div class="toggle-sw"></div></div>
-  </div>
-  <div class="feature-card" id="fc-delay" onclick="toggleFeature('delay')">
-    <div class="fc-icon">📡</div>
-    <div class="fc-info"><div class="fc-name">Redução de Delay</div><div class="fc-desc">Otimiza latência de rede.</div></div>
-    <div class="fc-toggle"><div class="fc-status" id="st-delay">DESATIVADO</div><div class="toggle-sw"></div></div>
-  </div>
-  <div class="feature-card" id="fc-estabilidade" onclick="toggleFeature('estabilidade')">
-    <div class="fc-icon">🔋</div>
-    <div class="fc-info"><div class="fc-name">Estabilidade de Sistema</div><div class="fc-desc">Mantém desempenho constante.</div></div>
-    <div class="fc-toggle"><div class="fc-status" id="st-estabilidade">DESATIVADO</div><div class="toggle-sw"></div></div>
-  </div>
-  <div class="feature-card" id="fc-touch" onclick="toggleFeature('touch')">
-    <div class="fc-icon">👆</div>
-    <div class="fc-info"><div class="fc-name">Ajuste de Sensibilidade Touch</div><div class="fc-desc">Calibra resposta ao toque.</div></div>
-    <div class="fc-toggle"><div class="fc-status" id="st-touch">DESATIVADO</div><div class="toggle-sw"></div></div>
-  </div>
-  <div class="feature-card" id="fc-boost" onclick="toggleFeature('boost')">
-    <div class="fc-icon">🏆</div>
-    <div class="fc-info"><div class="fc-name">Modo Desempenho Máximo</div><div class="fc-desc">Ativa todos os boosters do sistema.</div></div>
-    <div class="fc-toggle"><div class="fc-status" id="st-boost">DESATIVADO</div><div class="toggle-sw"></div></div>
-  </div>
-</div>
+    <!-- DESEMPENHO -->
+    <div class="page" id="page-desempenho">
+      <div class="page-title">Desempenho</div>
+      <div class="feature-card" id="fc-fps" onclick="toggleFeature('fps')">
+        <div class="fc-icon">📈</div>
+        <div class="fc-info"><div class="fc-name">Otimização de FPS</div><div class="fc-desc">Maximiza quadros por segundo.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-fps">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-delay" onclick="toggleFeature('delay')">
+        <div class="fc-icon">📡</div>
+        <div class="fc-info"><div class="fc-name">Redução de Delay</div><div class="fc-desc">Otimiza latência de rede.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-delay">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-estabilidade" onclick="toggleFeature('estabilidade')">
+        <div class="fc-icon">🔋</div>
+        <div class="fc-info"><div class="fc-name">Estabilidade de Sistema</div><div class="fc-desc">Mantém desempenho constante.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-estabilidade">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-touch" onclick="toggleFeature('touch')">
+        <div class="fc-icon">👆</div>
+        <div class="fc-info"><div class="fc-name">Ajuste de Sensibilidade Touch</div><div class="fc-desc">Calibra resposta ao toque.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-touch">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+      <div class="feature-card" id="fc-boost" onclick="toggleFeature('boost')">
+        <div class="fc-icon">🏆</div>
+        <div class="fc-info"><div class="fc-name">Modo Desempenho Máximo</div><div class="fc-desc">Ativa todos os boosters do sistema.</div></div>
+        <div class="fc-toggle"><div class="fc-status" id="st-boost">DESATIVADO</div><div class="toggle-sw"></div></div>
+      </div>
+    </div>
 
-<!-- CONFIG -->
-<div class="page" id="page-config">
-  <div class="page-title">Configurações</div>
-  <div class="cfg-section">
-    <div class="cfg-row"><span>Versão</span><span class="cfg-val">2.4.1</span></div>
-    <div class="cfg-row"><span>Usuário</span><span class="cfg-val" id="cfg-user">—</span></div>
-    <div class="cfg-row"><span>Plataforma</span><span class="badge-sm" id="cfg-platform">—</span></div>
-    <div class="cfg-row"><span>Autenticação</span><span class="badge-sm">SHA-256</span></div>
-    <div class="cfg-row"><span>Sessão</span><span class="badge-sm">Ativa</span></div>
-  </div>
-  <button class="btn-logout" onclick="doLogout()">
-    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>
-    SAIR DO SISTEMA
-  </button>
-</div>
-```
+    <!-- CONFIG -->
+    <div class="page" id="page-config">
+      <div class="page-title">Configurações</div>
+      <div class="cfg-section">
+        <div class="cfg-row"><span>Versão</span><span class="cfg-val">2.4.1</span></div>
+        <div class="cfg-row"><span>Usuário</span><span class="cfg-val" id="cfg-user">—</span></div>
+        <div class="cfg-row"><span>Plataforma</span><span class="badge-sm">Android</span></div>
+        <div class="cfg-row"><span>Autenticação</span><span class="badge-sm">SHA-256</span></div>
+        <div class="cfg-row"><span>Sessão</span><span class="badge-sm">Ativa</span></div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>
+        SAIR DO SISTEMA
+      </button>
+    </div>
 
   </div><!-- scroll-area -->
 
@@ -440,16 +433,6 @@ animation:termIn .35s cubic-bezier(.16,1,.3,1);
 </div>
 
 <script>
-// ── PLATFORM DETECTION ──
-(function(){
-  var ua=navigator.userAgent||navigator.vendor||window.opera;
-  var el=document.getElementById('cfg-platform');
-  if(!el)return;
-  if(/android/i.test(ua)){el.textContent='Android';}
-  else if(/iPad|iPhone|iPod/.test(ua)&&!window.MSStream){el.textContent='iOS';}
-  else{el.textContent='Desktop';}
-})();
-
 // ── PARTICLES ──
 const canvas=document.getElementById('bg-canvas');
 const ctx=canvas.getContext('2d');
@@ -519,21 +502,7 @@ function goPage(id,el){
   el.classList.add('active');
   document.querySelector('.scroll-area').scrollTop=0;
 }
-function openFF(){
-  var ua=navigator.userAgent||navigator.vendor||window.opera;
-  if(/android/i.test(ua)){
-    // Android: intent para abrir o Free Fire direto no app
-    var intent='intent://com.dts.freefireth/#Intent;scheme=freefire;package=com.dts.freefireth;end';
-    var link=document.createElement('a');
-    link.href=intent;link.click();
-  } else if(/iPad|iPhone|iPod/.test(ua)&&!window.MSStream){
-    // iOS: URL scheme do Free Fire
-    window.location.href='freefiremax://';
-    setTimeout(function(){window.location.href='https://apps.apple.com/app/garena-free-fire/id1300146617';},1500);
-  } else {
-    window.open('https://ff.garena.com','_blank');
-  }
-}
+function openFF(){  window.location.href = "intent://freefire#Intent;scheme=garena;package=com.dts.freefireth;end";}
 
 // ── TOGGLES ──
 const state={};
@@ -632,6 +601,5 @@ document.getElementById('terminal-modal').addEventListener('click',function(e){
   if(e.target===this){this.classList.remove('show');termTarget=null;}
 });
 </script>
-
 </body>
 </html>
