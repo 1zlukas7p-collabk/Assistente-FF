@@ -330,15 +330,6 @@ body {
       <button class="btn-ff" onclick="openFF()">
         <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"/></svg>
         ABRIR FREE FIRE
-      function openFF(){
-  // tentativa principal (Android)
-  window.location.href = "intent://freefire#Intent;scheme=garena;package=com.dts.freefireth;end";
-
-  // fallback se falhar
-  setTimeout(() => {
-    window.location.href = "https://play.google.com/store/apps/details?id=com.dts.freefireth";
-  }, 1500);
-}
       </button>
     </div>
 
