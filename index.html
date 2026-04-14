@@ -4,12 +4,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Headtrick Ryuzn</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
 :root {
+color-scheme: dark;
 –bg: #0a0a0f;
 –purple: #b44dff;
 –purple2: #7c1fa8;
@@ -25,10 +29,12 @@
 
 body {
 font-family: var(–font);
-background: var(–bg);
+background: var(–bg) !important;
+background-color: #0a0a0f !important;
 color: var(–text);
 min-height: 100vh;
 overflow-x: hidden;
+-webkit-text-size-adjust: 100%;
 }
 
 #bg-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
