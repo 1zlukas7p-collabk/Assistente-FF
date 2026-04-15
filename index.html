@@ -514,7 +514,24 @@ function goPage(id,el){
   el.classList.add('active');
   document.querySelector('.scroll-area').scrollTop=0;
 }
-function openFF(){window.open('https://ff.garena.com','_blank');}
+function openFF(){
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+
+  // Android
+  if (/android/i.test(ua)) {
+    window.location.href = 'intent://#Intent;package=com.dts.freefireth;end';
+    return;
+  }
+
+  // iPhone / iPad
+  if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
+    window.location.href = 'freefire://';
+    return;
+  }
+
+  // Fallback caso esteja no PC ou não consiga identificar
+  window.open('https://ff.garena.com', '_blank');
+}
 
 // ── TOGGLES ──
 const state={};
