@@ -411,7 +411,7 @@ body {
       <div class="cfg-section">
         <div class="cfg-row"><span>Versão</span><span class="cfg-val">2.4.1</span></div>
         <div class="cfg-row"><span>Usuário</span><span class="cfg-val" id="cfg-user">—</span></div>
-        <div class="cfg-row"><span>Plataforma</span><span class="badge-sm">Android</span></div>
+        <div class="cfg-row"><span>Plataforma</span><span class="badge-sm" id="platform-label">Detectando...</span></div>
         <div class="cfg-row"><span>Autenticação</span><span class="badge-sm">SHA-256</span></div>
         <div class="cfg-row"><span>Sessão</span><span class="badge-sm">Ativa</span></div>
       </div>
@@ -533,7 +533,25 @@ function openFF(){
   window.open('https://ff.garena.com', '_blank');
 }
 
+
+function detectPlatform(){
+  const ua = navigator.userAgent || navigator.vendor || window.opera;
+  const label = document.getElementById('platform-label');
+  if(!label) return;
+
+  if (/android/i.test(ua)) {
+    label.textContent = 'Android';
+  } else if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
+    label.textContent = 'iOS';
+  } else {
+    label.textContent = 'Desconhecido';
+  }
+}
+
+detectPlatform();
+
 // ── TOGGLES ──
+
 const state={};
 function loadToggles(){
   const saved=JSON.parse(localStorage.getItem('htr_toggles')||'{}');
