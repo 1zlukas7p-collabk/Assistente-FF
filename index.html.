@@ -3,12 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<link rel="icon" href="icon-v2.png" type="image/png">
+<link rel="shortcut icon" href="icon-v2.png">
+<link rel="apple-touch-icon" href="icon-v2.png">
 <title>Headtrick Ryuzn</title>
-
-<!-- ÍCONE DO APP -->
-<link rel="icon" type="image/png" href="icon.png">
-<link rel="apple-touch-icon" href="icon.png">
-<meta name="theme-color" content="#0a0a0f">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
@@ -416,7 +414,7 @@ body {
       <div class="cfg-section">
         <div class="cfg-row"><span>Versão</span><span class="cfg-val">2.4.1</span></div>
         <div class="cfg-row"><span>Usuário</span><span class="cfg-val" id="cfg-user">—</span></div>
-        <div class="cfg-row"><span>Plataforma</span><span class="badge-sm" id="platform-label">Detectando...</span></div>
+        <div class="cfg-row"><span>Plataforma</span><span class="badge-sm">Android</span></div>
         <div class="cfg-row"><span>Autenticação</span><span class="badge-sm">SHA-256</span></div>
         <div class="cfg-row"><span>Sessão</span><span class="badge-sm">Ativa</span></div>
       </div>
@@ -538,25 +536,7 @@ function openFF(){
   window.open('https://ff.garena.com', '_blank');
 }
 
-
-function detectPlatform(){
-  const ua = navigator.userAgent || navigator.vendor || window.opera;
-  const label = document.getElementById('platform-label');
-  if(!label) return;
-
-  if (/android/i.test(ua)) {
-    label.textContent = 'Android';
-  } else if (/iPad|iPhone|iPod/.test(ua) && !window.MSStream) {
-    label.textContent = 'iOS';
-  } else {
-    label.textContent = 'Desconhecido';
-  }
-}
-
-detectPlatform();
-
 // ── TOGGLES ──
-
 const state={};
 function loadToggles(){
   const saved=JSON.parse(localStorage.getItem('htr_toggles')||'{}');
